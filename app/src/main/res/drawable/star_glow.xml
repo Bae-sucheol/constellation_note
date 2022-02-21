@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:left="16dp" android:right="16dp">
+
+        <rotate android:fromDegrees="0">
+
+            <shape android:shape="line">
+
+                <stroke android:width="1dp" android:color="#CCffffff"/>
+
+            </shape>
+
+        </rotate>
+
+    </item>
+
+    <item android:left="16dp" android:right="16dp">
+
+        <rotate android:fromDegrees="90">
+
+            <shape android:shape="line">
+
+                <stroke android:width="1dp" android:color="#CCffffff"/>
+
+            </shape>
+
+        </rotate>
+
+    </item>
+
+    <item>
+
+        <rotate android:fromDegrees="45">
+
+            <shape android:shape="line">
+
+                <stroke android:width="1dp" android:color="#CCffffff"/>
+
+            </shape>
+
+        </rotate>
+
+    </item>
+
+    <item>
+
+        <rotate android:fromDegrees="135">
+
+            <shape android:shape="line">
+
+                <stroke android:width="1dp" android:color="#CCffffff"/>
+
+            </shape>
+
+        </rotate>
+
+    </item>
+
+    <item android:left="20dp" android:right="20dp" android:top="20dp" android:bottom="20dp">
+
+        <shape android:shape="oval">
+
+            <solid android:color="#1Affffff"/>
+            <size android:width="8dp" android:height="8dp" />
+
+        </shape>
+
+    </item>
+
+    <item android:left="30dp" android:right="30dp" android:top="30dp" android:bottom="30dp">
+
+        <shape android:shape="oval">
+
+            <solid android:color="#1Affffff"/>
+            <size android:width="8dp" android:height="8dp" />
+
+        </shape>
+
+    </item>
+
+    <item android:left="40dp" android:right="40dp" android:top="40dp" android:bottom="40dp">
+
+        <shape android:shape="oval">
+
+            <solid android:color="#ffffff"/>
+            <size android:width="8dp" android:height="8dp" />
+
+        </shape>
+
+    </item>
+
+
+</layer-list>
