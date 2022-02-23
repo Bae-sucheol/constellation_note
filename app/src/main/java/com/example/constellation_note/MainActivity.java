@@ -101,6 +101,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             star_distance[i] = random_z;
             star_y[i] = random_y;
             star_list[i].setX(random_x);
+            star_list[i].setY(random_y);
+
+
+            int y_center = height / 2;
+
+            float y_gap = (y_center - random_y) / y_center; // 0 ~ 1의 값을 갖는다.
+
+            // 위치별 각도(degree) 0 ~ 180 사이의 값을 갖는다.
+            double position_per_degree = random_x / width * 180;
+
+            star_list[i].setY(star_y[i] + (float)Math.sin(Math.toRadians(position_per_degree)) * y_gap * (y_center * DISTORTION) );
 
             star_list[i].setColorFilter(getResources().getColor(star_colors[random_star_color]));
 
@@ -114,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
         // 별의 초기 위치를 초기화 하기 위해 실행한다.
         // 안하면 첫 이동시 위치가 순간적으로 변함.
-        move_stars(0.0f, 0.0f);
+
     }
 
 
