@@ -103,16 +103,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             star_list[i].setX(random_x);
             star_list[i].setY(random_y);
 
-
-            int y_center = height / 2;
-
-            float y_gap = (y_center - random_y) / y_center; // 0 ~ 1의 값을 갖는다.
-
-            // 위치별 각도(degree) 0 ~ 180 사이의 값을 갖는다.
-            double position_per_degree = random_x / width * 180;
-
-            star_list[i].setY(star_y[i] + (float)Math.sin(Math.toRadians(position_per_degree)) * y_gap * (y_center * DISTORTION) );
-
             star_list[i].setColorFilter(getResources().getColor(star_colors[random_star_color]));
 
             int star_dia = (int)(STAR_SIZE - Math.pow(random_z, 1.3));
@@ -125,6 +115,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
         // 별의 초기 위치를 초기화 하기 위해 실행한다.
         // 안하면 첫 이동시 위치가 순간적으로 변함.
+        // 결국 문제 파악을 못해서 그냥 move 함수를 한번 적용해 주기로 했음.
+        move_stars(0, 0, 10);
 
     }
 
@@ -170,13 +162,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     if(touch_move_distance > 0)
                     {
                         //move_stars(motionEvent.getX(), touch_pre_x - width * MAX_MAGNIFICATION, 10);
-                        move_stars(width, current_x, 10); // 다음 페이지의 중앙값으로 가야 하므로 width 이 아니라  width + width / 2 로 설정해야 할듯.
+                        //move_stars(width, current_x, 10);
+                        move_stars(current_x, width, 10);
 
                     }
                     else
                     {
                         //move_stars(motionEvent.getX(), touch_pre_x + width * MAX_MAGNIFICATION, 10);
-                        move_stars(0, current_x, 10); // 다음 페이지의 중앙값으로 가야 하므로 0이 아니라 -width / 2 로 설정해야 할듯.
+                        //move_stars(0, current_x, 10);
+                        move_stars(current_x, 0, 10);
 
                     }
 
@@ -281,7 +275,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         System.out.println("토탈 카운트 : " + total_count);
 
-        float delta_distance = (pre_x - post_x) / total_count;
+        //float delta_distance = (pre_x - post_x) / total_count;
+        float delta_distance = (post_x - pre_x) / total_count;
 
         System.out.println("거리 차이 : " + delta_distance);
 
