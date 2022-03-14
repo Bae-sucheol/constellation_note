@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -29,8 +30,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private static final float SWIPE_MAGNIFUCATION = 0.4f; // 얼마나 스와이프 해야 화면이 넘어가는지(별자리 페이지가 넘어가는지)
     private static final int ANIMATION_TIME = 200; // 애니메이션 타임.
 
-    private int width;
-    private int height;
+    public static int width;
+    public static int height;
 
     private FrameLayout frameLayout_main;
 
@@ -70,6 +71,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         // 별 생성
         create_stars(NUM_STAR);
+
+        // 별자리 생성
+        create_constellations();
 
     }
 
@@ -120,7 +124,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     }
 
-
+    private void create_constellations()
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            Constellation_view constellation = new Constellation_view(this, i);
+            frameLayout_main.addView(constellation);
+        }
+    }
 
 
     @Override
@@ -273,13 +284,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         int total_count = ANIMATION_TIME / interval;
 
-        System.out.println("토탈 카운트 : " + total_count);
-
         //float delta_distance = (pre_x - post_x) / total_count;
         float delta_distance = (post_x - pre_x) / total_count;
 
-        System.out.println("거리 차이 : " + delta_distance);
-
+        // 부드러운 이동을 위해 타이머를 이용하여 목표 지점까지 등속도로 움직인다.
+        // 이때 UI 쓰레드에서 작동할 수 있도록 runOnUiThread 메소드를 이용한다.
         Timer timer = new Timer();
 
         TimerTask timerTask = new TimerTask() {
