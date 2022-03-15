@@ -41,7 +41,7 @@ public class Constellation_view extends FrameLayout
 
     }
 
-    private void move_constellations(float pre_x, float post_x)
+    public void move_constellations(float pre_x, float post_x)
     {
 
 

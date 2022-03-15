@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private static final float DISTORTION = 0.2f; // 공간이 왜곡되는 정도
     private static final float SWIPE_MAGNIFUCATION = 0.4f; // 얼마나 스와이프 해야 화면이 넘어가는지(별자리 페이지가 넘어가는지)
     private static final int ANIMATION_TIME = 200; // 애니메이션 타임.
+    private static final int CONSTELLATION_Z = 2; // 별자리 뷰와 스크린간의 거리 (움직이는 속도와도 관계가 있음)
 
     public static int width;
     public static int height;
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private float star_y[]; //
 
     private int animation_count;
+
+    private Constellation_view constellations[]; // 별자리 뷰 리스트
 
   @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -126,9 +129,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     private void create_constellations()
     {
+
+        constellations = new Constellation_view[5];
+
         for(int i = 0; i < 5; i++)
         {
             Constellation_view constellation = new Constellation_view(this, i);
+            constellations[i] = constellation;
             frameLayout_main.addView(constellation);
         }
     }
@@ -161,8 +168,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 // 좌측으로 스와이프 할 때 우측으로 스와이프 할 때가 음수 양수로 값이 다르다.
                 // 따라서 경우를 나누어 주어야 한다.
 
-
-
                 if(Math.abs(touch_move_distance) >= width * SWIPE_MAGNIFUCATION)
                 {
                     // 별자리의 최대 사이즈 만큼 움직여야 하기 때문에
@@ -175,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         //move_stars(motionEvent.getX(), touch_pre_x - width * MAX_MAGNIFICATION, 10);
                         //move_stars(width, current_x, 10);
                         move_stars(current_x, width, 10);
+                        //move_constellations(current_x, width, 10);
 
                     }
                     else
@@ -182,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         //move_stars(motionEvent.getX(), touch_pre_x + width * MAX_MAGNIFICATION, 10);
                         //move_stars(0, current_x, 10);
                         move_stars(current_x, 0, 10);
-
+                        //move_constellations(current_x, 0, 10);
                     }
 
 
@@ -195,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     // 자연스럽게 원래 자리로 이동 시켜야 한다.
 
                     move_stars(touch_pre_x, current_x, 10);
+                    //move_constellations(touch_pre_x, current_x, 10);
 
                 }
 
@@ -206,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 {
 
                     move_stars(touch_move_pre_x, motionEvent.getX());
+                    move_constellations(touch_move_pre_x, motionEvent.getX());
                     touch_move_pre_x = motionEvent.getX();
 
                 }
@@ -221,13 +229,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         return true;
     }
 
+    // 일단은 move_stars로 두고 나중에 적절한 메소드명을 지어주기로 했다.
+    // 현재는 stars, constellations 를 전부 이동시킨다.
+    // runOnUiThread 를 동시에 사용하니 문제가 생겨 하나로 통합하기로 했다.
     private void move_stars(float pre_x, float post_x) {
         // 페이지당 움직여야할 총 거리를 정하고
         // 선형보간 방정식으로 움직여야할 것 같다.
 
         // 선형보간.
 
-        for (int i = 0; i < star_list.length; i++) {
+        for (int i = 0; i < star_list.length; i++)
+        {
 
             float current_x = star_list[i].getX();
             float current_y = star_list[i].getY();
@@ -275,6 +287,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             }
 
         }
+
+        for (int i = 0; i < constellations.length; i++)
+        {
+
+            float current_x = constellations[i].getX();
+            float delta_distance = pre_x - post_x;
+
+            constellations[i].setX(current_x - delta_distance / CONSTELLATION_Z);
+
+        }
+
     }
 
     private void move_stars(float pre_x, float post_x, int interval)
@@ -320,4 +343,64 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         timer.schedule(timerTask, 0, 10);
 
     }
+
+    private void move_constellations(float pre_x, float post_x)
+    {
+
+        for (int i = 0; i < constellations.length; i++)
+        {
+
+            float current_x = constellations[i].getX();
+            float delta_distance = pre_x - post_x;
+
+            constellations[i].setX(current_x - delta_distance / CONSTELLATION_Z);
+
+        }
+
+    }
+
+    private void move_constellations(float pre_x, float post_x, int interval)
+    {
+
+        animation_count = 0;
+
+        int total_count = ANIMATION_TIME / interval;
+
+        //float delta_distance = (pre_x - post_x) / total_count;
+        float delta_distance = (post_x - pre_x) / total_count;
+
+        // 부드러운 이동을 위해 타이머를 이용하여 목표 지점까지 등속도로 움직인다.
+        // 이때 UI 쓰레드에서 작동할 수 있도록 runOnUiThread 메소드를 이용한다.
+        Timer timer = new Timer();
+
+        TimerTask timerTask = new TimerTask() {
+
+            public void run(){
+
+                runOnUiThread(new Runnable(){
+
+                    public void run()
+                    {
+
+                        float move_pre_x = pre_x + (animation_count * delta_distance);
+
+                        move_constellations(move_pre_x, move_pre_x + delta_distance);
+                        animation_count++;
+
+                        if(animation_count == total_count)
+                        {
+                            timer.cancel();
+                        }
+
+                    }
+
+                });
+
+            }
+        };
+
+        timer.schedule(timerTask, 0, 10);
+
+    }
+
 }
