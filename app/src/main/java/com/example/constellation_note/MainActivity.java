@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         //move_stars(motionEvent.getX(), touch_pre_x - width * MAX_MAGNIFICATION, 10);
                         //move_stars(width, current_x, 10);
                         move_stars(current_x, width, 10);
-                        //move_constellations(current_x, width, 10);
+                        
 
                     }
                     else
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         //move_stars(motionEvent.getX(), touch_pre_x + width * MAX_MAGNIFICATION, 10);
                         //move_stars(0, current_x, 10);
                         move_stars(current_x, 0, 10);
-                        //move_constellations(current_x, 0, 10);
+
                     }
 
 
@@ -201,7 +201,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     // 자연스럽게 원래 자리로 이동 시켜야 한다.
 
                     move_stars(touch_pre_x, current_x, 10);
-                    //move_constellations(touch_pre_x, current_x, 10);
 
                 }
 
@@ -213,7 +212,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 {
 
                     move_stars(touch_move_pre_x, motionEvent.getX());
-                    move_constellations(touch_move_pre_x, motionEvent.getX());
                     touch_move_pre_x = motionEvent.getX();
 
                 }
@@ -288,6 +286,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         }
 
+        // constellation 파트
         for (int i = 0; i < constellations.length; i++)
         {
 
@@ -344,6 +343,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     }
 
+    /*
     private void move_constellations(float pre_x, float post_x)
     {
 
@@ -402,5 +402,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         timer.schedule(timerTask, 0, 10);
 
     }
+     */
 
 }
