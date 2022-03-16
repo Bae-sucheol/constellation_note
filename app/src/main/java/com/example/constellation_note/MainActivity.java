@@ -174,20 +174,24 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     // width * MAX_MAGNIFICATION 만큼 움직여야 하기 때문에
                     // 터치를 종료한 지점부터 터치를 시작한 지점 + width * MAX_MAGNIFICATION 까지
 
+                    float page_deviation;
+
+
                     // 음수 양수를 통해 좌측 이동인지 우측 이동인지 판별
                     if(touch_move_distance > 0)
                     {
-                        // 우측 끝으로 이동
-                        move_stars(current_x, width, 10);
+                        // 한 페이지 만큼을 움직여야 한다.
+                        page_deviation = current_x + (width - touch_move_distance);
 
                     }
                     else
                     {
-                        // 좌측 끝으로 이동
-                        move_stars(current_x, 0, 10);
+
+                        page_deviation = current_x - (width + touch_move_distance);
 
                     }
 
+                    move_stars(current_x, page_deviation, 10);
 
                 }
                 else
