@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public static int height;
 
     private FrameLayout frameLayout_main;
-
+ 
     private float touch_pre_x; // 터치한 지점의 x좌표
     private float touch_move_distance; // 터치 시작 지점부터 터치를 끝낸 지점까지의 거리.
     private float touch_move_pre_x; // 터치 후 움직일 때 이전 좌표.
