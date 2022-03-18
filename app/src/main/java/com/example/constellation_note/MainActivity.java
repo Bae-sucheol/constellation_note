@@ -176,16 +176,20 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                     float page_deviation;
 
-
                     // 음수 양수를 통해 좌측 이동인지 우측 이동인지 판별
                     if(touch_move_distance > 0)
                     {
+
+                        set_constellation_index(true);
+
                         // 한 페이지 만큼을 움직여야 한다.
                         page_deviation = current_x + (width - touch_move_distance);
 
                     }
                     else
                     {
+
+                        set_constellation_index(false);
 
                         page_deviation = current_x - (width + touch_move_distance);
 
@@ -324,7 +328,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
             public void run(){
 
-                runOnUiThread(new Runnable(){
+                runOnUiThread(new Runnable()
+                {
 
                     public void run()
                     {
@@ -337,6 +342,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         if(animation_count == total_count)
                         {
                             timer.cancel();
+                            // float 소수점 편차로 인해서 약간의 보정이 필요하다.
+                            // move_stars 함수를 이용해서 움직이려고 했으나 터치 좌표가 기준이며, 다른 계산식이 섞여있어
+                            // 그냥 따로 위치를 재배치 하기로 했다.
+
+                            set_constellation_position();
                         }
 
                     }
@@ -347,6 +357,27 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         };
 
         timer.schedule(timerTask, 0, 10);
+
+    }
+
+    private void set_constellation_index(boolean direction)
+    {
+
+        for(int i = 0; i < constellations.length; i++)
+        {
+            constellations[i].setIndex(direction);
+        }
+
+    }
+
+    private void set_constellation_position()
+    {
+
+        for(int i = 0; i < constellations.length; i++)
+        {
+            float constellation_position = (width / 2) + (Constellation_view.width * (constellations[i].getIndex() - 2) ) - Constellation_view.width / 2;
+            constellations[i].setX( (int)(constellation_position) );
+        }
 
     }
 
