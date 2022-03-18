@@ -304,6 +304,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
             constellations[i].setX(current_x - delta_distance / 3);
 
+            // 투명도 조절
+
+            float center_x = (width / 2) - Constellation_view.width / 2;
+            float normalization = (center_x - current_x) / (width / 2);
+            normalization = Math.abs(normalization);
+            float interpolation = (1.0f - normalization) + (0.2f * normalization);
+
+            constellations[i].setAlpha(interpolation);
         }
 
     }
