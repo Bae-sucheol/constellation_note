@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private static final float SWIPE_MAGNIFUCATION = 0.4f; // 얼마나 스와이프 해야 화면이 넘어가는지(별자리 페이지가 넘어가는지)
     private static final int ANIMATION_TIME = 200; // 애니메이션 타임.
     private static final int CONSTELLATION_Z = 2; // 별자리 뷰와 스크린간의 거리 (움직이는 속도와도 관계가 있음)
-
+ 
     public static int width;
     public static int height;
 
