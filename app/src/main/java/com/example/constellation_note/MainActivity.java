@@ -2,7 +2,9 @@ package com.example.constellation_note;
 
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintSet;
 
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.media.Image;
 import android.os.Bundle;
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private static final float SWIPE_MAGNIFUCATION = 0.4f; // 얼마나 스와이프 해야 화면이 넘어가는지(별자리 페이지가 넘어가는지)
     private static final int ANIMATION_TIME = 200; // 애니메이션 타임.
     private static final int CONSTELLATION_Z = 2; // 별자리 뷰와 스크린간의 거리 (움직이는 속도와도 관계가 있음)
- 
+
     public static int width;
     public static int height;
 
@@ -49,6 +51,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     private Constellation_view constellations[]; // 별자리 뷰 리스트
 
+    private boolean isTouchConstellation = false; // 별자리를 터치했는지...
+
+    private int bottom__bar_height;
+
   @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -64,6 +70,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         width = size.x;
         height = size.y;
+
+        // 하단 네이게이션바 사이즈
+        Resources resources = this.getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0)
+        {
+            bottom__bar_height = resources.getDimensionPixelSize(resourceId);
+        }
 
         // 부모 뷰(컨테이너)
 
@@ -135,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         for(int i = 0; i < 5; i++)
         {
             Constellation_view constellation = new Constellation_view(this, i);
+            constellation.setOnTouchListener(this);
             constellations[i] = constellation;
             frameLayout_main.addView(constellation);
         }
@@ -144,6 +159,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent)
     {
+
+        if(view instanceof Constellation_view)
+        {
+            isTouchConstellation = true;
+        }
 
         switch (motionEvent.getAction())
         {
@@ -158,6 +178,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             case MotionEvent.ACTION_UP:
 
                 float current_x = motionEvent.getX();
+
+                if(isTouchConstellation && touch_pre_x == current_x)
+                {
+                    isTouchConstellation = false;
+
+                    creative_mode((Constellation_view)view);
+
+                    return false;
+                }
 
                 touch_move_distance = current_x - touch_pre_x;
 
@@ -386,6 +415,37 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             float constellation_position = (width / 2) + (Constellation_view.width * (constellations[i].getIndex() - 2) ) - Constellation_view.width / 2;
             constellations[i].setX( (int)(constellation_position) );
         }
+
+    }
+
+    private void creative_mode(Constellation_view view)
+    {
+
+        // 전체화면
+        // 추후 보간식을 이용해서 애니메이션 처리 할 예정
+
+        for(Constellation_view constellation : constellations)
+        {
+
+            if(constellation == view)
+            {
+                constellation.setAlpha(1.0f);
+
+                constellation.setX(0.0f);
+                constellation.setY(0.0f);
+
+                ViewGroup.LayoutParams constellation_param = constellation.getLayoutParams();
+                constellation_param.width = width;
+                constellation_param.height = height - bottom__bar_height;
+
+            }
+            else
+            {
+                constellation.setVisibility(View.GONE);
+            }
+
+        }
+
 
     }
 
