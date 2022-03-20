@@ -17,8 +17,8 @@ public class Constellation_view extends FrameLayout
 
     // 해당 별자리 뷰의 인덱스(순서)
     private int index;
-    public static int width = MainActivity.width / 3;
-    public static int height = MainActivity.height / 3;
+    private int width = MainActivity.width / 3;
+    private int height = MainActivity.height / 3;
 
     private Button button_confirm;
     private LinearLayout menu_layout;
@@ -53,7 +53,7 @@ public class Constellation_view extends FrameLayout
         menu_layout.setGravity(Gravity.RIGHT);
         menu_layout.setBackgroundResource(R.drawable.constellation_border);
 
-        button_confirm = new Button(getContext());
+        button_confirm = new Button(context);
 
         int button_width = width / 3;
         int button_height = height / 8;
@@ -66,12 +66,25 @@ public class Constellation_view extends FrameLayout
         menu_layout.addView(button_confirm);
         this.addView(menu_layout);
 
+        Star root_star = new Star(context, this);
+
+        this.addView(root_star);
 
     }
 
     public int getIndex()
     {
         return this.index;
+    }
+
+    public int get_width()
+    {
+        return this.width;
+    }
+
+    public int get_height()
+    {
+        return this.height;
     }
 
     public void setIndex(boolean direction)

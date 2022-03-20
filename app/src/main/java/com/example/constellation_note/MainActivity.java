@@ -335,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
             // 투명도 조절
 
-            float center_x = (width / 2) - Constellation_view.width / 2;
+            float center_x = (width / 2) - constellations[i].get_width() / 2;
             float normalization = (center_x - current_x) / (width / 2);
             normalization = Math.abs(normalization);
             float interpolation = (1.0f - normalization) + (0.2f * normalization);
@@ -412,7 +412,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         for(int i = 0; i < constellations.length; i++)
         {
-            float constellation_position = (width / 2) + (Constellation_view.width * (constellations[i].getIndex() - 2) ) - Constellation_view.width / 2;
+            float constellation_position = (width / 2) + (constellations[i].get_width() * (constellations[i].getIndex() - 2) ) - constellations[i].get_width() / 2;
             constellations[i].setX( (int)(constellation_position) );
         }
 
