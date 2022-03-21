@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import java.util.Random;
 import java.util.Timer;
@@ -151,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             Constellation_view constellation = new Constellation_view(this, i);
             constellation.setOnTouchListener(this);
             constellations[i] = constellation;
+            constellations[i].setCallback(this);
             frameLayout_main.addView(constellation);
         }
     }
@@ -434,9 +436,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 constellation.setX(0.0f);
                 constellation.setY(0.0f);
 
-                ViewGroup.LayoutParams constellation_param = constellation.getLayoutParams();
-                constellation_param.width = width;
-                constellation_param.height = height - bottom__bar_height;
+                constellation.set_width(width);
+                constellation.set_height(height - bottom__bar_height);
+                constellation.set_size();
 
             }
             else
@@ -446,7 +448,30 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         }
 
+        view.set_star_position();
 
     }
+
+    public void normal_mode(Constellation_view view)
+    {
+
+        view.set_width(width / 3);
+        view.set_height(height / 3);
+        view.set_size();
+
+        for(Constellation_view constellation : constellations)
+        {
+            constellation.setVisibility(View.VISIBLE);
+        }
+
+        view.requestLayout();
+        view.setY(height / 2 - view.get_height() / 2);
+        set_constellation_position();
+        view.set_star_position();
+        //move_stars(0, 0);
+
+    }
+
+
 
 }

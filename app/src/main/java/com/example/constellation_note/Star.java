@@ -19,6 +19,7 @@ public class Star extends View
 
     // 별의 위치
     // 별의 위치는 각자 다르기 때문에.
+    // 절대 위치가 아니라 상대 위치로 알아야 하기 때문에 비율(소숫점)로 정해야한다.
     private float x;
     private float y;
 
@@ -26,6 +27,8 @@ public class Star extends View
     // 첫 로딩 시. 번호가 낮은(루트 노드와 가까운) 순서대로 불러올 예정이기 때문에...
     private int parent_index;
     private Star Parent;
+
+    private Constellation_view constellation;
 
     public Star(Context context, Constellation_view constellation)
     {

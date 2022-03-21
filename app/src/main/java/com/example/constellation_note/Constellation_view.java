@@ -12,7 +12,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-public class Constellation_view extends FrameLayout
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+public class Constellation_view extends FrameLayout implements Button.OnClickListener
 {
 
     // 해당 별자리 뷰의 인덱스(순서)
@@ -23,6 +28,12 @@ public class Constellation_view extends FrameLayout
     private Button button_confirm;
     private LinearLayout menu_layout;
 
+    private ViewGroup.LayoutParams constellation_params;
+
+    private MainActivity mainActivity = null;
+
+    private List<Star> stars = new ArrayList<>();
+
     public Constellation_view(@NonNull Context context, int index)
     {
         super(context);
@@ -31,7 +42,7 @@ public class Constellation_view extends FrameLayout
 
         this.setBackgroundResource(R.drawable.constellation_border);
 
-        ViewGroup.LayoutParams constellation_params = new LayoutParams(width, height);
+        constellation_params = new LayoutParams(width, height);
 
         this.setLayoutParams(constellation_params);
 
@@ -62,14 +73,27 @@ public class Constellation_view extends FrameLayout
         button_confirm.setLayoutParams(button_param);
 
         button_confirm.setText("확인");
+        button_confirm.setOnClickListener(this);
 
         menu_layout.addView(button_confirm);
         this.addView(menu_layout);
 
         Star root_star = new Star(context, this);
 
+        stars.add(root_star);
+
         this.addView(root_star);
 
+    }
+
+    public interface Callback
+    {
+        public void normal_mode(Constellation_view constellation_view);
+    }
+
+    public void setCallback(MainActivity activity)
+    {
+        this.mainActivity = activity;
     }
 
     public int getIndex()
@@ -85,6 +109,22 @@ public class Constellation_view extends FrameLayout
     public int get_height()
     {
         return this.height;
+    }
+
+    public void set_width(int width)
+    {
+        this.width = width;
+    }
+
+    public void set_height(int height)
+    {
+        this.height = height;
+    }
+
+    public void set_size()
+    {
+        constellation_params.width = this.width;
+        constellation_params.height = this.height;
     }
 
     public void setIndex(boolean direction)
@@ -120,5 +160,30 @@ public class Constellation_view extends FrameLayout
 
     }
 
+
+    @Override
+    public void onClick(View view)
+    {
+
+        if(mainActivity != null)
+        {
+            this.mainActivity.normal_mode(this);
+        }
+
+    }
+
+    public void set_star_position()
+    {
+        System.out.println("별 위치 조정");
+        Iterator<Star> iterator = stars.iterator();
+
+        while(iterator.hasNext())
+        {
+            Star iter = iterator.next();
+            iter.setX(this.get_width() / 2 - width / 20);
+            iter.setY(this.get_height() / 2 - width / 20);
+        }
+
+    }
 
 }
