@@ -20,7 +20,7 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity implements View.OnTouchListener
+public class MainActivity extends AppCompatActivity implements View.OnTouchListener, Constellation_view.Callback_constellation
 {
 
     private static final int NUM_STAR = 50; // 별 개수
@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private static final int ANIMATION_TIME = 200; // 애니메이션 타임.
     private static final int CONSTELLATION_Z = 2; // 별자리 뷰와 스크린간의 거리 (움직이는 속도와도 관계가 있음)
 
+    public static boolean isFocused = false;
     public static int width;
     public static int height;
 
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private float touch_pre_x; // 터치한 지점의 x좌표
     private float touch_move_distance; // 터치 시작 지점부터 터치를 끝낸 지점까지의 거리.
     private float touch_move_pre_x; // 터치 후 움직일 때 이전 좌표.
+    private float touch_pre_y; // 터치한 지점의 y좌표
+
 
     private ImageView star_list[]; // 이미지 뷰 리스트 ( 별 )
     private int star_distance[]; // 별의 거리
@@ -152,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             Constellation_view constellation = new Constellation_view(this, i);
             constellation.setOnTouchListener(this);
             constellations[i] = constellation;
-            constellations[i].setCallback(this);
+            constellations[i].setCallback_constellation(this);
             frameLayout_main.addView(constellation);
         }
     }
@@ -173,7 +176,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             case MotionEvent.ACTION_DOWN:
 
                 touch_pre_x = motionEvent.getX();
+                touch_pre_y = motionEvent.getY();
                 touch_move_pre_x = touch_pre_x;
+
+                if(isFocused)
+                {
+                    return false;
+                }
 
                 break;
             // 화면 터치가 종료될 때. 즉 화면에서 손을 뗄 때.
@@ -185,9 +194,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 {
                     isTouchConstellation = false;
 
-                    creative_mode((Constellation_view)view);
+                    if(isFocused)
+                    {
+                        return false;
+                    }
 
-                    return false;
+                    creative_mode((Constellation_view)view);
                 }
 
                 touch_move_distance = current_x - touch_pre_x;
@@ -199,52 +211,55 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 // 좌측으로 스와이프 할 때 우측으로 스와이프 할 때가 음수 양수로 값이 다르다.
                 // 따라서 경우를 나누어 주어야 한다.
 
-                if(Math.abs(touch_move_distance) >= width * SWIPE_MAGNIFUCATION)
+                if(!isFocused)
                 {
-                    // 별자리의 최대 사이즈 만큼 움직여야 하기 때문에
-                    // width * MAX_MAGNIFICATION 만큼 움직여야 하기 때문에
-                    // 터치를 종료한 지점부터 터치를 시작한 지점 + width * MAX_MAGNIFICATION 까지
-
-                    float page_deviation;
-
-                    // 음수 양수를 통해 좌측 이동인지 우측 이동인지 판별
-                    if(touch_move_distance > 0)
+                    if(Math.abs(touch_move_distance) >= width * SWIPE_MAGNIFUCATION)
                     {
+                        // 별자리의 최대 사이즈 만큼 움직여야 하기 때문에
+                        // width * MAX_MAGNIFICATION 만큼 움직여야 하기 때문에
+                        // 터치를 종료한 지점부터 터치를 시작한 지점 + width * MAX_MAGNIFICATION 까지
 
-                        set_constellation_index(true);
+                        float page_deviation;
 
-                        // 한 페이지 만큼을 움직여야 한다.
-                        page_deviation = current_x + (width - touch_move_distance);
+                        // 음수 양수를 통해 좌측 이동인지 우측 이동인지 판별
+                        if(touch_move_distance > 0)
+                        {
+
+                            set_constellation_index(true);
+
+                            // 한 페이지 만큼을 움직여야 한다.
+                            page_deviation = current_x + (width - touch_move_distance);
+
+                        }
+                        else
+                        {
+
+                            set_constellation_index(false);
+
+                            page_deviation = current_x - (width + touch_move_distance);
+
+                        }
+
+                        move_stars(current_x, page_deviation, 10);
 
                     }
                     else
                     {
-
-                        set_constellation_index(false);
-
-                        page_deviation = current_x - (width + touch_move_distance);
+                        // 반대로 일정 범위 이상 스와이프를 하지 못했을 경우
+                        // 원래 자리로 돌아가야 한다.
+                        // 터치를 종료한 지점 ~ 터치를 시작한 지점까지의 거리를 구해서
+                        // 자연스럽게 원래 자리로 이동 시켜야 한다.
+                        ;
+                        move_stars(current_x, touch_pre_x, 10);
 
                     }
-
-                    move_stars(current_x, page_deviation, 10);
-
-                }
-                else
-                {
-                    // 반대로 일정 범위 이상 스와이프를 하지 못했을 경우
-                    // 원래 자리로 돌아가야 한다.
-                    // 터치를 종료한 지점 ~ 터치를 시작한 지점까지의 거리를 구해서
-                    // 자연스럽게 원래 자리로 이동 시켜야 한다.
-;
-                    move_stars(current_x, touch_pre_x, 10);
-
                 }
 
                 break;
             // 터치중에 움직일 때.
             case MotionEvent.ACTION_MOVE:
 
-                if(touch_move_pre_x != motionEvent.getX())
+                if(touch_move_pre_x != motionEvent.getX() && !isFocused)
                 {
 
                     move_stars(touch_move_pre_x, motionEvent.getX());
@@ -449,6 +464,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
         view.set_star_position();
+        isFocused = true;
 
     }
 
@@ -468,10 +484,21 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         view.setY(height / 2 - view.get_height() / 2);
         set_constellation_position();
         view.set_star_position();
+        isFocused = false;
         //move_stars(0, 0);
 
     }
 
+    public float[] get_touch_position()
+    {
+
+        float touch_position[] = new float[2];
+
+        touch_position[0] = touch_pre_x;
+        touch_position[1] = touch_pre_y;
+
+        return touch_position;
+    }
 
 
 }

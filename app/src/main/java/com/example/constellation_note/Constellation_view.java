@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Constellation_view extends FrameLayout implements Button.OnClickListener
+public class Constellation_view extends FrameLayout implements Button.OnClickListener, View.OnLongClickListener
 {
 
     // 해당 별자리 뷰의 인덱스(순서)
@@ -34,9 +34,13 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
     private List<Star> stars = new ArrayList<>();
 
+    private Context context;
+
     public Constellation_view(@NonNull Context context, int index)
     {
         super(context);
+
+        this.context = context;
 
         this.index = index;
 
@@ -78,20 +82,20 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         menu_layout.addView(button_confirm);
         this.addView(menu_layout);
 
-        Star root_star = new Star(context, this);
+        create_star(width / 2, height / 2);
 
-        stars.add(root_star);
-
-        this.addView(root_star);
+        this.setOnLongClickListener(this);
 
     }
 
-    public interface Callback
+
+
+    public interface Callback_constellation
     {
         public void normal_mode(Constellation_view constellation_view);
     }
 
-    public void setCallback(MainActivity activity)
+    public void setCallback_constellation(MainActivity activity)
     {
         this.mainActivity = activity;
     }
@@ -180,10 +184,40 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         while(iterator.hasNext())
         {
             Star iter = iterator.next();
-            iter.setX(this.get_width() / 2 - width / 20);
-            iter.setY(this.get_height() / 2 - width / 20);
+            iter.setX(this.get_width() / 2 - Star.getSize() / 2);
+            iter.setY(this.get_height() / 2 - Star.getSize() / 2);
         }
 
     }
 
+    @Override
+    public boolean onLongClick(View view)
+    {
+
+        if(mainActivity.isFocused)
+        {
+            float touch_position[] = this.mainActivity.get_touch_position();
+            create_star(touch_position[0], touch_position[1]);
+        }
+
+        return true;
+    }
+
+    private void create_star(float x, float y)
+    {
+        Star star = new Star(context, this);
+        star.setIndex(stars.size());
+        star.set_Postion(x, y);
+        stars.add(star);
+        this.addView(star);
+        this.requestLayout();
+    }
+
+    /*
+    @Override
+    public void click_star()
+    {
+
+    }
+    */
 }

@@ -4,11 +4,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
-public class Star extends View
+public class Star extends View implements View.OnLongClickListener
 {
-
-    // 최상위 번호
-    private static int max_index;
 
     // 별의 번호
     private int index;
@@ -39,14 +36,41 @@ public class Star extends View
         LinearLayout.LayoutParams star_param = new LinearLayout.LayoutParams(size, size);
 
         this.setLayoutParams(star_param);
-
-        //this.setX(MainActivity.width - size / 2);
-        //this.setY(MainActivity.height - size / 2);
-
-        this.setX(constellation.get_width() / 2 - size / 2);
-        this.setY(constellation.get_height() / 2 - size / 2);
     }
 
+    public interface Callback_star
+    {
+        public void click_star();
+    }
 
+    public static int getSize()
+    {
+        return size;
+    }
+
+    public void setIndex(int index)
+    {
+        this.index = index;
+    }
+
+    public int getIndex()
+    {
+        return this.index;
+    }
+
+    public void set_Postion(float x, float y)
+    {
+        this.setX(x - size / 2);
+        this.setY(y - size / 2);
+    }
+
+    @Override
+    public boolean onLongClick(View view)
+    {
+
+
+        return false;
+
+    }
 
 }
