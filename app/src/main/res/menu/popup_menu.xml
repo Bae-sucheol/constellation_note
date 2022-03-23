@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_star_create"
+        android:title="생성" />
+    <item
+        android:id="@+id/action_star_delete"
+        android:title="삭제" />
+    <item
+        android:id="@+id/action_star_modify"
+        android:title="수정" />
+
+</menu>

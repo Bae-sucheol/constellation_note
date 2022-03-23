@@ -31,11 +31,15 @@ public class Star extends View implements View.OnLongClickListener
     {
         super(context);
 
+        this.constellation = constellation;
+
         this.setBackgroundResource(R.drawable.star_glow);
 
         LinearLayout.LayoutParams star_param = new LinearLayout.LayoutParams(size, size);
 
         this.setLayoutParams(star_param);
+
+        this.setOnLongClickListener(this);
     }
 
     public interface Callback_star
@@ -58,6 +62,11 @@ public class Star extends View implements View.OnLongClickListener
         return this.index;
     }
 
+    public void setAlpha(float alpha)
+    {
+        this.setAlpha(alpha);
+    }
+
     public void set_Postion(float x, float y)
     {
         this.setX(x - size / 2);
@@ -68,8 +77,9 @@ public class Star extends View implements View.OnLongClickListener
     public boolean onLongClick(View view)
     {
 
+        constellation.long_click_star(view);
 
-        return false;
+        return true;
 
     }
 

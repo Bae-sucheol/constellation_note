@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Constellation_view extends FrameLayout implements Button.OnClickListener, View.OnLongClickListener
+public class Constellation_view extends FrameLayout implements Button.OnClickListener
 {
 
     // 해당 별자리 뷰의 인덱스(순서)
@@ -83,9 +83,6 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         this.addView(menu_layout);
 
         create_star(width / 2, height / 2);
-
-        this.setOnLongClickListener(this);
-
     }
 
 
@@ -190,20 +187,26 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
     }
 
-    @Override
-    public boolean onLongClick(View view)
+    public void long_click_star(View view)
     {
 
         if(mainActivity.isFocused)
         {
+            // 터치 메소드가 있는 메인 액티비티에서 담당하는 것이 맞는 것 같다.
+            // 따라서 메인 액티비티에서 터치 좌표를 얻는 것이 아니라
+            // 메인 액티비티 자체에서 처리하도록 해야 한다.
+            /*
             float touch_position[] = this.mainActivity.get_touch_position();
             create_star(touch_position[0], touch_position[1]);
+            */
+
+            this.mainActivity.popup_star_menu(view, this);
+
         }
 
-        return true;
     }
 
-    private void create_star(float x, float y)
+    public void create_star(float x, float y)
     {
         Star star = new Star(context, this);
         star.setIndex(stars.size());

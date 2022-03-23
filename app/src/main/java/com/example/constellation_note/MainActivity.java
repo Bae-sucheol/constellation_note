@@ -2,6 +2,7 @@ package com.example.constellation_note;
 
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.content.res.Resources;
@@ -9,12 +10,14 @@ import android.graphics.Point;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.Random;
 import java.util.Timer;
@@ -34,7 +37,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private static final int ANIMATION_TIME = 200; // 애니메이션 타임.
     private static final int CONSTELLATION_Z = 2; // 별자리 뷰와 스크린간의 거리 (움직이는 속도와도 관계가 있음)
 
+    private static boolean temp_star_mode = false;
+
     public static boolean isFocused = false;
+
     public static int width;
     public static int height;
 
@@ -58,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private boolean isTouchConstellation = false; // 별자리를 터치했는지...
 
     private int bottom__bar_height;
+
+    private Star temp_star;
 
   @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -175,19 +183,26 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             switch (motionEvent.getAction())
             {
                 case MotionEvent.ACTION_DOWN :
-
+                    System.out.println("움직여라1");
                     touch_pre_x = motionEvent.getX();
                     touch_pre_y = motionEvent.getY();
 
                     break;
                 case MotionEvent.ACTION_UP :
 
+                    System.out.println("움직여라2");
                     // 다른 이벤트 추가하세요.
                     break;
 
                 case MotionEvent.ACTION_MOVE :
 
-                    // 다른 이벤트 추가하세요.
+                    if(temp_star_mode)
+                    {
+                        temp_star.setX(motionEvent.getX());
+                        temp_star.setY(motionEvent.getY());
+                        System.out.println("움직여라3");
+                    }
+                    System.out.println("움직여라3");
                     break;
                 default :
                     break;
@@ -511,6 +526,49 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         touch_position[1] = touch_pre_y;
 
         return touch_position;
+    }
+
+    public void temp_star(Constellation_view constellation)
+    {
+        temp_star = new Star(this, constellation);
+
+        constellation.requestLayout();
+        //temp_star.setAlpha(0.5f);
+        temp_star.set_Postion(touch_pre_x, touch_pre_y);
+
+        frameLayout_main.addView(temp_star);
+
+        temp_star_mode = true;
+    }
+
+    public void popup_star_menu(View view, Constellation_view constellation)
+    {
+        final PopupMenu popupMenu = new PopupMenu(this, view);
+        getMenuInflater().inflate(R.menu.popup_menu,popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+                switch (menuItem.getItemId())
+                {
+                    case R.id.action_star_create :
+                        temp_star(constellation);
+                        break;
+                    case R.id.action_star_delete :
+
+                        break;
+                    case R.id.action_star_modify :
+
+                        break;
+                    default:
+
+                        break;
+                }
+
+                return false;
+            }
+        });
+        popupMenu.show();
     }
 
 
