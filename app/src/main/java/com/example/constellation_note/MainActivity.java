@@ -170,49 +170,63 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             isTouchConstellation = true;
         }
 
-        switch (motionEvent.getAction())
+        if(isFocused)
         {
-            // 화면을 터치할 때.
-            case MotionEvent.ACTION_DOWN:
+            switch (motionEvent.getAction())
+            {
+                case MotionEvent.ACTION_DOWN :
 
-                touch_pre_x = motionEvent.getX();
-                touch_pre_y = motionEvent.getY();
-                touch_move_pre_x = touch_pre_x;
+                    touch_pre_x = motionEvent.getX();
+                    touch_pre_y = motionEvent.getY();
 
-                if(isFocused)
-                {
-                    return false;
-                }
+                    break;
+                case MotionEvent.ACTION_UP :
 
-                break;
-            // 화면 터치가 종료될 때. 즉 화면에서 손을 뗄 때.
-            case MotionEvent.ACTION_UP:
+                    // 다른 이벤트 추가하세요.
+                    break;
 
-                float current_x = motionEvent.getX();
+                case MotionEvent.ACTION_MOVE :
 
-                if(isTouchConstellation && touch_pre_x == current_x)
-                {
-                    isTouchConstellation = false;
+                    // 다른 이벤트 추가하세요.
+                    break;
+                default :
+                    break;
+            }
 
-                    if(isFocused)
+            return false;
+        }
+        else
+        {
+            switch (motionEvent.getAction())
+            {
+                // 화면을 터치할 때.
+                case MotionEvent.ACTION_DOWN:
+
+                    touch_pre_x = motionEvent.getX();
+                    touch_move_pre_x = touch_pre_x;
+
+                    break;
+                // 화면 터치가 종료될 때. 즉 화면에서 손을 뗄 때.
+                case MotionEvent.ACTION_UP:
+
+                    float current_x = motionEvent.getX();
+
+                    if(isTouchConstellation && touch_pre_x == current_x)
                     {
-                        return false;
+                        isTouchConstellation = false;
+
+                        creative_mode((Constellation_view)view);
                     }
 
-                    creative_mode((Constellation_view)view);
-                }
+                    touch_move_distance = current_x - touch_pre_x;
 
-                touch_move_distance = current_x - touch_pre_x;
+                    System.out.println("거리 : " + touch_move_distance);
+                    System.out.println("거리 절대값 : " + Math.abs(touch_move_distance));
 
-                System.out.println("거리 : " + touch_move_distance);
-                System.out.println("거리 절대값 : " + Math.abs(touch_move_distance));
+                    // 일정 범위 이상 스와이프 했을경우 다음 페이지(별자리)로 넘어간다.
+                    // 좌측으로 스와이프 할 때 우측으로 스와이프 할 때가 음수 양수로 값이 다르다.
+                    // 따라서 경우를 나누어 주어야 한다.
 
-                // 일정 범위 이상 스와이프 했을경우 다음 페이지(별자리)로 넘어간다.
-                // 좌측으로 스와이프 할 때 우측으로 스와이프 할 때가 음수 양수로 값이 다르다.
-                // 따라서 경우를 나누어 주어야 한다.
-
-                if(!isFocused)
-                {
                     if(Math.abs(touch_move_distance) >= width * SWIPE_MAGNIFUCATION)
                     {
                         // 별자리의 최대 사이즈 만큼 움직여야 하기 때문에
@@ -251,28 +265,27 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         // 자연스럽게 원래 자리로 이동 시켜야 한다.
                         ;
                         move_stars(current_x, touch_pre_x, 10);
+                    }
+
+                    break;
+                // 터치중에 움직일 때.
+                case MotionEvent.ACTION_MOVE:
+
+                    if(touch_move_pre_x != motionEvent.getX())
+                    {
+
+                        move_stars(touch_move_pre_x, motionEvent.getX());
+                        touch_move_pre_x = motionEvent.getX();
 
                     }
-                }
 
-                break;
-            // 터치중에 움직일 때.
-            case MotionEvent.ACTION_MOVE:
+                    break;
 
-                if(touch_move_pre_x != motionEvent.getX() && !isFocused)
-                {
+                default:
 
-                    move_stars(touch_move_pre_x, motionEvent.getX());
-                    touch_move_pre_x = motionEvent.getX();
+                    break;
 
-                }
-
-                break;
-
-            default:
-
-                break;
-
+            }
         }
 
         return true;
