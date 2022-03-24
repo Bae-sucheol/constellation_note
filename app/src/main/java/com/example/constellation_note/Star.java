@@ -73,6 +73,16 @@ public class Star extends View implements View.OnLongClickListener
         this.setY(y - size / 2);
     }
 
+    public float get_x()
+    {
+        return this.getX() + size / 2;
+    }
+
+    public float get_y()
+    {
+        return this.getY() + size / 2;
+    }
+
     @Override
     public boolean onLongClick(View view)
     {

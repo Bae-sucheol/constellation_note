@@ -190,25 +190,23 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     break;
                 case MotionEvent.ACTION_UP :
 
-                    System.out.println("움직여라2");
-                    // 다른 이벤트 추가하세요.
+                    temp_star_mode = false;
+
                     break;
 
                 case MotionEvent.ACTION_MOVE :
 
                     if(temp_star_mode)
                     {
-                        temp_star.setX(motionEvent.getX());
-                        temp_star.setY(motionEvent.getY());
-                        System.out.println("움직여라3");
+                        temp_star.set_Postion(motionEvent.getX(), motionEvent.getY());
                     }
-                    System.out.println("움직여라3");
+
                     break;
                 default :
                     break;
             }
 
-            return false;
+            //return false;
         }
         else
         {
@@ -536,13 +534,16 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         //temp_star.setAlpha(0.5f);
         temp_star.set_Postion(touch_pre_x, touch_pre_y);
 
-        frameLayout_main.addView(temp_star);
+        //frameLayout_main.addView(temp_star);
+        constellation.addView(temp_star);
 
         temp_star_mode = true;
     }
 
     public void popup_star_menu(View view, Constellation_view constellation)
     {
+        Star star = (Star)view;
+
         final PopupMenu popupMenu = new PopupMenu(this, view);
         getMenuInflater().inflate(R.menu.popup_menu,popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -552,9 +553,18 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 switch (menuItem.getItemId())
                 {
                     case R.id.action_star_create :
+
+                        touch_pre_x = star.get_x();
+                        touch_pre_y = star.get_y();
                         temp_star(constellation);
+
                         break;
                     case R.id.action_star_delete :
+
+                        // 별자리의 arraylist 에서 삭제
+                        constellation.remove_star(star);
+                        // 별자리의 뷰에서 삭제
+                        constellation.removeView(star);
 
                         break;
                     case R.id.action_star_modify :
@@ -570,6 +580,5 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         });
         popupMenu.show();
     }
-
 
 }

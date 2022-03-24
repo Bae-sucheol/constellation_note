@@ -216,6 +216,11 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         this.requestLayout();
     }
 
+    public void remove_star(Star star)
+    {
+        stars.remove(star);
+    }
+
     /*
     @Override
     public void click_star()
