@@ -62,11 +62,6 @@ public class Star extends View implements View.OnLongClickListener
         return this.index;
     }
 
-    public void setAlpha(float alpha)
-    {
-        this.setAlpha(alpha);
-    }
-
     public void set_Postion(float x, float y)
     {
         this.setX(x - size / 2);

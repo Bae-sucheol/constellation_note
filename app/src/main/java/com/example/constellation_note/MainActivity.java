@@ -190,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     break;
                 case MotionEvent.ACTION_UP :
 
+                    temp_star.setAlpha(1.0f);
                     temp_star_mode = false;
 
                     break;
@@ -531,12 +532,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         temp_star = new Star(this, constellation);
 
         constellation.requestLayout();
-        //temp_star.setAlpha(0.5f);
+
         temp_star.set_Postion(touch_pre_x, touch_pre_y);
 
-        //frameLayout_main.addView(temp_star);
         constellation.addView(temp_star);
 
+        temp_star.setAlpha(0.5f);
         temp_star_mode = true;
     }
 
@@ -568,6 +569,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                         break;
                     case R.id.action_star_modify :
+
+                        temp_star = star;
+                        temp_star.setAlpha(0.5f);
+                        temp_star_mode = true;
 
                         break;
                     default:
