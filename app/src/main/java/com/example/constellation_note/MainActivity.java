@@ -190,8 +190,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     break;
                 case MotionEvent.ACTION_UP :
 
-                    temp_star.setAlpha(1.0f);
-                    temp_star_mode = false;
+                    if(temp_star_mode)
+                    {
+                        temp_star.setAlpha(1.0f);
+                        temp_star_mode = false;
+                    }
 
                     break;
 
@@ -468,8 +471,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         // 전체화면
         // 추후 보간식을 이용해서 애니메이션 처리 할 예정
 
+        int delta_index = 2 - view.getIndex();
+
         for(Constellation_view constellation : constellations)
         {
+
+            if(delta_index == 1)
+            {
+                constellation.setIndex(true);
+            }
+            else if(delta_index == -1)
+            {
+                constellation.setIndex(false);
+            }
 
             if(constellation == view)
             {
