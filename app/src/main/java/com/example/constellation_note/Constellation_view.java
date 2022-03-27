@@ -181,8 +181,11 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         while(iterator.hasNext())
         {
             Star iter = iterator.next();
-            iter.setX(this.get_width() / 2 - Star.getSize() / 2);
-            iter.setY(this.get_height() / 2 - Star.getSize() / 2);
+
+            //iter.setX(this.get_width() / 2 - Star.getSize() / 2);
+            //iter.setY(this.get_height() / 2 - Star.getSize() / 2);
+            iter.set_Position_relative();
+
         }
 
     }
@@ -211,14 +214,21 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         Star star = new Star(context, this);
         star.setIndex(stars.size());
         star.set_Postion(x, y);
+        star.calculate_relative_position();
         stars.add(star);
         this.addView(star);
         this.requestLayout();
+
     }
 
     public void remove_star(Star star)
     {
         stars.remove(star);
+    }
+
+    public Star get_last_star()
+    {
+        return stars.get(stars.size() - 1);
     }
 
     /*

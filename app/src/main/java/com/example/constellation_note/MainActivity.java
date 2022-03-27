@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                     if(temp_star_mode)
                     {
+                        temp_star.calculate_relative_position();
                         temp_star.setAlpha(1.0f);
                         temp_star_mode = false;
                     }
@@ -231,7 +232,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     if(isTouchConstellation && touch_pre_x == current_x)
                     {
                         isTouchConstellation = false;
-
                         creative_mode((Constellation_view)view);
                     }
 
@@ -516,6 +516,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         view.set_height(height / 3);
         view.set_size();
 
+        set_constellation_position();
         for(Constellation_view constellation : constellations)
         {
             constellation.setVisibility(View.VISIBLE);
@@ -523,10 +524,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         view.requestLayout();
         view.setY(height / 2 - view.get_height() / 2);
-        set_constellation_position();
         view.set_star_position();
         isFocused = false;
-        //move_stars(0, 0);
+        move_stars(0, 0);
 
     }
 
@@ -569,9 +569,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 {
                     case R.id.action_star_create :
 
-                        touch_pre_x = star.get_x();
-                        touch_pre_y = star.get_y();
-                        temp_star(constellation);
+                        //touch_pre_x = star.get_x();
+                        //touch_pre_y = star.get_y();
+                        //temp_star(constellation);
+                        constellation.create_star(star.get_x(), star.get_y());
+                        temp_star = constellation.get_last_star();
+                        temp_star.setAlpha(0.5f);
+                        temp_star_mode = true;
 
                         break;
                     case R.id.action_star_delete :
