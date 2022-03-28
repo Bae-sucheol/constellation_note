@@ -2,6 +2,7 @@ package com.example.constellation_note;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 public class Star extends View implements View.OnLongClickListener
@@ -11,8 +12,10 @@ public class Star extends View implements View.OnLongClickListener
     private int index;
 
     // 별들의 사이즈.
-    // 사이즈는 동일하게 할 것이기 때문에 클래스 변수로 정의
-    private static int size = MainActivity.width / 20;
+    private static int size;
+
+    // 레이아웃 파라미터
+    ViewGroup.LayoutParams star_param;
 
     // 별의 위치
     // 별의 위치는 각자 다르기 때문에.
@@ -33,9 +36,11 @@ public class Star extends View implements View.OnLongClickListener
 
         this.constellation = constellation;
 
+        this.calculate_size();
+
         this.setBackgroundResource(R.drawable.star_glow);
 
-        LinearLayout.LayoutParams star_param = new LinearLayout.LayoutParams(size, size);
+        star_param = new ViewGroup.LayoutParams(size, size);
 
         this.setLayoutParams(star_param);
 
@@ -47,9 +52,22 @@ public class Star extends View implements View.OnLongClickListener
         public void click_star();
     }
 
-    public static int getSize()
+    public void calculate_size()
     {
-        return size;
+        this.size = constellation.get_width() / 20;
+    }
+
+    public void setSize()
+    {
+        ViewGroup.LayoutParams param =  this.getLayoutParams();
+        param.width = this.size;
+        param.height = this.size;
+        this.setLayoutParams(param);
+    }
+
+    public int getSize()
+    {
+        return this.size;
     }
 
     public void setIndex(int index)
@@ -80,11 +98,8 @@ public class Star extends View implements View.OnLongClickListener
 
     public void calculate_relative_position()
     {
-        this.relative_x = this.get_x() / (float)constellation.get_width();
-        this.relative_y = this.get_y() / (float)constellation.get_height();
-
-        System.out.println("별자리 절대 x : " + this.relative_x);
-        System.out.println("별자리 절대 y : " + this.relative_y);
+        this.relative_x = this.getX() / (float)constellation.get_width();
+        this.relative_y = this.getY() / (float)constellation.get_height();
     }
 
     public void set_Position_relative()

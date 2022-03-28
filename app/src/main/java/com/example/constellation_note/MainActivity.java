@@ -495,7 +495,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 constellation.set_width(width);
                 constellation.set_height(height - bottom__bar_height);
                 constellation.set_size();
-
             }
             else
             {
