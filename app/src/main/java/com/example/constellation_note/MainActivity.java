@@ -194,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     {
                         temp_star.calculate_relative_position();
                         temp_star.setAlpha(1.0f);
+                        temp_star.draw_line();
                         temp_star_mode = false;
                     }
 
@@ -574,6 +575,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         constellation.create_star(star.get_x(), star.get_y());
                         temp_star = constellation.get_last_star();
                         temp_star.setAlpha(0.5f);
+                        temp_star.setParent(star);
                         temp_star_mode = true;
 
                         break;

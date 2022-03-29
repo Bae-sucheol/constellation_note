@@ -3,7 +3,6 @@ package com.example.constellation_note;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 public class Star extends View implements View.OnLongClickListener
 {
@@ -26,9 +25,11 @@ public class Star extends View implements View.OnLongClickListener
     // 부모만 알면 된다.
     // 첫 로딩 시. 번호가 낮은(루트 노드와 가까운) 순서대로 불러올 예정이기 때문에...
     private int parent_index;
-    private Star Parent;
+    private Star parent;
 
     private Constellation_view constellation;
+
+    private Line_star line;
 
     public Star(Context context, Constellation_view constellation)
     {
@@ -96,6 +97,11 @@ public class Star extends View implements View.OnLongClickListener
         return this.getY() + size / 2;
     }
 
+    public void setParent(Star parent)
+    {
+        this.parent = parent;
+    }
+
     public void calculate_relative_position()
     {
         this.relative_x = this.getX() / (float)constellation.get_width();
@@ -108,6 +114,29 @@ public class Star extends View implements View.OnLongClickListener
         System.out.println("별자리 절대 y : " + this.relative_y);
         this.setX(constellation.get_width() * this.relative_x);
         this.setY(constellation.get_height() * this.relative_y);
+    }
+
+    public void draw_line()
+    {
+        double delta_x = parent.get_x() - this.get_x();
+        double delta_y = parent.get_y() - this.get_y();
+
+        float add_x = parent.get_x() + this.get_x();
+        float add_y = parent.get_y() + this.get_y();
+
+        float angle = (float)Math.toDegrees(Math.atan2(delta_y, delta_x));
+
+        int distance = (int)Math.sqrt(Math.pow(delta_x, 2) + Math.pow(delta_y, 2));
+
+        int thickness = 2;
+
+        line = new Line_star(getContext(), angle, distance, thickness);
+
+        line.setX(add_x / 2 - distance / 2);
+        line.setY(add_y / 2);
+
+        constellation.addView(line);
+
     }
 
     @Override
