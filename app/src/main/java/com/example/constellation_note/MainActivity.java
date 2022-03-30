@@ -173,11 +173,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public boolean onTouch(View view, MotionEvent motionEvent)
     {
 
-        if(view instanceof Constellation_view)
-        {
-            isTouchConstellation = true;
-        }
-
         if(isFocused)
         {
             switch (motionEvent.getAction())
@@ -189,6 +184,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                     break;
                 case MotionEvent.ACTION_UP :
+
+                    //isTouchConstellation = false;
 
                     if(temp_star_mode)
                     {
@@ -216,6 +213,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
         else
         {
+
+            if(view instanceof Constellation_view)
+            {
+                isTouchConstellation = true;
+            }
+
             switch (motionEvent.getAction())
             {
                 // 화면을 터치할 때.
