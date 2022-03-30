@@ -187,10 +187,33 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
             iter.set_Position_relative();
             iter.calculate_size();
             iter.setSize();
+
         }
 
         this.requestLayout();
 
+    }
+
+    // 모든 요소마다 조건을 검사하면 비효율적.
+    // 최상단에서 한번만 조건을 파악하는 것이 효율적이라고 생각했다.
+    // 선은 부모별을 가진 별이 존재할 때 즉 별자리에 별이 최소 2개일때 실행하는 것이 옳다.
+    public void redraw_star_line()
+    {
+        if(stars.size() > 1)
+        {
+            Iterator<Star> iterator = stars.iterator();
+            // 처음 root 별은 무시한다.
+            iterator.next();
+
+            while(iterator.hasNext())
+            {
+                Star iter = iterator.next();
+
+                iter.remove_line();
+                iter.draw_line();
+
+            }
+        }
     }
 
     public void long_click_star(View view)

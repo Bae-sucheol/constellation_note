@@ -102,6 +102,12 @@ public class Star extends View implements View.OnLongClickListener
         this.parent = parent;
     }
 
+    public void remove_line()
+    {
+        constellation.removeView(line);
+        line = null;
+    }
+
     public void calculate_relative_position()
     {
         this.relative_x = this.getX() / (float)constellation.get_width();

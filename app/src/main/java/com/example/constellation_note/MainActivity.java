@@ -505,6 +505,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
         view.set_star_position();
+        view.redraw_star_line();
         isFocused = true;
 
     }
@@ -525,6 +526,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         view.requestLayout();
         view.setY(height / 2 - view.get_height() / 2);
         view.set_star_position();
+        view.redraw_star_line();
         isFocused = false;
         move_stars(0, 0);
 
@@ -585,10 +587,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         constellation.remove_star(star);
                         // 별자리의 뷰에서 삭제
                         constellation.removeView(star);
+                        // 별과 별을 잇는(이어주는) 선을 지운다.
+                        star.remove_line();
 
                         break;
                     case R.id.action_star_modify :
 
+                        star.remove_line();
                         temp_star = star;
                         temp_star.setAlpha(0.5f);
                         temp_star_mode = true;
