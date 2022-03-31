@@ -14,11 +14,22 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <EditText
+            android:id="@+id/edit_create_note_toolbar_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"/>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:inputType="textMultiLine" />
+        android:inputType="textMultiLine"
+        android:gravity="top"
+        android:background="@android:color/transparent"
+        android:padding="10dp"/>
 
 </LinearLayout>

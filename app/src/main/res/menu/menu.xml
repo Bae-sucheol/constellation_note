@@ -2,12 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_1"
-        android:title="항목1"
+    <item android:id="@+id/action_delete"
+        android:title="삭제"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/action_2"
-        android:title="항목2"
-        app:showAsAction="never"/>
 
 </menu>
