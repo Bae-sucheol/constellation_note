@@ -1,6 +1,7 @@
 package com.example.constellation_note;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.view.Gravity;
 import android.view.View;
@@ -233,6 +234,15 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
         }
 
+    }
+
+    public void click_star(View view)
+    {
+        if(mainActivity.isFocused)
+        {
+            Intent intent = new Intent(getContext(), Create_note.class);
+            mainActivity.startActivity(intent);
+        }
     }
 
     public void create_star(float x, float y)

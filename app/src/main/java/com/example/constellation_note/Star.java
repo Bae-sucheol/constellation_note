@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class Star extends View implements View.OnLongClickListener
+public class Star extends View implements View.OnLongClickListener, View.OnClickListener
 {
 
     // 별의 번호
@@ -46,6 +46,7 @@ public class Star extends View implements View.OnLongClickListener
         this.setLayoutParams(star_param);
 
         this.setOnLongClickListener(this);
+        this.setOnClickListener(this);
     }
 
     public interface Callback_star
@@ -152,6 +153,14 @@ public class Star extends View implements View.OnLongClickListener
         constellation.long_click_star(view);
 
         return true;
+
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+
+        constellation.click_star(view);
 
     }
 
