@@ -9,7 +9,8 @@ import androidx.annotation.Nullable;
 public class SQLiteHelper extends SQLiteOpenHelper
 {
 
-    private String Table_name = "note";
+    private String Table_note = "note";
+    private String Table_constellation = "constellation";
 
     public SQLiteHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version)
     {
@@ -19,16 +20,31 @@ public class SQLiteHelper extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase)
     {
+        // constellation 테이블
         String id = "id INTEGER PRIMARY KEY AUTOINCREMENT, ";
-        String title = "title TEXT NOT NULL, ";
-        String content = "content TEXT NOT NULL, ";
-        String timestamp = "timestamp TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))";
+        String title = "title TEXT NOT NULL";
 
-        String query = "CREATE TABLE note(" +
+
+        String query = "CREATE TABLE constellation(" +
+                id +
+                title +
+                ");";
+
+        sqLiteDatabase.execSQL(query);
+
+        // note 테이블
+        String content = "content TEXT NOT NULL, ";
+        String timestamp = "timestamp TEXT NOT NULL DEFAULT (datetime('now', 'localtime')), ";
+        String parent_id = "parent_id INTEGER, ";
+        String constellation_id = "constellation_id INTEGER, FOREIGN_KEY(constellation_id) REFERENCES constellation(id) ON DELETE CASCADE";
+
+        query = "CREATE TABLE note(" +
                 id +
                 title +
                 content +
                 timestamp +
+                parent_id +
+                constellation_id +
                 ");";
 
         sqLiteDatabase.execSQL(query);
@@ -37,14 +53,23 @@ public class SQLiteHelper extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion)
     {
-        String query = "DROP TABLE note";
+        String query = "DROP TABLE constellation";
         sqLiteDatabase.execSQL(query);
+
+        query = "DROP TABLE note";
+        sqLiteDatabase.execSQL(query);
+
         onCreate(sqLiteDatabase);
     }
 
-    public String getTable_name()
+    public String getTable_note()
     {
-        return this.Table_name;
+        return this.Table_note;
+    }
+
+    public String getTable_constellation()
+    {
+        return this.Table_constellation;
     }
 
 }
