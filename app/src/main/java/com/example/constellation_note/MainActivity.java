@@ -6,6 +6,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.media.Image;
 import android.os.Bundle;
@@ -67,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     private Star temp_star;
 
+    private SQLiteHelper sqLiteHelper;
+    private SQLiteControl sqLiteControl;
+
   @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -97,6 +101,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         // 터치 리스너
         frameLayout_main.setOnTouchListener(this);
+
+        //
+        sqLiteHelper = new SQLiteHelper(MainActivity.this, "constellation_note.db", null, 1);
+        sqLiteControl = new SQLiteControl(sqLiteHelper);
 
         // 별 생성
         create_stars(NUM_STAR);

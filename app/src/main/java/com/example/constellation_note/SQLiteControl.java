@@ -1,7 +1,12 @@
 package com.example.constellation_note;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SQLiteControl
 {
@@ -39,6 +44,35 @@ public class SQLiteControl
         sqlite.update(table, values, "id=?", new String[] {id});
     }
 
+
+    public List<String[]> select(String table, String columns[], String selection, String selectionArgs[])
+    {
+        sqlite = helper.getReadableDatabase();
+        // String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy
+        Cursor cursor = sqlite.query(table, columns, selection, selectionArgs, null, null, null);
+
+        List<String[]> returnValues = new ArrayList<>();
+
+        String returnValue[] = new String[columns.length];
+
+        while(cursor.moveToNext())
+        {
+            for(int i = 0; i < returnValue.length; i++)
+            {
+                int index = cursor.getColumnIndex(columns[i]);
+                returnValue[i] = cursor.getString(index);
+            }
+
+            returnValues.add(returnValue);
+
+        }
+
+        cursor.close();
+
+        return returnValues;
+    }
+
+    // 커넥션 종료
     public void db_close()
     {
         sqlite.close();
