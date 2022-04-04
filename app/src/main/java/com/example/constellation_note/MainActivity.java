@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private SQLiteHelper sqLiteHelper;
     private SQLiteControl sqLiteControl;
 
+    private int constellation_count = 0;
+
   @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -110,7 +112,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         create_stars(NUM_STAR);
 
         // 별자리 생성
-        create_constellations();
+        constellations = new Constellation_view[5];
+        //create_constellations();
 
     }
 
@@ -163,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     private void create_constellations()
     {
-
+        /*
         constellations = new Constellation_view[5];
 
         for(int i = 0; i < 5; i++)
@@ -174,6 +177,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             constellations[i].setCallback_constellation(this);
             frameLayout_main.addView(constellation);
         }
+         */
+        Constellation_view constellation = new Constellation_view(this, constellation_count);
+        constellation.setOnTouchListener(this);
+        constellations[constellation_count] = constellation;
+        constellations[constellation_count].setCallback_constellation(this);
+        frameLayout_main.addView(constellation);
+
+        constellation_count++;
+
     }
 
 
@@ -380,7 +392,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
         // constellation 파트
-        for (int i = 0; i < constellations.length; i++)
+        for (int i = 0; i < constellation_count; i++)
         {
 
             // post 입력은 width
@@ -459,7 +471,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private void set_constellation_index(boolean direction)
     {
 
-        for(int i = 0; i < constellations.length; i++)
+        for(int i = 0; i < constellation_count; i++)
         {
             constellations[i].setIndex(direction);
         }
@@ -469,7 +481,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private void set_constellation_position()
     {
 
-        for(int i = 0; i < constellations.length; i++)
+        for(int i = 0; i < constellation_count; i++)
         {
             float constellation_position = (width / 2) + (constellations[i].get_width() * (constellations[i].getIndex() - 2) ) - constellations[i].get_width() / 2;
             constellations[i].setX( (int)(constellation_position) );
@@ -477,6 +489,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     }
 
+    // 여기 수정해야함.
     private void creative_mode(Constellation_view view)
     {
 
@@ -619,6 +632,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             }
         });
         popupMenu.show();
+    }
+
+    public void onClickCreateConstellation(View view)
+    {
+        create_constellations();
     }
 
     
