@@ -414,7 +414,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             float normalization = (center_x - current_x) / (width / 2);
             normalization = Math.abs(normalization);
             float interpolation = (1.0f - normalization) + (0.2f * normalization);
-
+            System.out.println("normalization : " + normalization);
             constellation.setAlpha(interpolation);
         }
 
