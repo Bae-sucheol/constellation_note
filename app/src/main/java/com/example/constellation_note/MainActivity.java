@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import android.content.ContentValues;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
@@ -20,6 +21,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -60,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     private int animation_count;
 
-    private Constellation_view constellations[]; // 별자리 뷰 리스트
+    //private Constellation_view constellations[]; // 별자리 뷰 리스트
+    private List<Constellation_view> constellations;
 
     private boolean isTouchConstellation = false; // 별자리를 터치했는지...
 
@@ -68,10 +73,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     private Star temp_star;
 
+    private ImageView imageView_add_constellation;
+
     private SQLiteHelper sqLiteHelper;
     private SQLiteControl sqLiteControl;
-
-    private int constellation_count = 0;
 
   @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -112,8 +117,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         create_stars(NUM_STAR);
 
         // 별자리 생성
-        constellations = new Constellation_view[5];
+        //constellations = new Constellation_view[5];
+        constellations = new ArrayList<>();
+
         //create_constellations();
+
+        imageView_add_constellation = findViewById(R.id.imageView_add_constellation);
 
     }
 
@@ -178,14 +187,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             frameLayout_main.addView(constellation);
         }
          */
-        Constellation_view constellation = new Constellation_view(this, constellation_count);
+        Constellation_view constellation = new Constellation_view(this, constellations.size());
+        constellation.setCallback_constellation(this);
         constellation.setOnTouchListener(this);
-        constellations[constellation_count] = constellation;
-        constellations[constellation_count].setCallback_constellation(this);
+        constellations.add(constellation);
         frameLayout_main.addView(constellation);
-
-        constellation_count++;
-
+        System.out.println("별자리 번호 : " + constellation.getIndex());
     }
 
 
@@ -392,7 +399,28 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
         // constellation 파트
-        for (int i = 0; i < constellation_count; i++)
+        Iterator<Constellation_view> iter = constellations.iterator();
+
+        while(iter.hasNext())
+        {
+            Constellation_view constellation = iter.next();
+
+            float current_x = constellation.getX();
+            float delta_distance = pre_x - post_x;
+
+            constellation.setX(current_x - delta_distance / 3);
+
+            float center_x = (width / 2) - constellation.get_width() / 2;
+            float normalization = (center_x - current_x) / (width / 2);
+            normalization = Math.abs(normalization);
+            float interpolation = (1.0f - normalization) + (0.2f * normalization);
+
+            constellation.setAlpha(interpolation);
+        }
+
+        /*
+        // constellation 파트
+        for (int i = 0; i < constellations.size(); i++)
         {
 
             // post 입력은 width
@@ -413,6 +441,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
             constellations[i].setAlpha(interpolation);
         }
+         */
 
     }
 
@@ -471,25 +500,50 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private void set_constellation_index(boolean direction)
     {
 
+        Iterator<Constellation_view> iter = constellations.iterator();
+
+        while(iter.hasNext())
+        {
+            Constellation_view constellation = iter.next();
+
+            constellation.setIndex(direction);
+        }
+
+        /*
         for(int i = 0; i < constellation_count; i++)
         {
             constellations[i].setIndex(direction);
         }
+
+         */
 
     }
 
     private void set_constellation_position()
     {
 
+        Iterator<Constellation_view> iter = constellations.iterator();
+
+        int center_index = (constellations.size() - 1) / 2;
+
+        while(iter.hasNext())
+        {
+            Constellation_view constellation = iter.next();
+
+            float constellation_position = (width / 2) + (constellation.get_width() * (constellation.getIndex() - center_index) ) - constellation.get_width() / 2;
+            constellation.setX( (int)(constellation_position) );
+        }
+
+    /*
         for(int i = 0; i < constellation_count; i++)
         {
             float constellation_position = (width / 2) + (constellations[i].get_width() * (constellations[i].getIndex() - 2) ) - constellations[i].get_width() / 2;
             constellations[i].setX( (int)(constellation_position) );
         }
-
+        */
     }
 
-    // 여기 수정해야함.
+
     private void creative_mode(Constellation_view view)
     {
 
@@ -498,6 +552,40 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         int delta_index = 2 - view.getIndex();
 
+        Iterator<Constellation_view> iter = constellations.iterator();
+
+        while(iter.hasNext())
+        {
+            Constellation_view constellation = iter.next();
+
+            if(delta_index == 1)
+            {
+                constellation.setIndex(true);
+            }
+            else if(delta_index == -1)
+            {
+                constellation.setIndex(false);
+            }
+
+            if(constellation == view)
+            {
+                constellation.setAlpha(1.0f);
+
+                constellation.setX(0.0f);
+                constellation.setY(0.0f);
+
+                constellation.set_width(width);
+                constellation.set_height(height - bottom__bar_height);
+                constellation.set_size();
+            }
+            else
+            {
+                constellation.setVisibility(View.GONE);
+            }
+
+        }
+
+        /*
         for(Constellation_view constellation : constellations)
         {
 
@@ -527,7 +615,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             }
 
         }
+         */
 
+        imageView_add_constellation.setVisibility(View.GONE);
         view.set_star_position();
         view.redraw_star_line();
         isFocused = true;
@@ -542,11 +632,24 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         view.set_size();
 
         set_constellation_position();
+
+        Iterator<Constellation_view> iter = constellations.iterator();
+
+        while(iter.hasNext())
+        {
+            Constellation_view constellation = iter.next();
+
+            constellation.setVisibility(View.VISIBLE);
+        }
+
+        /*
         for(Constellation_view constellation : constellations)
         {
             constellation.setVisibility(View.VISIBLE);
         }
+         */
 
+        imageView_add_constellation.setVisibility(View.VISIBLE);
         view.requestLayout();
         view.setY(height / 2 - view.get_height() / 2);
         view.set_star_position();
@@ -637,6 +740,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public void onClickCreateConstellation(View view)
     {
         create_constellations();
+        set_constellation_position();
+        //move_stars(0.0f, 0.0f);
     }
 
     

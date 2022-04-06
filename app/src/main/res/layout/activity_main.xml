@@ -9,9 +9,10 @@
     tools:context=".MainActivity">
 
     <ImageView
+        android:id="@+id/imageView_add_constellation"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/ic_launcher_background"
+        android:background="@drawable/ic_baseline_add_24"
         android:layout_gravity="right"
         android:onClick="onClickCreateConstellation"/>
 
