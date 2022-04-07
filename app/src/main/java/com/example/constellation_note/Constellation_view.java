@@ -132,10 +132,12 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
     public void setIndex(boolean direction)
     {
 
+        int max_index = mainActivity.getConstellationSize() - 1;
+
         if(direction)
         {
 
-            if(index == 4)
+            if(index == max_index)
             {
                 index = 0;
             }
@@ -150,7 +152,7 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
             if(index == 0)
             {
-                index = 4;
+                index = max_index;
             }
             else
             {
