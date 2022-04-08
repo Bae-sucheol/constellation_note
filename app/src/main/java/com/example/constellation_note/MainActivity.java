@@ -192,6 +192,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         constellation.setOnTouchListener(this);
         constellations.add(constellation);
         frameLayout_main.addView(constellation);
+
+        // sql 삽입
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("title", "별자리 이름");
+
+        sqLiteControl.insert(sqLiteHelper.getTable_constellation(), contentValues);
     }
 
 

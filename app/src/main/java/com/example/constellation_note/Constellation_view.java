@@ -2,16 +2,22 @@ package com.example.constellation_note;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.widget.TextViewCompat;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,6 +34,7 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
     private Button button_confirm;
     private LinearLayout menu_layout;
+    private EditText edit_title;
 
     private ViewGroup.LayoutParams constellation_params;
 
@@ -66,7 +73,6 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         LinearLayout.LayoutParams menu_param = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         menu_layout.setLayoutParams(menu_param);
 
-        menu_layout.setGravity(Gravity.RIGHT);
         menu_layout.setBackgroundResource(R.drawable.constellation_border);
 
         button_confirm = new Button(context);
@@ -75,10 +81,21 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         int button_height = height / 8;
 
         LinearLayout.LayoutParams button_param = new LinearLayout.LayoutParams(button_width, button_height);
+        button_param.weight = 1;
         button_confirm.setLayoutParams(button_param);
 
         button_confirm.setText("확인");
         button_confirm.setOnClickListener(this);
+
+        edit_title = new EditText(getContext());
+
+        LinearLayout.LayoutParams edit_param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        edit_param.weight = 8;
+        edit_title.setLayoutParams(edit_param);
+        edit_title.setText("별자리 이름");
+        edit_title.setTextColor(Color.WHITE);
+
+        menu_layout.addView(edit_title);
 
         menu_layout.addView(button_confirm);
         this.addView(menu_layout);

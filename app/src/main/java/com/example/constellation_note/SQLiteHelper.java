@@ -36,6 +36,8 @@ public class SQLiteHelper extends SQLiteOpenHelper
         String content = "content TEXT NOT NULL, ";
         String timestamp = "timestamp TEXT NOT NULL DEFAULT (datetime('now', 'localtime')), ";
         String parent_id = "parent_id INTEGER, ";
+        String x = "x FLOAT, ";
+        String y = "y FLOAT, ";
         String constellation_id = "constellation_id INTEGER, FOREIGN_KEY(constellation_id) REFERENCES constellation(id) ON DELETE CASCADE";
 
         query = "CREATE TABLE note(" +
@@ -44,10 +46,12 @@ public class SQLiteHelper extends SQLiteOpenHelper
                 content +
                 timestamp +
                 parent_id +
+                x +
+                y +
                 constellation_id +
                 ");";
 
-        sqLiteDatabase.execSQL(query);
+        //sqLiteDatabase.execSQL(query);
     }
 
     @Override

@@ -24,6 +24,9 @@ public class SQLiteControl
         sqlite = helper.getWritableDatabase();
 
         sqlite.insert(table, null, contentValues);
+
+        System.out.println("삽입되었습니다.");
+        System.out.println(contentValues);
     }
 
     // 삭제
