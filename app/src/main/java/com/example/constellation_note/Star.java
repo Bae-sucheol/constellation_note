@@ -1,6 +1,8 @@
 package com.example.constellation_note;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.graphics.Point;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,6 +14,12 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
     // 별들의 사이즈.
     private static int size;
+
+    // 별의 제목
+    private String title;
+
+    // 내용
+    private String content;
 
     // 레이아웃 파라미터
     ViewGroup.LayoutParams star_param;
@@ -123,6 +131,26 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
         this.setY(constellation.get_height() * this.relative_y);
     }
 
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
+    public String getTitle()
+    {
+        return this.title;
+    }
+
+    public void setContent(String content)
+    {
+        this.content = content;
+    }
+
+    public String getContent()
+    {
+        return this.content;
+    }
+
     public void draw_line()
     {
         double delta_x = parent.get_x() - this.get_x();
@@ -144,6 +172,26 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
         constellation.addView(line);
 
+    }
+
+    public void insert_into_star()
+    {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("id", this.index);
+        contentValues.put("title", "임시 제목");
+        contentValues.put("content", "임시 내용");
+        contentValues.put("x", this.relative_x);
+        contentValues.put("y", this.relative_y);
+        contentValues.put("constellation_id", 1);// 임시.
+
+        if(this.parent != null)
+        {
+            contentValues.put("parent_id", this.parent.getIndex());
+        }
+
+        MainActivity mainActivity = (MainActivity)getContext();
+        SQLiteControl sqLiteControl = mainActivity.getSqLiteControl();
+        sqLiteControl.insert(sqLiteControl.getTable_note(), contentValues);
     }
 
     @Override

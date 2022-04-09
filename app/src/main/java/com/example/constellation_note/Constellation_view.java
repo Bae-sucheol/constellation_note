@@ -99,7 +99,6 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
         menu_layout.addView(button_confirm);
         this.addView(menu_layout);
-
         create_star(width / 2, height / 2);
     }
 
@@ -273,6 +272,7 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         stars.add(star);
         this.addView(star);
         this.requestLayout();
+        star.insert_into_star();
 
     }
 
@@ -284,6 +284,11 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
     public Star get_last_star()
     {
         return stars.get(stars.size() - 1);
+    }
+
+    public MainActivity getMainActivity()
+    {
+       return this.mainActivity;
     }
 
     /*

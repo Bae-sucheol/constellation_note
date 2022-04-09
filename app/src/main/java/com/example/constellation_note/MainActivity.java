@@ -2,7 +2,6 @@ package com.example.constellation_note;
 
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.content.ContentValues;
@@ -19,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         frameLayout_main.setOnTouchListener(this);
 
         //
-        sqLiteHelper = new SQLiteHelper(MainActivity.this, "constellation_note.db", null, 1);
+        sqLiteHelper = new SQLiteHelper(MainActivity.this, "constellation_note.db", null, 4);
         sqLiteControl = new SQLiteControl(sqLiteHelper);
 
         // 별 생성
@@ -433,31 +433,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             constellation.setAlpha(interpolation);
         }
 
-        /*
-        // constellation 파트
-        for (int i = 0; i < constellations.size(); i++)
-        {
-
-            // post 입력은 width
-            // 별자리 width 사이즈는 화면 width / 3
-            //
-
-            float current_x = constellations[i].getX();
-            float delta_distance = pre_x - post_x;
-
-            constellations[i].setX(current_x - delta_distance / 3);
-
-            // 투명도 조절
-
-            float center_x = (width / 2) - constellations[i].get_width() / 2;
-            float normalization = (center_x - current_x) / (width / 2);
-            normalization = Math.abs(normalization);
-            float interpolation = (1.0f - normalization) + (0.2f * normalization);
-
-            constellations[i].setAlpha(interpolation);
-        }
-         */
-
     }
 
     private void move_stars(float pre_x, float post_x, int interval)
@@ -654,7 +629,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     {
         Star star = (Star)view;
 
-        final PopupMenu popupMenu = new PopupMenu(this, view);
+        final android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(this, view);
         getMenuInflater().inflate(R.menu.popup_menu,popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -714,5 +689,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         return constellations.size();
     }
 
+    public SQLiteHelper getSqLiteHelper()
+    {
+        return this.sqLiteHelper;
+    }
+
+    public SQLiteControl getSqLiteControl()
+    {
+        return this.sqLiteControl;
+    }
     
 }

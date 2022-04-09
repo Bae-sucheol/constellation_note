@@ -13,6 +13,9 @@ public class SQLiteControl
     private SQLiteHelper helper;
     private SQLiteDatabase sqlite;
 
+    private String Table_note = "note";
+    private String Table_constellation = "constellation";
+
     public SQLiteControl(SQLiteHelper helper)
     {
         this.helper = helper;
@@ -80,5 +83,15 @@ public class SQLiteControl
     {
         sqlite.close();
         helper.close();
+    }
+
+    public String getTable_note()
+    {
+        return this.Table_note;
+    }
+
+    public String getTable_constellation()
+    {
+        return this.Table_constellation;
     }
 }

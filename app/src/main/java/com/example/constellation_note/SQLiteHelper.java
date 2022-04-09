@@ -32,13 +32,19 @@ public class SQLiteHelper extends SQLiteOpenHelper
 
         sqLiteDatabase.execSQL(query);
 
+        sqLiteDatabase.execSQL("PRAGMA foreign_keys = 1;");
+
         // note 테이블
+        id = "id INTEGER , ";
+        title = "title TEXT NOT NULL, ";
         String content = "content TEXT NOT NULL, ";
         String timestamp = "timestamp TEXT NOT NULL DEFAULT (datetime('now', 'localtime')), ";
         String parent_id = "parent_id INTEGER, ";
-        String x = "x FLOAT, ";
-        String y = "y FLOAT, ";
-        String constellation_id = "constellation_id INTEGER, FOREIGN_KEY(constellation_id) REFERENCES constellation(id) ON DELETE CASCADE";
+        String x = "x FLOAT NOT NULL, ";
+        String y = "y FLOAT NOT NULL, ";
+        String constellation_id = "constellation_id INTEGER, ";
+        String constraint = "CONSTRAINT constellation_id_fk FOREIGN KEY(constellation_id) REFERENCES constellation(id) ON DELETE CASCADE ";
+        String constraint2 = "PRIMARY KEY(id, constellation_id)";
 
         query = "CREATE TABLE note(" +
                 id +
@@ -49,9 +55,11 @@ public class SQLiteHelper extends SQLiteOpenHelper
                 x +
                 y +
                 constellation_id +
+                constraint +
+                constraint2 +
                 ");";
 
-        //sqLiteDatabase.execSQL(query);
+        sqLiteDatabase.execSQL(query);
     }
 
     @Override
