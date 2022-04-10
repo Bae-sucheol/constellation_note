@@ -39,6 +39,9 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
     private Line_star line;
 
+    // sql 컨트롤 객체
+    private SQLiteControl sqLiteControl;
+
     public Star(Context context, Constellation_view constellation)
     {
         super(context);
@@ -189,9 +192,7 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
             contentValues.put("parent_id", this.parent.getIndex());
         }
 
-        MainActivity mainActivity = (MainActivity)getContext();
-        SQLiteControl sqLiteControl = mainActivity.getSqLiteControl();
-        sqLiteControl.insert(sqLiteControl.getTable_note(), contentValues);
+        sqLiteControl = new SQLiteControl(SQLiteHelper.getSqLiteHelper(getContext()));
     }
 
     @Override

@@ -8,13 +8,24 @@ import androidx.annotation.Nullable;
 
 public class SQLiteHelper extends SQLiteOpenHelper
 {
+    // 싱글톤 패턴으로 만들어야 하기 때문에.. static으로 클래스 고유의(1개의, 유니크한) 객체를 만들어 놓는다.
+    private static SQLiteHelper sqLiteHelper = null;
 
-    private String Table_note = "note";
-    private String Table_constellation = "constellation";
-
-    public SQLiteHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version)
+    private SQLiteHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version)
     {
         super(context, name, factory, version);
+    }
+
+    public static SQLiteHelper getSqLiteHelper(Context context)
+    {
+
+        // 객체가 존재하지 않으면 만들어야한다.
+        if(sqLiteHelper == null)
+        {
+            sqLiteHelper = new SQLiteHelper(context, "constellation_note.db", null, 4);
+        }
+
+        return sqLiteHelper;
     }
 
     @Override
@@ -74,14 +85,5 @@ public class SQLiteHelper extends SQLiteOpenHelper
         onCreate(sqLiteDatabase);
     }
 
-    public String getTable_note()
-    {
-        return this.Table_note;
-    }
-
-    public String getTable_constellation()
-    {
-        return this.Table_constellation;
-    }
 
 }

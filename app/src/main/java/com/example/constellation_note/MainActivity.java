@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     private ImageView imageView_add_constellation;
 
-    private SQLiteHelper sqLiteHelper;
+    //sql 컨트롤 객체
     private SQLiteControl sqLiteControl;
 
   @Override
@@ -109,9 +109,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         // 터치 리스너
         frameLayout_main.setOnTouchListener(this);
 
-        //
-        sqLiteHelper = new SQLiteHelper(MainActivity.this, "constellation_note.db", null, 4);
-        sqLiteControl = new SQLiteControl(sqLiteHelper);
+        // 데이터베이스(SQLITE) 싱글톤 객체 초기화
+        sqLiteControl = new SQLiteControl(SQLiteHelper.getSqLiteHelper(this));
 
         // 별 생성
         create_stars(NUM_STAR);
@@ -197,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         ContentValues contentValues = new ContentValues();
         contentValues.put("title", "별자리 이름");
 
-        sqLiteControl.insert(sqLiteHelper.getTable_constellation(), contentValues);
+        sqLiteControl.insert(sqLiteControl.getTable_constellation(), contentValues);
     }
 
 
@@ -687,16 +686,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public int getConstellationSize()
     {
         return constellations.size();
-    }
-
-    public SQLiteHelper getSqLiteHelper()
-    {
-        return this.sqLiteHelper;
-    }
-
-    public SQLiteControl getSqLiteControl()
-    {
-        return this.sqLiteControl;
     }
     
 }

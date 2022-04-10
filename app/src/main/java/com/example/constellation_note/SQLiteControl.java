@@ -27,9 +27,6 @@ public class SQLiteControl
         sqlite = helper.getWritableDatabase();
 
         sqlite.insert(table, null, contentValues);
-
-        System.out.println("삽입되었습니다.");
-        System.out.println(contentValues);
     }
 
     // 삭제
@@ -44,6 +41,7 @@ public class SQLiteControl
     public void update(String table, String id, String title)
     {
         sqlite = helper.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put("title", title);
 
@@ -55,6 +53,7 @@ public class SQLiteControl
     {
         sqlite = helper.getReadableDatabase();
         // String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy
+
         Cursor cursor = sqlite.query(table, columns, selection, selectionArgs, null, null, null);
 
         List<String[]> returnValues = new ArrayList<>();
