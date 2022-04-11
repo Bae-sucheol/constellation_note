@@ -48,7 +48,7 @@ public class SQLiteControl
         sqlite.update(table, values, "id=?", new String[] {id});
     }
 
-
+  
     public List<String[]> select(String table, String columns[], String selection, String selectionArgs[])
     {
         sqlite = helper.getReadableDatabase();
