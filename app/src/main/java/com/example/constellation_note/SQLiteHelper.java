@@ -22,7 +22,7 @@ public class SQLiteHelper extends SQLiteOpenHelper
         // 객체가 존재하지 않으면 만들어야한다.
         if(sqLiteHelper == null)
         {
-            sqLiteHelper = new SQLiteHelper(context, "constellation_note.db", null, 4);
+            sqLiteHelper = new SQLiteHelper(context, "constellation_note.db", null, 5);
         }
 
         return sqLiteHelper;
@@ -46,7 +46,7 @@ public class SQLiteHelper extends SQLiteOpenHelper
         sqLiteDatabase.execSQL("PRAGMA foreign_keys = 1;");
 
         // note 테이블
-        id = "id INTEGER , ";
+        id = "id INTEGER, ";
         title = "title TEXT NOT NULL, ";
         String content = "content TEXT NOT NULL, ";
         String timestamp = "timestamp TEXT NOT NULL DEFAULT (datetime('now', 'localtime')), ";

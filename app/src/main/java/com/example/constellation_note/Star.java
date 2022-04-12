@@ -58,6 +58,8 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
         this.setOnLongClickListener(this);
         this.setOnClickListener(this);
+
+        sqLiteControl = new SQLiteControl(SQLiteHelper.getSqLiteHelper(getContext()));
     }
 
     public interface Callback_star
@@ -185,14 +187,17 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
         contentValues.put("content", "임시 내용");
         contentValues.put("x", this.relative_x);
         contentValues.put("y", this.relative_y);
-        contentValues.put("constellation_id", 1);// 임시.
+        contentValues.put("constellation_id", constellation.getIndex());// 임시.
 
         if(this.parent != null)
         {
             contentValues.put("parent_id", this.parent.getIndex());
         }
 
-        sqLiteControl = new SQLiteControl(SQLiteHelper.getSqLiteHelper(getContext()));
+        sqLiteControl.insert(sqLiteControl.getTable_note(), contentValues);
+
+        MainActivity.submitRunnable(sqLiteControl);
+
     }
 
     @Override

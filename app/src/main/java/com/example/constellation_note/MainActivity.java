@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener, Constellation_view.Callback_constellation
 {
@@ -77,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     //sql 컨트롤 객체
     private SQLiteControl sqLiteControl;
+
+    private static ExecutorService executorService = Executors.newSingleThreadExecutor();
 
   @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -197,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         contentValues.put("title", "별자리 이름");
 
         sqLiteControl.insert(sqLiteControl.getTable_constellation(), contentValues);
+        submitRunnable(sqLiteControl);
     }
 
 
@@ -686,6 +692,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public int getConstellationSize()
     {
         return constellations.size();
+    }
+
+    public static void submitRunnable(Runnable runnable)
+    {
+        executorService.submit(runnable);
+        //executorService.shutdown();
     }
     
 }
