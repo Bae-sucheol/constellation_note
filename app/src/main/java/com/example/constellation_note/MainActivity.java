@@ -10,6 +10,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.media.Image;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -83,6 +86,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     private static ExecutorService executorService = Executors.newSingleThreadExecutor();
 
+    //private static Handler handler = new Handler();
+    private Handler handler = new MainThreadHandler(Looper.getMainLooper());
+
   @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -115,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         frameLayout_main.setOnTouchListener(this);
 
         // 데이터베이스(SQLITE) 싱글톤 객체 초기화
-        sqLiteControl = new SQLiteControl(SQLiteHelper.getSqLiteHelper(this));
+        sqLiteControl = new SQLiteControl(SQLiteHelper.getSqLiteHelper(this), handler);
 
         // 별 생성
         create_stars(NUM_STAR);
@@ -127,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         //create_constellations();
 
         imageView_add_constellation = findViewById(R.id.imageView_add_constellation);
-
     }
 
     private void create_stars(int num_star)
@@ -699,5 +704,5 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         executorService.submit(runnable);
         //executorService.shutdown();
     }
-    
+
 }

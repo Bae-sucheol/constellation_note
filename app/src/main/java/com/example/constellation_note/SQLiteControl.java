@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.List;;
 
 public class SQLiteControl implements Runnable
 {
@@ -27,9 +30,12 @@ public class SQLiteControl implements Runnable
     private String id;
     private ContentValues contentValues;
 
-    public SQLiteControl(SQLiteHelper helper)
+    private Handler handler;
+
+    public SQLiteControl(SQLiteHelper helper, Handler handler)
     {
         this.helper = helper;
+        this.handler = handler;
     }
 
     @Override
@@ -79,6 +85,15 @@ public class SQLiteControl implements Runnable
 
                     break;
             }
+
+            // 메시지 테스트
+            Message message = new Message();
+            Bundle bundle = new Bundle();
+            bundle.putInt("key", task_id);
+
+            message.setData(bundle);
+
+            handler.sendMessage(message);
 
             db_close();
 

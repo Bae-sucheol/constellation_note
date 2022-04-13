@@ -3,8 +3,12 @@ package com.example.constellation_note;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.MainThread;
 
 public class Star extends View implements View.OnLongClickListener, View.OnClickListener
 {
@@ -59,7 +63,9 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
         this.setOnLongClickListener(this);
         this.setOnClickListener(this);
 
-        sqLiteControl = new SQLiteControl(SQLiteHelper.getSqLiteHelper(getContext()));
+        Handler handler = new MainThreadHandler(Looper.getMainLooper());
+
+        sqLiteControl = new SQLiteControl(SQLiteHelper.getSqLiteHelper(getContext()), handler);
     }
 
     public interface Callback_star
