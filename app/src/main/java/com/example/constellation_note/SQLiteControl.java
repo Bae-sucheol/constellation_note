@@ -30,6 +30,11 @@ public class SQLiteControl implements Runnable
     private String id;
     private ContentValues contentValues;
 
+    private String columns[];
+    private String orderBy;
+    private String selection;
+    private String selectionArgs[];
+
     private Handler handler;
 
     public SQLiteControl(SQLiteHelper helper, Handler handler)
@@ -77,7 +82,35 @@ public class SQLiteControl implements Runnable
 
                 case TASK_SELECT :
 
-                    // 미정
+                    Cursor cursor = sqlite.query(table, columns, selection, selectionArgs, null, null, orderBy);
+
+                    List<?> returnValues = new ArrayList<>();
+
+                    if(columns.length > 1)
+                    {
+                        while(cursor.moveToNext())
+                        {
+
+
+
+
+
+                        }
+                    }
+                    else if(columns.length == 1)
+                    {
+                        if(cursor.moveToNext())
+                        {
+
+                        }
+                    }
+                    else
+                    {
+
+                    }
+
+
+                    cursor.close();
 
                     break;
 
@@ -146,37 +179,19 @@ public class SQLiteControl implements Runnable
        // sqlite.update(table, values, "id=?", new String[] {id});
     }
 
-    /* 일단 select 는 핸들러와 루퍼 개념을 조금 더 숙지 한 이후에 적용해볼 것.
-    public List<String[]> select(String table, String columns[], String selection, String selectionArgs[])
+    public void select(String table, String columns[], String selection, String selectionArgs[], String orderBy)
     {
         task_id = TASK_SELECT;
 
         sqlite = helper.getReadableDatabase();
         // String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy
 
-        Cursor cursor = sqlite.query(table, columns, selection, selectionArgs, null, null, null);
-
-        List<String[]> returnValues = new ArrayList<>();
-
-        String returnValue[] = new String[columns.length];
-
-        while(cursor.moveToNext())
-        {
-            for(int i = 0; i < returnValue.length; i++)
-            {
-                int index = cursor.getColumnIndex(columns[i]);
-                returnValue[i] = cursor.getString(index);
-            }
-
-            returnValues.add(returnValue);
-
-        }
-
-        cursor.close();
-
-        return returnValues;
+        this.columns = columns;
+        this.selection = selection;
+        this.selectionArgs = selectionArgs;
+        this.orderBy = orderBy;
     }
-     */
+
 
     // 커넥션 종료
     public void db_close()
@@ -185,6 +200,10 @@ public class SQLiteControl implements Runnable
         table = null;
         id = null;
         contentValues= null;
+        columns = null;
+        orderBy= null;
+        selection = null;
+        selectionArgs = null;
 
         sqlite.close();
         //helper.close();

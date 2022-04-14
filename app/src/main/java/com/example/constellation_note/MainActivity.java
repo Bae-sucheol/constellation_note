@@ -1,5 +1,6 @@
 package com.example.constellation_note;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -24,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -87,7 +89,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private static ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     //private static Handler handler = new Handler();
-    private Handler handler = new MainThreadHandler(Looper.getMainLooper());
+    //private Handler handler = new MainThreadHandler(this);
+    private Handler handler = new MainHandler(this);
 
   @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -121,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         frameLayout_main.setOnTouchListener(this);
 
         // 데이터베이스(SQLITE) 싱글톤 객체 초기화
+
         sqLiteControl = new SQLiteControl(SQLiteHelper.getSqLiteHelper(this), handler);
 
         // 별 생성
@@ -133,6 +137,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         //create_constellations();
 
         imageView_add_constellation = findViewById(R.id.imageView_add_constellation);
+
+        //(String table, String columns[], String selection, String selectionArgs[], String orderBy)
+        sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"id"}, null, null, "id DESC LIMIT 1");
+
     }
 
     private void create_stars(int num_star)

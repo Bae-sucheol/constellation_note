@@ -32,6 +32,9 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
     private int width = MainActivity.width / 3;
     private int height = MainActivity.height / 3;
 
+    private int id;
+    private String title;
+
     private Button button_confirm;
     private LinearLayout menu_layout;
     private EditText edit_title;

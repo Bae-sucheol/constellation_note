@@ -63,7 +63,7 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
         this.setOnLongClickListener(this);
         this.setOnClickListener(this);
 
-        Handler handler = new MainThreadHandler(Looper.getMainLooper());
+        Handler handler = MainHandler.getMainHandler(context);
 
         sqLiteControl = new SQLiteControl(SQLiteHelper.getSqLiteHelper(getContext()), handler);
     }
