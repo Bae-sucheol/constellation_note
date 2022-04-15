@@ -31,7 +31,6 @@ public class SQLiteControl implements Runnable
     private ContentValues contentValues;
 
     private String columns[];
-    private String orderBy;
     private String selection;
     private String selectionArgs[];
 
@@ -82,27 +81,61 @@ public class SQLiteControl implements Runnable
 
                 case TASK_SELECT :
 
-                    Cursor cursor = sqlite.query(table, columns, selection, selectionArgs, null, null, orderBy);
+                    System.out.println("여기서 문제가 생기는 건가? : " + columns.length);
 
-                    List<?> returnValues = new ArrayList<>();
-
+                    Cursor cursor = sqlite.query(table, columns, selection, selectionArgs, null, null, null);
+                    /*
                     if(columns.length > 1)
                     {
+
+                        List<Constellation_data> returnValues = new ArrayList<>();
+
                         while(cursor.moveToNext())
                         {
+                            if(table.equals(getTable_constellation()))
+                            {
+                                Constellation_data data = new Constellation_data();
+                                data.setId(cursor.getInt(0));
+                                data.setTitle(cursor.getString(1));
 
+                                returnValues.add(data);
+                            }
+                            else if(table.equals(getTable_note()))
+                            {
+                                Star_data data = new Star_data();
 
+                                data.setId(cursor.getInt(0));
+                                data.setTitle(cursor.getString(1));
 
+                                returnValues.add(data);
 
+                            }
 
                         }
+
+                        Message message = handler.obtainMessage(MainActivity.GET_LAST_CONSTELLATION_ID, returnValues);
+
+                        handler.sendMessage(message);
                     }
-                    else if(columns.length == 1)
+                    */
+                    if(columns.length == 1)
                     {
-                        if(cursor.moveToNext())
-                        {
 
+                        Message message;
+
+                        if(cursor.moveToLast())
+                        {
+                            System.out.println("여기서 문제가 생기는 건가? : " + cursor.getInt(0));
+                            message = handler.obtainMessage(MainActivity.GET_LAST_CONSTELLATION_ID, cursor.getInt(0));
                         }
+                        else
+                        {
+                            message = handler.obtainMessage(MainActivity.GET_LAST_CONSTELLATION_ID, 0);
+                        }
+
+                        handler.sendMessage(message);
+
+
                     }
                     else
                     {
@@ -118,15 +151,6 @@ public class SQLiteControl implements Runnable
 
                     break;
             }
-
-            // 메시지 테스트
-            Message message = new Message();
-            Bundle bundle = new Bundle();
-            bundle.putInt("key", task_id);
-
-            message.setData(bundle);
-
-            handler.sendMessage(message);
 
             db_close();
 
@@ -179,7 +203,7 @@ public class SQLiteControl implements Runnable
        // sqlite.update(table, values, "id=?", new String[] {id});
     }
 
-    public void select(String table, String columns[], String selection, String selectionArgs[], String orderBy)
+    public void select(String table, String columns[], String selection, String selectionArgs[])
     {
         task_id = TASK_SELECT;
 
@@ -189,7 +213,6 @@ public class SQLiteControl implements Runnable
         this.columns = columns;
         this.selection = selection;
         this.selectionArgs = selectionArgs;
-        this.orderBy = orderBy;
     }
 
 
@@ -201,7 +224,6 @@ public class SQLiteControl implements Runnable
         id = null;
         contentValues= null;
         columns = null;
-        orderBy= null;
         selection = null;
         selectionArgs = null;
 

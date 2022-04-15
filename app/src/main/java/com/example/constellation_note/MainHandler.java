@@ -33,6 +33,11 @@ public class MainHandler extends Handler
     public void handleMessage(@NonNull Message msg) {
         //super.handleMessage(msg);
 
-        System.out.println(msg.getData());
+        if(msg.what == MainActivity.GET_LAST_CONSTELLATION_ID)
+        {
+            System.out.println("오옹 나이스 : " + msg.getData());
+        }
+
+
     }
 }

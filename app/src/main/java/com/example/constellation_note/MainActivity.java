@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private static final int ANIMATION_TIME = 200; // 애니메이션 타임.
     private static final int CONSTELLATION_Z = 2; // 별자리 뷰와 스크린간의 거리 (움직이는 속도와도 관계가 있음)
 
+    public static final int GET_LAST_CONSTELLATION_ID = 1;
+    public static final int GET_CONSTELLATION_LIST = 2;
+
     private static boolean temp_star_mode = false;
 
     public static boolean isFocused = false;
@@ -139,7 +142,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         imageView_add_constellation = findViewById(R.id.imageView_add_constellation);
 
         //(String table, String columns[], String selection, String selectionArgs[], String orderBy)
-        sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"id"}, null, null, "id DESC LIMIT 1");
+        sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"id"}, null, null);
+        submitRunnable(sqLiteControl);
 
     }
 

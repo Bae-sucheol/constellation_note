@@ -1,11 +1,9 @@
 package com.example.constellation_note;
 
-public class Star_data
+public class Star_data extends Constellation_data
 {
 
-    private int index;
     private int constellation_id;
-    private String title;
     private String content;
     private float relative_x;
     private float relative_y;
@@ -13,19 +11,9 @@ public class Star_data
 
     //setter
 
-    public void setIndex(int index)
-    {
-        this.index = index;
-    }
-
     public void setConstellation_id(int constellation_id)
     {
         this.constellation_id = constellation_id;
-    }
-
-    public void setTitle(String title)
-    {
-        this.title = title;
     }
 
     public void setContent(String content)
@@ -50,19 +38,9 @@ public class Star_data
 
     //getter
 
-    public int getIndex()
-    {
-        return index;
-    }
-
     public int getConstellation_id()
     {
         return constellation_id;
-    }
-
-    public String getTitle()
-    {
-        return title;
     }
 
     public String getContent()
