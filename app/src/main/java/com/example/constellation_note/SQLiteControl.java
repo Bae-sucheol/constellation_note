@@ -81,10 +81,10 @@ public class SQLiteControl implements Runnable
 
                 case TASK_SELECT :
 
-                    System.out.println("여기서 문제가 생기는 건가? : " + columns.length);
 
                     Cursor cursor = sqlite.query(table, columns, selection, selectionArgs, null, null, null);
-                    /*
+
+
                     if(columns.length > 1)
                     {
 
@@ -92,8 +92,10 @@ public class SQLiteControl implements Runnable
 
                         while(cursor.moveToNext())
                         {
+
                             if(table.equals(getTable_constellation()))
                             {
+
                                 Constellation_data data = new Constellation_data();
                                 data.setId(cursor.getInt(0));
                                 data.setTitle(cursor.getString(1));
@@ -117,7 +119,7 @@ public class SQLiteControl implements Runnable
 
                         handler.sendMessage(message);
                     }
-                    */
+
                     if(columns.length == 1)
                     {
 
@@ -125,7 +127,7 @@ public class SQLiteControl implements Runnable
 
                         if(cursor.moveToLast())
                         {
-                            System.out.println("여기서 문제가 생기는 건가? : " + cursor.getInt(0));
+                            System.out.println("여기서 문제가 생기는 건가? : " + columns.length);
                             message = handler.obtainMessage(MainActivity.GET_LAST_CONSTELLATION_ID, cursor.getInt(0));
                         }
                         else
@@ -136,6 +138,8 @@ public class SQLiteControl implements Runnable
                         handler.sendMessage(message);
 
 
+
+
                     }
                     else
                     {
@@ -144,6 +148,7 @@ public class SQLiteControl implements Runnable
 
 
                     cursor.close();
+
 
                     break;
 
@@ -210,6 +215,7 @@ public class SQLiteControl implements Runnable
         sqlite = helper.getReadableDatabase();
         // String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy
 
+        this.table = table;
         this.columns = columns;
         this.selection = selection;
         this.selectionArgs = selectionArgs;
