@@ -84,11 +84,12 @@ public class SQLiteControl implements Runnable
 
                     Cursor cursor = sqlite.query(table, columns, selection, selectionArgs, null, null, null);
 
-
                     if(columns.length > 1)
                     {
+                        System.out.println("길이가 2이상이네?");
+                        ArrayList<Constellation_data> returnValues = new ArrayList<>();
 
-                        List<Constellation_data> returnValues = new ArrayList<>();
+                        Bundle bundle = new Bundle();
 
                         while(cursor.moveToNext())
                         {
@@ -115,30 +116,34 @@ public class SQLiteControl implements Runnable
 
                         }
 
-                        Message message = handler.obtainMessage(MainActivity.GET_LAST_CONSTELLATION_ID, returnValues);
+                        bundle.putSerializable("constellations", returnValues);
+                        bundle.putParcelableArrayList("constellations", returnValues);
+                        Message message = handler.obtainMessage();
+
+                        message.what = MainActivity.GET_CONSTELLATION_LIST;
+                        message.setData(bundle);
 
                         handler.sendMessage(message);
                     }
-
-                    if(columns.length == 1)
+                    else if(columns.length == 1)
                     {
 
                         Message message;
+                        Bundle bundle = new Bundle();
 
                         if(cursor.moveToLast())
                         {
-                            System.out.println("여기서 문제가 생기는 건가? : " + columns.length);
-                            message = handler.obtainMessage(MainActivity.GET_LAST_CONSTELLATION_ID, cursor.getInt(0));
+                            bundle.putInt("id", cursor.getInt(0));
                         }
                         else
                         {
-                            message = handler.obtainMessage(MainActivity.GET_LAST_CONSTELLATION_ID, 0);
+                            bundle.putInt("id", 0);
                         }
 
+                        message = handler.obtainMessage();
+                        message.what = MainActivity.GET_LAST_CONSTELLATION_ID;
+                        message.setData(bundle);
                         handler.sendMessage(message);
-
-
-
 
                     }
                     else

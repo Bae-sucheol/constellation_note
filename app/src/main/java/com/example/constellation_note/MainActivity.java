@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     }
 
-    private void create_stars(int num_star)
+    public void create_stars(int num_star)
     {
 
         star_list = new ImageView[num_star];
@@ -194,20 +194,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     }
 
-    private void create_constellations()
+    public void create_constellations()
     {
-        /*
-        constellations = new Constellation_view[5];
 
-        for(int i = 0; i < 5; i++)
-        {
-            Constellation_view constellation = new Constellation_view(this, i);
-            constellation.setOnTouchListener(this);
-            constellations[i] = constellation;
-            constellations[i].setCallback_constellation(this);
-            frameLayout_main.addView(constellation);
-        }
-         */
         Constellation_view constellation = new Constellation_view(this, constellations.size());
         constellation.setCallback_constellation(this);
         constellation.setOnTouchListener(this);
@@ -715,6 +704,41 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     {
         executorService.submit(runnable);
         //executorService.shutdown();
+    }
+
+    public void select_ConstellationData(int last_id)
+    {
+        System.out.println("별자리를 탐색할게.");
+
+        String selection = "id=?";
+
+        /*
+        int index = last_id;
+        int delta = 0;
+
+        if(last_id > 5)
+        {
+            index = 5;
+            delta = 2;
+        }
+
+        String selectionArgs[] = new String[index];
+
+        for(int i = 0; i < index - delta; i++)
+        {
+            selectionArgs[i] = Integer.toString(last_id - 2 + i);
+        }
+
+        if(delta > 0)
+        {
+
+        }
+
+
+        sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"id", "title"}, selection, selectionArgs);
+        submitRunnable(sqLiteControl);
+
+         */
     }
 
 }
