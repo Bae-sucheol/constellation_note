@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         setContentView(R.layout.activity_main);
 
         // 화면 사이즈를 구한다.
-
+ 
         Display display = getWindowManager().getDefaultDisplay();
 
         Point size = new Point();
