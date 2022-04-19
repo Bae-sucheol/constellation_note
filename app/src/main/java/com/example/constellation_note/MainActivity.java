@@ -710,35 +710,43 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     {
         System.out.println("별자리를 탐색할게.");
 
-        String selection = "id=?";
+        String selection;
 
-        /*
-        int index = last_id;
-        int delta = 0;
+        String selectionArgs[];
 
         if(last_id > 5)
         {
-            index = 5;
-            delta = 2;
+            // for 문 쓰는 것 보다 이게 더 간편함.
+            selection = "id IN(?, ?, ?, ?, ?)";
+            selectionArgs = new String[5];
+
+            selectionArgs[0] = Integer.toString(1);
+            selectionArgs[1] = Integer.toString(2);
+            selectionArgs[2] = Integer.toString(last_id - 2);
+            selectionArgs[3] = Integer.toString(last_id - 1);
+            selectionArgs[4] = Integer.toString(last_id);
         }
-
-        String selectionArgs[] = new String[index];
-
-        for(int i = 0; i < index - delta; i++)
+        else
         {
-            selectionArgs[i] = Integer.toString(last_id - 2 + i);
+
+            StringBuffer stringBuffer = new StringBuffer("id IN(");
+            selectionArgs = new String[last_id];
+
+            for(int i = 0; i < last_id; i++)
+            {
+                selectionArgs[i] = Integer.toString(i + 1);
+                stringBuffer.append("?,");
+            }
+
+            stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+            stringBuffer.append(")");
+            selection = stringBuffer.toString();
+
         }
-
-        if(delta > 0)
-        {
-
-        }
-
 
         sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"id", "title"}, selection, selectionArgs);
         submitRunnable(sqLiteControl);
 
-         */
     }
 
 }

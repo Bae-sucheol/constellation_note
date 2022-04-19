@@ -81,6 +81,21 @@ public class SQLiteControl implements Runnable
 
                 case TASK_SELECT :
 
+                    System.out.println("테이블 : " + table);
+
+                    for(int i = 0; i < columns.length; i++)
+                    {
+                        System.out.println("컬럼 : " + columns[i]);
+                    }
+
+                    System.out.println("셀렉션 : " + selection);
+
+                    if(selectionArgs != null)
+                    {
+                        for (int i = 0; i < selectionArgs.length; i++) {
+                            System.out.println("셀렉션 args : " + selectionArgs[i]);
+                        }
+                    }
 
                     Cursor cursor = sqlite.query(table, columns, selection, selectionArgs, null, null, null);
 
@@ -116,7 +131,6 @@ public class SQLiteControl implements Runnable
 
                         }
 
-                        bundle.putSerializable("constellations", returnValues);
                         bundle.putParcelableArrayList("constellations", returnValues);
                         Message message = handler.obtainMessage();
 
@@ -144,10 +158,6 @@ public class SQLiteControl implements Runnable
                         message.what = MainActivity.GET_LAST_CONSTELLATION_ID;
                         message.setData(bundle);
                         handler.sendMessage(message);
-
-                    }
-                    else
-                    {
 
                     }
 
