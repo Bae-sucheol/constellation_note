@@ -36,6 +36,8 @@ public class MainHandler extends Handler
     public void handleMessage(@NonNull Message msg) {
         super.handleMessage(msg);
 
+        MainActivity mainActivity = weakReference.get();
+
         switch(msg.what)
         {
             case MainActivity.GET_LAST_CONSTELLATION_ID :
@@ -54,9 +56,7 @@ public class MainHandler extends Handler
 
                     System.out.println("반환받은 마지막 요소 : " + last_id);
 
-                    MainActivity activity = weakReference.get();
-
-                    activity.select_ConstellationData(last_id);
+                    mainActivity.select_ConstellationData(last_id);
 
                 }
 
@@ -68,14 +68,43 @@ public class MainHandler extends Handler
 
                 ArrayList<Constellation_data> returnValues = msg.getData().getParcelableArrayList("constellations");
 
-                Iterator<Constellation_data> iterator = returnValues.iterator();
+                int size = returnValues.size();
 
-                while(iterator.hasNext())
+                // 범위로 잡아야 하기 때문에 switch ~ case 말고 그냥 if로..
+
+                // 1 ~ 3 까지는 그냥 화면에 뿌려주면 된다.
+                if(size <= 3)
                 {
-                    Constellation_data constellation_data = iterator.next();
-                    System.out.println("아이디 : " + constellation_data.getId());
-                    System.out.println("타이틀 : " + constellation_data.getTitle());
+                    for(int i = 0; i < size; i++)
+                    {
+                        mainActivity.create_constellation(returnValues.get(i));
+                    }
                 }
+                else if(size == 4) // 3,4,1,2 순서
+                {
+                    mainActivity.create_constellation(returnValues.get(2));
+                    mainActivity.create_constellation(returnValues.get(3));
+                    mainActivity.create_constellation(returnValues.get(0));
+                    mainActivity.create_constellation(returnValues.get(1));
+                }
+                else // n-2, n-1, n, 1, 2 순서
+                {
+                    mainActivity.create_constellation(returnValues.get(returnValues.size() - 3));
+                    mainActivity.create_constellation(returnValues.get(returnValues.size() - 2));
+                    mainActivity.create_constellation(returnValues.get(returnValues.size() - 1));
+                    mainActivity.create_constellation(returnValues.get(0));
+                    mainActivity.create_constellation(returnValues.get(1));
+                }
+
+                break;
+
+            case MainActivity.GET_CONSTELLATION_SINGLE :
+
+                ArrayList<Constellation_data> returnValue = msg.getData().getParcelableArrayList("constellations");
+
+                mainActivity.swap_constellation_data(returnValue.get(0));
+
+                System.out.println("스왑할 데이터 : " + returnValue.get(0).getId());
 
                 break;
 

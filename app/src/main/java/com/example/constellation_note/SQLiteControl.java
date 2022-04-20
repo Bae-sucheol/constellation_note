@@ -19,6 +19,8 @@ public class SQLiteControl implements Runnable
     private static final int TASK_UPDATE = 3;
     private static final int TASK_SELECT = 4;
 
+    private int select_id = 0;
+
     private SQLiteHelper helper;
     private SQLiteDatabase sqlite;
 
@@ -81,30 +83,27 @@ public class SQLiteControl implements Runnable
 
                 case TASK_SELECT :
 
-                    System.out.println("테이블 : " + table);
-
-                    for(int i = 0; i < columns.length; i++)
-                    {
-                        System.out.println("컬럼 : " + columns[i]);
-                    }
-
-                    System.out.println("셀렉션 : " + selection);
-
-                    if(selectionArgs != null)
-                    {
-                        for (int i = 0; i < selectionArgs.length; i++) {
-                            System.out.println("셀렉션 args : " + selectionArgs[i]);
-                        }
-                    }
-
+                    Message message;
+                    Bundle bundle = new Bundle();
                     Cursor cursor = sqlite.query(table, columns, selection, selectionArgs, null, null, null);
 
-                    if(columns.length > 1)
+                    if(select_id == MainActivity.GET_LAST_CONSTELLATION_ID)
+                    {
+
+                        if(cursor.moveToLast())
+                        {
+                            bundle.putInt("id", cursor.getInt(0));
+                        }
+                        else
+                        {
+                            bundle.putInt("id", 0);
+                        }
+
+                    }
+                    else
                     {
                         System.out.println("길이가 2이상이네?");
                         ArrayList<Constellation_data> returnValues = new ArrayList<>();
-
-                        Bundle bundle = new Bundle();
 
                         while(cursor.moveToNext())
                         {
@@ -132,38 +131,16 @@ public class SQLiteControl implements Runnable
                         }
 
                         bundle.putParcelableArrayList("constellations", returnValues);
-                        Message message = handler.obtainMessage();
-
-                        message.what = MainActivity.GET_CONSTELLATION_LIST;
-                        message.setData(bundle);
-
-                        handler.sendMessage(message);
-                    }
-                    else if(columns.length == 1)
-                    {
-
-                        Message message;
-                        Bundle bundle = new Bundle();
-
-                        if(cursor.moveToLast())
-                        {
-                            bundle.putInt("id", cursor.getInt(0));
-                        }
-                        else
-                        {
-                            bundle.putInt("id", 0);
-                        }
-
-                        message = handler.obtainMessage();
-                        message.what = MainActivity.GET_LAST_CONSTELLATION_ID;
-                        message.setData(bundle);
-                        handler.sendMessage(message);
 
                     }
 
+                    message = handler.obtainMessage();
+                    message.what = select_id;
+                    message.setData(bundle);
+
+                    handler.sendMessage(message);
 
                     cursor.close();
-
 
                     break;
 
@@ -223,9 +200,10 @@ public class SQLiteControl implements Runnable
        // sqlite.update(table, values, "id=?", new String[] {id});
     }
 
-    public void select(String table, String columns[], String selection, String selectionArgs[])
+    public void select(String table, String columns[], String selection, String selectionArgs[], int flag)
     {
         task_id = TASK_SELECT;
+        select_id = flag;
 
         sqlite = helper.getReadableDatabase();
         // String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy
@@ -241,6 +219,7 @@ public class SQLiteControl implements Runnable
     public void db_close()
     {
         task_id = TASK_NONE;
+        select_id = 0;
         table = null;
         id = null;
         contentValues= null;

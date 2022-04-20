@@ -105,31 +105,27 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         create_star(width / 2, height / 2);
     }
 
-
-
     public interface Callback_constellation
     {
         public void normal_mode(Constellation_view constellation_view);
     }
 
+    // setter
+
+    public void set_id(int id)
+    {
+        this.id = id;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+        edit_title.setText(title);
+    }
+
     public void setCallback_constellation(MainActivity activity)
     {
         this.mainActivity = activity;
-    }
-
-    public int getIndex()
-    {
-        return this.index;
-    }
-
-    public int get_width()
-    {
-        return this.width;
-    }
-
-    public int get_height()
-    {
-        return this.height;
     }
 
     public void set_width(int width)
@@ -182,6 +178,34 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         }
 
     }
+
+    // getter
+
+    public int get_id()
+    {
+        return this.id;
+    }
+
+    public String getTitle()
+    {
+        return this.title;
+    }
+
+    public int getIndex()
+    {
+        return this.index;
+    }
+
+    public int get_width()
+    {
+        return this.width;
+    }
+
+    public int get_height()
+    {
+        return this.height;
+    }
+
 
 
     @Override

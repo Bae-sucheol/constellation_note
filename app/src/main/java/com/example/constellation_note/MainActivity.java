@@ -5,6 +5,7 @@ import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     public static final int GET_LAST_CONSTELLATION_ID = 1;
     public static final int GET_CONSTELLATION_LIST = 2;
+    public static final int GET_CONSTELLATION_SINGLE = 3;
 
     private static boolean temp_star_mode = false;
 
@@ -94,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     //private static Handler handler = new Handler();
     //private Handler handler = new MainThreadHandler(this);
     private Handler handler = new MainHandler(this);
+
+    private int swap_target = 0;
 
   @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -142,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         imageView_add_constellation = findViewById(R.id.imageView_add_constellation);
 
         //(String table, String columns[], String selection, String selectionArgs[], String orderBy)
-        sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"id"}, null, null);
+        sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"id"}, null, null, GET_LAST_CONSTELLATION_ID);
         submitRunnable(sqLiteControl);
 
     }
@@ -209,6 +213,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         sqLiteControl.insert(sqLiteControl.getTable_constellation(), contentValues);
         submitRunnable(sqLiteControl);
+    }
+
+    public void create_constellation(Constellation_data constellation_data)
+    {
+        Constellation_view constellation = new Constellation_view(this, constellations.size());
+        constellation.setId(constellation_data.getId());
+        constellation.setTitle(Integer.toString(constellation_data.getId()));
+        constellation.setCallback_constellation(this);
+        constellation.setOnTouchListener(this);
+        constellations.add(constellation);
+        frameLayout_main.addView(constellation);
     }
 
 
@@ -309,6 +324,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         {
 
                             set_constellation_index(true);
+                            request_constellation_data(0);
 
                             // 한 페이지 만큼을 움직여야 한다.
                             page_deviation = current_x + (width - touch_move_distance);
@@ -318,6 +334,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         {
 
                             set_constellation_index(false);
+                            request_constellation_data(1);
 
                             page_deviation = current_x - (width + touch_move_distance);
 
@@ -526,6 +543,61 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
             float constellation_position = (width / 2) + (constellation.get_width() * (constellation.getIndex() - center_index) ) - constellation.get_width() / 2;
             constellation.setX( (int)(constellation_position) );
+        }
+
+    }
+
+    private void request_constellation_data(int direction)
+    {
+        // true 가 들어오면 1번째 인덱스의 id 값을 가져와서
+        // 0번째(첫째)인덱스에 가져온 id의 별자리의 전 별자리 값들을 가져와서 덮어 씌운다.
+
+
+        // false 가 들어오면 3번째 인덱스의 id값을 가져와서
+        // 4번째(마지막)인덱스에 가져온 id의 별자리에 다음 별자리 값들을 가져와서 덮어 씌운다.
+
+        String selection = "id = ?";
+        String selectionArgs[] = new String[1];
+        int target = 1 + (2 * direction);
+        swap_target = (4 * direction);
+
+        Iterator<Constellation_view> iter = constellations.iterator();
+
+        while(iter.hasNext())
+        {
+            Constellation_view constellation = iter.next();
+
+            if(constellation.getIndex() == target)
+            {
+                selectionArgs[0] = Integer.toString(constellation.get_id() + (2 * direction - 1));
+                break;
+            }
+        }
+
+        sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"id", "title"}, selection, selectionArgs, GET_CONSTELLATION_SINGLE);
+        submitRunnable(sqLiteControl);
+
+    }
+
+    public void swap_constellation_data(Constellation_data constellation_data)
+    {
+
+        //swap_target 을 이용한다.
+
+        Iterator<Constellation_view> iter = constellations.iterator();
+
+        while(iter.hasNext())
+        {
+            Constellation_view constellation = iter.next();
+
+            if(constellation.getIndex() == swap_target)
+            {
+                constellation.set_id(constellation_data.getId());
+                constellation.setTitle(Integer.toString(constellation_data.getId()));
+                constellation.requestLayout();
+
+                break;
+            }
         }
 
     }
@@ -744,7 +816,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         }
 
-        sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"id", "title"}, selection, selectionArgs);
+        sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"id", "title"}, selection, selectionArgs, GET_CONSTELLATION_LIST);
         submitRunnable(sqLiteControl);
 
     }
