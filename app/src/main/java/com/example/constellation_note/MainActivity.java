@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public static final int GET_LAST_CONSTELLATION_ID = 1;
     public static final int GET_CONSTELLATION_LIST = 2;
     public static final int GET_CONSTELLATION_SINGLE = 3;
+    public static final int GET_STARS_LIST = 4;
 
     private static boolean temp_star_mode = false;
 
@@ -98,6 +99,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private Handler handler = new MainHandler(this);
 
     private int swap_target = 0;
+
+    private int max_constellation_index;
 
   @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -224,6 +227,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         constellation.setOnTouchListener(this);
         constellations.add(constellation);
         frameLayout_main.addView(constellation);
+
+        request_stars_data(constellation_data.getId());
     }
 
 
@@ -294,7 +299,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     if(isTouchConstellation && touch_pre_x == current_x)
                     {
                         isTouchConstellation = false;
-                        creative_mode((Constellation_view)view);
+                        if(view instanceof Constellation_view)
+                        {
+                            creative_mode((Constellation_view)view);
+                        }
                     }
 
                     if(constellations.size() < 4)
@@ -547,6 +555,50 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     }
 
+
+    // 작업 쓰레드에 정보를 요청해서 받으면 처리를 하는거라
+    // 어느 별자리에서 요청했는지 나중에 선별해서 넣어줘야한다.
+    // 어차피 보이는 뷰3개 안보이는뷰 2개로 최대 5개이기 때문에
+    // 탐색 비용은 적을 것 같다.
+    private void request_stars_data(int constellation_id)
+    {
+        String selection = "constellation_id = ?";
+        String selectionArgs[] = new String[1];
+
+        selectionArgs[0] = Integer.toString(constellation_id);
+
+        sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"*"}, selection, selectionArgs, GET_STARS_LIST);
+        submitRunnable(sqLiteControl);
+    }
+
+    public void set_stars_data(ArrayList<Star_data> stars)
+    {
+        int constellation_id = stars.get(0).getConstellation_id();
+
+        Iterator<Constellation_view> iter = constellations.iterator();
+
+        while(iter.hasNext())
+        {
+            Constellation_view constellation_view = iter.next();
+
+            if(constellation_id == constellation_view.get_id())
+            {
+
+                Iterator<Star_data> iterator = stars.iterator();
+
+                while(iterator.hasNext())
+                {
+                    // 여기서 별을만드는 동작을 구현해야함.
+                    // 오늘은 여기까지
+                    // constellation_view.create_star();
+                }
+
+                break;
+            }
+        }
+
+    }
+
     private void request_constellation_data(int direction)
     {
         // true 가 들어오면 1번째 인덱스의 id 값을 가져와서
@@ -569,7 +621,24 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
             if(constellation.getIndex() == target)
             {
-                selectionArgs[0] = Integer.toString(constellation.get_id() + (2 * direction - 1));
+
+                int constellation_id = constellation.get_id();
+                int next_id = constellation_id + (2 * direction - 1);
+
+                // 다음 id가 1보다 작으면 즉 0이면 마지막 별자리를 불러와야한다.
+                if(next_id < 1)
+                {
+                    selectionArgs[0] = Integer.toString(max_constellation_index);
+                }
+                else if(next_id > max_constellation_index) // 다음 id가 마지막 별자리 id보다 크면 첫번째 별자리를 불러와야한다.
+                {
+                    selectionArgs[0] = Integer.toString(1);
+                }
+                else
+                {
+                    selectionArgs[0] = Integer.toString(next_id);
+                }
+
                 break;
             }
         }
@@ -765,6 +834,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     {
         create_constellations();
         set_constellation_position();
+        max_constellation_index++;
     }
 
     public int getConstellationSize()
@@ -780,7 +850,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     public void select_ConstellationData(int last_id)
     {
-        System.out.println("별자리를 탐색할게.");
+
+        max_constellation_index = last_id;
 
         String selection;
 

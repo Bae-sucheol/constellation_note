@@ -100,6 +100,27 @@ public class SQLiteControl implements Runnable
                         }
 
                     }
+                    else if(select_id == MainActivity.GET_STARS_LIST)
+                    {
+
+                        ArrayList<Star_data> returnValues = new ArrayList<>();
+
+                        while(cursor.moveToNext())
+                        {
+
+                            Star_data data = new Star_data();
+                            data.setId(cursor.getInt(0));
+                            data.setTitle(cursor.getString(1));
+                            data.setContent(cursor.getString(2));
+                            data.setParent_index(cursor.getInt(4));
+                            data.setRelative_x(cursor.getFloat(5));
+                            data.setRelative_y(cursor.getFloat(6));
+                            data.setConstellation_id(cursor.getInt(7));
+
+                        }
+
+                        bundle.putParcelableArrayList("stars", returnValues);
+                    }
                     else
                     {
                         System.out.println("길이가 2이상이네?");

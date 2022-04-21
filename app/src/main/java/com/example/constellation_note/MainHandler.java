@@ -108,6 +108,16 @@ public class MainHandler extends Handler
 
                 break;
 
+            case MainActivity.GET_STARS_LIST :
+
+                ArrayList<Star_data> return_star_value = msg.getData().getParcelableArrayList("stars");
+
+                mainActivity.set_stars_data(return_star_value);
+
+                break;
+
+
+
             default:
 
                 break;
