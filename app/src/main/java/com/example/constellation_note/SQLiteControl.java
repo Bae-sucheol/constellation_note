@@ -109,7 +109,7 @@ public class SQLiteControl implements Runnable
                         {
 
                             Star_data data = new Star_data();
-                            data.setId(cursor.getInt(0));
+                            data.set_id(cursor.getInt(0));
                             data.setTitle(cursor.getString(1));
                             data.setContent(cursor.getString(2));
                             data.setParent_index(cursor.getInt(4));

@@ -3,6 +3,7 @@ package com.example.constellation_note;
 public class Star_data extends Constellation_data
 {
 
+    private int id;
     private int constellation_id;
     private String content;
     private float relative_x;
@@ -10,6 +11,11 @@ public class Star_data extends Constellation_data
     private int parent_index;
 
     //setter
+
+    public void set_id(int id)
+    {
+        this.id = id;
+    }
 
     public void setConstellation_id(int constellation_id)
     {
@@ -37,6 +43,11 @@ public class Star_data extends Constellation_data
     }
 
     //getter
+
+    public int get_id()
+    {
+        return this.id;
+    }
 
     public int getConstellation_id()
     {

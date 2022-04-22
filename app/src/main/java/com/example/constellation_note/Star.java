@@ -107,6 +107,16 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
         this.setY(y - size / 2);
     }
 
+    public void setParent_index(int parent_index)
+    {
+        this.parent_index = parent_index;
+    }
+
+    public int getParent_index()
+    {
+        return this.parent_index;
+    }
+
     public float get_x()
     {
         return this.getX() + size / 2;
@@ -124,8 +134,14 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
     public void remove_line()
     {
+        if(line == null)
+        {
+            return;
+        }
+
         constellation.removeView(line);
         line = null;
+
     }
 
     public void calculate_relative_position()
@@ -164,6 +180,11 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
     public void draw_line()
     {
+        if(parent == null)
+        {
+            return;
+        }
+
         double delta_x = parent.get_x() - this.get_x();
         double delta_y = parent.get_y() - this.get_y();
 
@@ -193,7 +214,7 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
         contentValues.put("content", "임시 내용");
         contentValues.put("x", this.relative_x);
         contentValues.put("y", this.relative_y);
-        contentValues.put("constellation_id", constellation.getIndex());// 임시.
+        contentValues.put("constellation_id", constellation.get_id());// 임시.
 
         if(this.parent != null)
         {

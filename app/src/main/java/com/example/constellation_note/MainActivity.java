@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     private int swap_target = 0;
 
-    private int max_constellation_index;
+    private int max_constellation_index = 0;
 
   @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -207,11 +207,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         Constellation_view constellation = new Constellation_view(this, constellations.size());
         constellation.setCallback_constellation(this);
         constellation.setOnTouchListener(this);
+        constellation.set_id(max_constellation_index);
         constellations.add(constellation);
         frameLayout_main.addView(constellation);
 
         // sql 삽입
         ContentValues contentValues = new ContentValues();
+        contentValues.put("id", constellation.get_id());
         contentValues.put("title", "별자리 이름");
 
         sqLiteControl.insert(sqLiteControl.getTable_constellation(), contentValues);
@@ -567,7 +569,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         selectionArgs[0] = Integer.toString(constellation_id);
 
-        sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"*"}, selection, selectionArgs, GET_STARS_LIST);
+        sqLiteControl.select(sqLiteControl.getTable_note(), new String[] {"*"}, selection, selectionArgs, GET_STARS_LIST);
         submitRunnable(sqLiteControl);
     }
 
@@ -588,10 +590,25 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                 while(iterator.hasNext())
                 {
+
+                    Star_data star_data = iterator.next();
                     // 여기서 별을만드는 동작을 구현해야함.
                     // 오늘은 여기까지
                     // constellation_view.create_star();
+                    constellation_view.create_star(star_data.getRelative_x(), star_data.getRelative_y());
+                    temp_star = constellation_view.get_last_star();
+                    temp_star.setAlpha(0.5f);
+                    temp_star.setParent_index(star_data.getParent_index());
+                    temp_star.setTitle(star_data.getTitle());
+                    temp_star.setContent(star_data.getContent());
+                    temp_star.setIndex(star_data.get_id());
+
                 }
+
+                constellation_view.find_stars_parent();
+
+                System.out.println("별자리 id : " + constellation_id);
+                System.out.println("별 개수 : " + constellation_view.get_last_star().getIndex());
 
                 break;
             }
@@ -748,35 +765,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     }
 
-    /*
-    public float[] get_touch_position()
-    {
-
-        float touch_position[] = new float[2];
-
-        touch_position[0] = touch_pre_x;
-        touch_position[1] = touch_pre_y;
-
-        return touch_position;
-    }
-     */
-
-    /*
-    public void temp_star(Constellation_view constellation)
-    {
-        temp_star = new Star(this, constellation);
-
-        constellation.requestLayout();
-
-        temp_star.set_Postion(touch_pre_x, touch_pre_y);
-
-        constellation.addView(temp_star);
-
-        temp_star.setAlpha(0.5f);
-        temp_star_mode = true;
-    }
-     */
-
     public void popup_star_menu(View view, Constellation_view constellation)
     {
         Star star = (Star)view;
@@ -798,6 +786,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         temp_star = constellation.get_last_star();
                         temp_star.setAlpha(0.5f);
                         temp_star.setParent(star);
+                        temp_star.insert_into_star();
                         temp_star_mode = true;
 
                         break;

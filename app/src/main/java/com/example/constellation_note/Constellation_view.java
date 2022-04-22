@@ -103,6 +103,8 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         menu_layout.addView(button_confirm);
         this.addView(menu_layout);
         create_star(width / 2, height / 2);
+
+        get_last_star().insert_into_star();
     }
 
     public interface Callback_constellation
@@ -248,8 +250,6 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         if(stars.size() > 1)
         {
             Iterator<Star> iterator = stars.iterator();
-            // 처음 root 별은 무시한다.
-            iterator.next();
 
             while(iterator.hasNext())
             {
@@ -299,7 +299,6 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         stars.add(star);
         this.addView(star);
         this.requestLayout();
-        star.insert_into_star();
 
     }
 
@@ -316,6 +315,44 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
     public MainActivity getMainActivity()
     {
        return this.mainActivity;
+    }
+
+    public void find_stars_parent()
+    {
+        Iterator<Star> iterator = stars.iterator();
+
+        while(iterator.hasNext())
+        {
+            Star iter = iterator.next();
+
+            Star parent = find_star(iter.getParent_index());
+
+            iter.setParent(parent);
+        }
+
+        redraw_star_line();
+    }
+
+    private Star find_star(int id)
+    {
+
+        Iterator<Star> iterator = stars.iterator();
+
+        Star star = null;
+
+        while(iterator.hasNext())
+        {
+            Star iter = iterator.next();
+
+            if(iter.getIndex() == id)
+            {
+                star = iter;
+
+                break;
+            }
+        }
+
+        return star;
     }
 
     /*
