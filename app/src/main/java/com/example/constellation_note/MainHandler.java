@@ -42,14 +42,14 @@ public class MainHandler extends Handler
         {
             case MainActivity.GET_LAST_CONSTELLATION_ID :
 
+                boolean isEmpty = msg.getData().getBoolean("isEmpty");
                 int last_id = msg.getData().getInt("id");
 
-                System.out.println("반환받은 값 : " + last_id);
-
-                if(last_id == 0)
+                if(isEmpty)
                 {
-                    // 아무것도 안해도 됨.
-                    // 나중에 추가할게 있으면 추가하자.
+
+                    System.out.println("별자리가 없어용");
+
                 }
                 else
                 {
@@ -64,11 +64,11 @@ public class MainHandler extends Handler
 
             case MainActivity.GET_CONSTELLATION_LIST :
 
-                System.out.println("값을 받았어." + msg.getData());
-
                 ArrayList<Constellation_data> returnValues = msg.getData().getParcelableArrayList("constellations");
 
                 int size = returnValues.size();
+
+                System.out.println("사이즈가 몇일까? : " + size);
 
                 // 범위로 잡아야 하기 때문에 switch ~ case 말고 그냥 if로..
 
@@ -78,6 +78,7 @@ public class MainHandler extends Handler
                     for(int i = 0; i < size; i++)
                     {
                         mainActivity.create_constellation(returnValues.get(i));
+                        System.out.println("받은값을 뿌려볼게 : " + returnValues.get(i));
                     }
                 }
                 else if(size == 4) // 3,4,1,2 순서

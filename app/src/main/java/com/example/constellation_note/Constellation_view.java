@@ -102,9 +102,6 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
         menu_layout.addView(button_confirm);
         this.addView(menu_layout);
-        create_star(width / 2, height / 2);
-
-        get_last_star().insert_into_star();
     }
 
     public interface Callback_constellation
@@ -299,7 +296,6 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         stars.add(star);
         this.addView(star);
         this.requestLayout();
-
     }
 
     public void remove_star(Star star)

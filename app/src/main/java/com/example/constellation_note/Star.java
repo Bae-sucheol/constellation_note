@@ -158,6 +158,16 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
         this.setY(constellation.get_height() * this.relative_y);
     }
 
+    public void setRelative_x(float x)
+    {
+        this.relative_x = x;
+    }
+
+    public void setRelative_y(float y)
+    {
+        this.relative_y = y;
+    }
+
     public void setTitle(String title)
     {
         this.title = title;

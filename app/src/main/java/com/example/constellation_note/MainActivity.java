@@ -208,6 +208,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         constellation.setCallback_constellation(this);
         constellation.setOnTouchListener(this);
         constellation.set_id(max_constellation_index);
+        constellation.create_star(constellation.get_width() / 2, constellation.get_height() / 2);
+
+        constellation.get_last_star().insert_into_star();
         constellations.add(constellation);
         frameLayout_main.addView(constellation);
 
@@ -257,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         temp_star.calculate_relative_position();
                         temp_star.setAlpha(1.0f);
                         temp_star.draw_line();
+                        temp_star.insert_into_star();
                         temp_star_mode = false;
                     }
 
@@ -595,9 +599,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     // 여기서 별을만드는 동작을 구현해야함.
                     // 오늘은 여기까지
                     // constellation_view.create_star();
-                    constellation_view.create_star(star_data.getRelative_x(), star_data.getRelative_y());
+                    constellation_view.create_star(0.0f, 0.0f);
                     temp_star = constellation_view.get_last_star();
-                    temp_star.setAlpha(0.5f);
+                    temp_star.setRelative_x(star_data.getRelative_x());
+                    temp_star.setRelative_y(star_data.getRelative_y());
+                    temp_star.set_Position_relative();
                     temp_star.setParent_index(star_data.getParent_index());
                     temp_star.setTitle(star_data.getTitle());
                     temp_star.setContent(star_data.getContent());
@@ -786,7 +792,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         temp_star = constellation.get_last_star();
                         temp_star.setAlpha(0.5f);
                         temp_star.setParent(star);
-                        temp_star.insert_into_star();
                         temp_star_mode = true;
 
                         break;
@@ -846,7 +851,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         String selectionArgs[];
 
-        if(last_id > 5)
+        if(last_id > 4)
         {
             // for 문 쓰는 것 보다 이게 더 간편함.
             selection = "id IN(?, ?, ?, ?, ?)";
@@ -862,11 +867,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         {
 
             StringBuffer stringBuffer = new StringBuffer("id IN(");
-            selectionArgs = new String[last_id];
+            selectionArgs = new String[last_id + 1];
 
-            for(int i = 0; i < last_id; i++)
+            for(int i = 0; i <= last_id; i++)
             {
-                selectionArgs[i] = Integer.toString(i + 1);
+                selectionArgs[i] = Integer.toString(i);
                 stringBuffer.append("?,");
             }
 

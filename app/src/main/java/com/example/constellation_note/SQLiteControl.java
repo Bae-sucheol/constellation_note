@@ -92,10 +92,12 @@ public class SQLiteControl implements Runnable
 
                         if(cursor.moveToLast())
                         {
+                            bundle.putBoolean("isEmpty", false);
                             bundle.putInt("id", cursor.getInt(0));
                         }
                         else
                         {
+                            bundle.putBoolean("isEmpty", true);
                             bundle.putInt("id", 0);
                         }
 
@@ -117,6 +119,7 @@ public class SQLiteControl implements Runnable
                             data.setRelative_y(cursor.getFloat(6));
                             data.setConstellation_id(cursor.getInt(7));
 
+                            returnValues.add(data);
                         }
 
                         bundle.putParcelableArrayList("stars", returnValues);
@@ -248,7 +251,7 @@ public class SQLiteControl implements Runnable
         selection = null;
         selectionArgs = null;
 
-        sqlite.close();
+        //sqlite.close();
         //helper.close();
     }
 
