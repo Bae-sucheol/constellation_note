@@ -826,9 +826,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     public void onClickCreateConstellation(View view)
     {
+        max_constellation_index++;
         create_constellations();
         set_constellation_position();
-        max_constellation_index++;
     }
 
     public int getConstellationSize()
@@ -838,7 +838,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     public static void submitRunnable(Runnable runnable)
     {
-        executorService.submit(runnable);
+        //executorService.submit(runnable);
+        executorService.execute(runnable);
         //executorService.shutdown();
     }
 

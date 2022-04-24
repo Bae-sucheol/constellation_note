@@ -22,7 +22,7 @@ public class SQLiteHelper extends SQLiteOpenHelper
         // 객체가 존재하지 않으면 만들어야한다.
         if(sqLiteHelper == null)
         {
-            sqLiteHelper = new SQLiteHelper(context, "constellation_note.db", null, 22);
+            sqLiteHelper = new SQLiteHelper(context, "constellation_note.db", null, 23);
         }
 
         return sqLiteHelper;
