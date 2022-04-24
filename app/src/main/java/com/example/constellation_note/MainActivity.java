@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     private int swap_target = 0;
 
-    private int max_constellation_index = 0;
+    private int max_constellation_index = -1;
 
   @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -225,8 +225,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     public void create_constellation(Constellation_data constellation_data)
     {
+        System.out.println("create constellation 실행확인.");
+
         Constellation_view constellation = new Constellation_view(this, constellations.size());
-        constellation.setId(constellation_data.getId());
+        constellation.set_id(constellation_data.getId());
         constellation.setTitle(Integer.toString(constellation_data.getId()));
         constellation.setCallback_constellation(this);
         constellation.setOnTouchListener(this);
@@ -568,6 +570,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     // 탐색 비용은 적을 것 같다.
     private void request_stars_data(int constellation_id)
     {
+        System.out.println("request starts data 작동 확인");
+
         String selection = "constellation_id = ?";
         String selectionArgs[] = new String[1];
 
@@ -581,21 +585,25 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     {
         int constellation_id = stars.get(0).getConstellation_id();
 
-        Iterator<Constellation_view> iter = constellations.iterator();
+        System.out.println("set stars data - 별자리 아이디 : " + constellation_id);
 
-        while(iter.hasNext())
+        Iterator<Constellation_view> constellation_iterator = constellations.iterator();
+
+        System.out.println("별자리 리스트 개수 : " + constellations.size());
+
+        while(constellation_iterator.hasNext())
         {
-            Constellation_view constellation_view = iter.next();
+            Constellation_view constellation_view = constellation_iterator.next();
 
             if(constellation_id == constellation_view.get_id())
             {
+                System.out.println("오 맞는 별자리를 찾았어요.");
+                Iterator<Star_data> star_data_iterator = stars.iterator();
 
-                Iterator<Star_data> iterator = stars.iterator();
-
-                while(iterator.hasNext())
+                while(star_data_iterator.hasNext())
                 {
 
-                    Star_data star_data = iterator.next();
+                    Star_data star_data = star_data_iterator.next();
                     // 여기서 별을만드는 동작을 구현해야함.
                     // 오늘은 여기까지
                     // constellation_view.create_star();
@@ -609,6 +617,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     temp_star.setContent(star_data.getContent());
                     temp_star.setIndex(star_data.get_id());
 
+                    System.out.println("별하나 완성!");
                 }
 
                 constellation_view.find_stars_parent();

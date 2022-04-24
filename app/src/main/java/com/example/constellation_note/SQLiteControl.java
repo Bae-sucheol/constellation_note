@@ -121,7 +121,7 @@ public class SQLiteControl implements Runnable
 
                             returnValues.add(data);
                         }
-
+                        System.out.println("get_star_list 작동확인");
                         bundle.putParcelableArrayList("stars", returnValues);
                     }
                     else

@@ -113,6 +113,17 @@ public class MainHandler extends Handler
 
                 ArrayList<Star_data> return_star_value = msg.getData().getParcelableArrayList("stars");
 
+                Iterator<Star_data> iter = return_star_value.iterator();
+
+                while(iter.hasNext())
+                {
+                    Star_data data = iter.next();
+
+                    System.out.println(" 별 아이디 : " + data.get_id());
+                    System.out.println(" 별자리 아이디 : " + data.getConstellation_id());
+                }
+                // 여기 까지는 잘 작동한다.
+
                 mainActivity.set_stars_data(return_star_value);
 
                 break;
