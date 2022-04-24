@@ -1,39 +1,28 @@
 package com.example.constellation_note;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.UiThread;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintSet;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -101,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private int swap_target = 0;
 
     private int max_constellation_index = -1;
+
+    private boolean isLongclick = false;
 
   @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -225,7 +216,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     public void create_constellation(Constellation_data constellation_data)
     {
-        System.out.println("create constellation 실행확인.");
 
         Constellation_view constellation = new Constellation_view(this, constellations.size());
         constellation.set_id(constellation_data.getId());
@@ -248,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             switch (motionEvent.getAction())
             {
                 case MotionEvent.ACTION_DOWN :
-                    System.out.println("움직여라1");
+
                     touch_pre_x = motionEvent.getX();
                     touch_pre_y = motionEvent.getY();
 
@@ -284,10 +274,39 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
         else
         {
+            Timer long_click_timer = null;
+            TimerTask long_click_timerTask = null;
 
             if(view instanceof Constellation_view)
             {
                 isTouchConstellation = true;
+                long_click_timer = new Timer();
+
+                long_click_timerTask = new TimerTask()
+                {
+
+                    public void run()
+                    {
+
+                        runOnUiThread(new Runnable()
+                        {
+
+                            public void run()
+                            {
+
+                                if(touch_pre_x == motionEvent.getX() && touch_pre_y == motionEvent.getY() && isTouchConstellation)
+                                {
+                                    isLongclick = true;
+                                    popup_constellation_menu(view);
+                                }
+
+                            }
+
+                        });
+
+                    }
+                };
+
             }
 
             switch (motionEvent.getAction())
@@ -296,7 +315,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 case MotionEvent.ACTION_DOWN:
 
                     touch_pre_x = motionEvent.getX();
+                    touch_pre_y = motionEvent.getY();
                     touch_move_pre_x = touch_pre_x;
+
+                    if(view instanceof Constellation_view)
+                    {
+                        isLongclick = false;
+                        long_click_timer.schedule(long_click_timerTask, 1000); // 1초 후
+                    }
 
                     break;
                 // 화면 터치가 종료될 때. 즉 화면에서 손을 뗄 때.
@@ -304,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                     float current_x = motionEvent.getX();
 
-                    if(isTouchConstellation && touch_pre_x == current_x)
+                    if(isTouchConstellation && touch_pre_x == current_x && isLongclick == false)
                     {
                         isTouchConstellation = false;
                         if(view instanceof Constellation_view)
@@ -319,9 +345,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     }
 
                     touch_move_distance = current_x - touch_pre_x;
-
-                    System.out.println("거리 : " + touch_move_distance);
-                    System.out.println("거리 절대값 : " + Math.abs(touch_move_distance));
 
                     // 일정 범위 이상 스와이프 했을경우 다음 페이지(별자리)로 넘어간다.
                     // 좌측으로 스와이프 할 때 우측으로 스와이프 할 때가 음수 양수로 값이 다르다.
@@ -473,7 +496,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             float normalization = (center_x - current_x) / (width / 2);
             normalization = Math.abs(normalization);
             float interpolation = (1.0f - normalization) + (0.2f * normalization);
-            System.out.println("normalization : " + normalization);
+
             constellation.setAlpha(interpolation);
         }
 
@@ -488,8 +511,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         //float delta_distance = (pre_x - post_x) / total_count;
         float delta_distance = (post_x - pre_x) / total_count;
-
-        System.out.println((post_x - pre_x));
 
         // 부드러운 이동을 위해 타이머를 이용하여 목표 지점까지 등속도로 움직인다.
         // 이때 UI 쓰레드에서 작동할 수 있도록 runOnUiThread 메소드를 이용한다.
@@ -570,7 +591,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     // 탐색 비용은 적을 것 같다.
     private void request_stars_data(int constellation_id)
     {
-        System.out.println("request starts data 작동 확인");
 
         String selection = "constellation_id = ?";
         String selectionArgs[] = new String[1];
@@ -585,11 +605,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     {
         int constellation_id = stars.get(0).getConstellation_id();
 
-        System.out.println("set stars data - 별자리 아이디 : " + constellation_id);
-
         Iterator<Constellation_view> constellation_iterator = constellations.iterator();
-
-        System.out.println("별자리 리스트 개수 : " + constellations.size());
 
         while(constellation_iterator.hasNext())
         {
@@ -597,7 +613,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
             if(constellation_id == constellation_view.get_id())
             {
-                System.out.println("오 맞는 별자리를 찾았어요.");
                 Iterator<Star_data> star_data_iterator = stars.iterator();
 
                 while(star_data_iterator.hasNext())
@@ -617,13 +632,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     temp_star.setContent(star_data.getContent());
                     temp_star.setIndex(star_data.get_id());
 
-                    System.out.println("별하나 완성!");
                 }
 
                 constellation_view.find_stars_parent();
-
-                System.out.println("별자리 id : " + constellation_id);
-                System.out.println("별 개수 : " + constellation_view.get_last_star().getIndex());
 
                 break;
             }
@@ -703,7 +714,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     }
 
-
     private void creative_mode(Constellation_view view)
     {
 
@@ -780,12 +790,33 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     }
 
+    public void popup_constellation_menu(View view)
+    {
+
+        Constellation_view constellation_view = (Constellation_view)view;
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+
+        dialog.setTitle("삭제 메시지");
+        dialog.setMessage("삭제하시겠습니까?");
+
+        dialog.setPositiveButton("확인", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+
+            }
+        });
+        dialog.show();
+    }
+
     public void popup_star_menu(View view, Constellation_view constellation)
     {
         Star star = (Star)view;
 
         final android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(this, view);
-        getMenuInflater().inflate(R.menu.popup_menu,popupMenu.getMenu());
+        getMenuInflater().inflate(R.menu.popup_star_menu,popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -849,7 +880,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     {
         //executorService.submit(runnable);
         executorService.execute(runnable);
-        //executorService.shutdown();
     }
 
     public void select_ConstellationData(int last_id)
@@ -895,5 +925,4 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         submitRunnable(sqLiteControl);
 
     }
-
 }

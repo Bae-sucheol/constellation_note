@@ -121,12 +121,11 @@ public class SQLiteControl implements Runnable
 
                             returnValues.add(data);
                         }
-                        System.out.println("get_star_list 작동확인");
                         bundle.putParcelableArrayList("stars", returnValues);
                     }
                     else
                     {
-                        System.out.println("길이가 2이상이네?");
+
                         ArrayList<Constellation_data> returnValues = new ArrayList<>();
 
                         while(cursor.moveToNext())

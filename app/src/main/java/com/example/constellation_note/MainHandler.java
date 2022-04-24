@@ -54,8 +54,6 @@ public class MainHandler extends Handler
                 else
                 {
 
-                    System.out.println("반환받은 마지막 요소 : " + last_id);
-
                     mainActivity.select_ConstellationData(last_id);
 
                 }
@@ -68,8 +66,6 @@ public class MainHandler extends Handler
 
                 int size = returnValues.size();
 
-                System.out.println("사이즈가 몇일까? : " + size);
-
                 // 범위로 잡아야 하기 때문에 switch ~ case 말고 그냥 if로..
 
                 // 1 ~ 3 까지는 그냥 화면에 뿌려주면 된다.
@@ -78,7 +74,6 @@ public class MainHandler extends Handler
                     for(int i = 0; i < size; i++)
                     {
                         mainActivity.create_constellation(returnValues.get(i));
-                        System.out.println("받은값을 뿌려볼게 : " + returnValues.get(i));
                     }
                 }
                 else if(size == 4) // 3,4,1,2 순서
@@ -105,24 +100,11 @@ public class MainHandler extends Handler
 
                 mainActivity.swap_constellation_data(returnValue.get(0));
 
-                System.out.println("스왑할 데이터 : " + returnValue.get(0).getId());
-
                 break;
 
             case MainActivity.GET_STARS_LIST :
 
                 ArrayList<Star_data> return_star_value = msg.getData().getParcelableArrayList("stars");
-
-                Iterator<Star_data> iter = return_star_value.iterator();
-
-                while(iter.hasNext())
-                {
-                    Star_data data = iter.next();
-
-                    System.out.println(" 별 아이디 : " + data.get_id());
-                    System.out.println(" 별자리 아이디 : " + data.getConstellation_id());
-                }
-                // 여기 까지는 잘 작동한다.
 
                 mainActivity.set_stars_data(return_star_value);
 

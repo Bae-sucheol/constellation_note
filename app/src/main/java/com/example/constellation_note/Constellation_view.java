@@ -102,6 +102,7 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
         menu_layout.addView(button_confirm);
         this.addView(menu_layout);
+
     }
 
     public interface Callback_constellation
@@ -204,7 +205,6 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
     {
         return this.height;
     }
-
 
 
     @Override
