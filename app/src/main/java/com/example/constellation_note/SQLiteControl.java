@@ -18,8 +18,10 @@ public class SQLiteControl implements Runnable
     private static final int TASK_DELETE = 2;
     private static final int TASK_UPDATE = 3;
     private static final int TASK_SELECT = 4;
+    private static final int TASK_ALTER = 5;
 
     private int select_id = 0;
+    private boolean update_multiple = false;
 
     private SQLiteHelper helper;
     private SQLiteDatabase sqlite;
@@ -71,13 +73,21 @@ public class SQLiteControl implements Runnable
 
                 case TASK_DELETE :
 
-                    sqlite.delete(table, "id=?", new String[] {id});
-
+                    sqlite.delete(table, selection, selectionArgs);
+                    
                     break;
 
                 case TASK_UPDATE :
 
-                    sqlite.update(table, contentValues, "id=?", new String[] {id});
+                    if(update_multiple)
+                    {
+                        sqlite.execSQL(String.format("UPDATE %s SET %s = id - 1 WHERE %s;",
+                                getTable_constellation(), "id" , selection));
+                    }
+                    else
+                    {
+                        sqlite.update(table, contentValues, "id = ?", new String[]{id});
+                    }
 
                     break;
 
@@ -167,6 +177,13 @@ public class SQLiteControl implements Runnable
 
                     break;
 
+                case TASK_ALTER :
+
+                    sqlite.execSQL(String.format("ALTER TABLE %s AUTO_INCREMENT = %s;",
+                            getTable_constellation(), id));
+
+                    break;
+
                 default:
 
                     break;
@@ -195,11 +212,13 @@ public class SQLiteControl implements Runnable
     }
 
     // 삭제
-    public void delete(String table, String id)
+    public void delete(String table, String selection, String[] selectionArgs)
     {
         task_id = TASK_DELETE;
         this.table = table;
-        this.id = id;
+        //this.id = id;
+        this.selection = selection;
+        this.selectionArgs = selectionArgs;
 
         sqlite = helper.getWritableDatabase();
 
@@ -207,20 +226,26 @@ public class SQLiteControl implements Runnable
     }
 
     // 갱신
-    public void update(String table, String id, String title)
+    public void update(String table, ContentValues contentValues, String id)
     {
         task_id = TASK_UPDATE;
         this.table = table;
         this.id = id;
+        this.contentValues = contentValues;
 
         sqlite = helper.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put("title", title);
-
-        this.contentValues = values;
-
        // sqlite.update(table, values, "id=?", new String[] {id});
+    }
+
+    public void update(String table, String selection)
+    {
+        task_id = TASK_UPDATE;
+        update_multiple = true;
+        this.table = table;
+        this.selection = selection;
+
+        sqlite = helper.getWritableDatabase();
     }
 
     public void select(String table, String columns[], String selection, String selectionArgs[], int flag)
@@ -237,12 +262,19 @@ public class SQLiteControl implements Runnable
         this.selectionArgs = selectionArgs;
     }
 
+    public void set_autoincrement(String id)
+    {
+        task_id = TASK_ALTER;
+        this.id = id;
+        sqlite = helper.getWritableDatabase();
+    }
 
     // 커넥션 종료
     public void db_close()
     {
         task_id = TASK_NONE;
         select_id = 0;
+        update_multiple = false;
         table = null;
         id = null;
         contentValues= null;

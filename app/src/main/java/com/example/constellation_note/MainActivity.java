@@ -798,14 +798,42 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
 
         dialog.setTitle("삭제 메시지");
-        dialog.setMessage("삭제하시겠습니까?");
+        dialog.setMessage("선택한 별자리를 삭제하시겠습니까? 별자리 내의 모든 기록이 같이 삭제됩니다." + constellation_view.get_id());
 
         dialog.setPositiveButton("확인", new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
+                /*
+                    1. 별자리 내의 모든 별들을 삭제.
+                    2. 별자리 삭제
+                    3. 별자리 테이블의 모든 별자리 id를 적절하게 수정
+                    4. autoincrement 수정
+                 */
 
+                String target_id = Integer.toString(constellation_view.get_id());
+
+                // 1. 별자리 내의 모든 별들을 삭제
+                sqLiteControl.delete(sqLiteControl.getTable_note(), "constellation_id = ?", new String[] {target_id});
+                submitRunnable(sqLiteControl);
+
+                // 2. 별자리 삭제
+                sqLiteControl.delete(sqLiteControl.getTable_constellation(), "id = ?", new String[] {target_id});
+                submitRunnable(sqLiteControl);
+
+                constellations.remove(constellation_view);
+                frameLayout_main.removeView(constellation_view);
+
+                // 별자리 테이블의 모든 별자리 id를 적절하게 수정
+                sqLiteControl.update(sqLiteControl.getTable_constellation(),"id > " + target_id);
+                submitRunnable(sqLiteControl);
+
+                // autoincrement 수정
+                //sqLiteControl.set_autoincrement(Integer.toString(max_constellation_index));
+                //submitRunnable(sqLiteControl);
+                // 가독성을 위해 따로 증감문.
+                max_constellation_index--;
             }
         });
         dialog.show();

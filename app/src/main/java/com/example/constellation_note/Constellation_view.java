@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
+import android.os.Handler;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -46,6 +47,9 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
     private List<Star> stars = new ArrayList<>();
 
     private Context context;
+
+    // sql 컨트롤 객체
+    private SQLiteControl sqLiteControl;
 
     public Constellation_view(@NonNull Context context, int index)
     {
@@ -103,6 +107,9 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         menu_layout.addView(button_confirm);
         this.addView(menu_layout);
 
+        Handler handler = MainHandler.getMainHandler(context);
+
+        sqLiteControl = new SQLiteControl(SQLiteHelper.getSqLiteHelper(getContext()), handler);
     }
 
     public interface Callback_constellation
