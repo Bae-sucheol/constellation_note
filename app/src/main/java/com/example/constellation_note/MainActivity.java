@@ -140,7 +140,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         imageView_add_constellation = findViewById(R.id.imageView_add_constellation);
 
         //(String table, String columns[], String selection, String selectionArgs[], String orderBy)
-        sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"id"}, null, null, GET_LAST_CONSTELLATION_ID);
+        //sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"id"}, null, null, GET_LAST_CONSTELLATION_ID);
+        //String table, String columns[], String selection, String selectionArgs[], int flag)
+
+        SQLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_SELECT, sqLiteControl.getTable_constellation(), new String[] {"id"}, GET_LAST_CONSTELLATION_ID));
         submitRunnable(sqLiteControl);
 
     }
@@ -210,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         contentValues.put("id", constellation.get_id());
         contentValues.put("title", "별자리 이름");
 
-        sqLiteControl.insert(sqLiteControl.getTable_constellation(), contentValues);
+        sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_INSERT, sqLiteControl.getTable_constellation(), contentValues));
         submitRunnable(sqLiteControl);
     }
 
@@ -597,7 +600,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         selectionArgs[0] = Integer.toString(constellation_id);
 
-        sqLiteControl.select(sqLiteControl.getTable_note(), new String[] {"*"}, selection, selectionArgs, GET_STARS_LIST);
+        sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_SELECT, sqLiteControl.getTable_note(), new String[] {"*"}, selection, selectionArgs, GET_STARS_LIST));
         submitRunnable(sqLiteControl);
     }
 
@@ -686,7 +689,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             }
         }
 
-        sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"id", "title"}, selection, selectionArgs, GET_CONSTELLATION_SINGLE);
+        sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_SELECT, sqLiteControl.getTable_constellation(), new String[] {"id", "title"}, selection, selectionArgs, GET_CONSTELLATION_SINGLE));
         submitRunnable(sqLiteControl);
 
     }
@@ -815,23 +818,28 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 String target_id = Integer.toString(constellation_view.get_id());
 
                 // 1. 별자리 내의 모든 별들을 삭제
-                sqLiteControl.delete(sqLiteControl.getTable_note(), "constellation_id = ?", new String[] {target_id});
+                sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_DELETE, sqLiteControl.getTable_note(), "constellation_id = ?", new String[] {target_id}));
                 submitRunnable(sqLiteControl);
 
+                // 아마 실행 후 바로 아래 구문이 실행되어 별자리만 삭제하는 것 같으니 중간에 작업이 끝났을 때 다시 실행하도록 바꿔야 한다.
+
                 // 2. 별자리 삭제
-                sqLiteControl.delete(sqLiteControl.getTable_constellation(), "id = ?", new String[] {target_id});
+                sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_DELETE, sqLiteControl.getTable_constellation(), "id = ?", new String[] {target_id}));
                 submitRunnable(sqLiteControl);
 
                 constellations.remove(constellation_view);
                 frameLayout_main.removeView(constellation_view);
 
                 // 별자리 테이블의 모든 별자리 id를 적절하게 수정
-                sqLiteControl.update(sqLiteControl.getTable_constellation(),"id > " + target_id);
+                sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_UPDATE, sqLiteControl.getTable_constellation(), "id > " + target_id, true));
                 submitRunnable(sqLiteControl);
 
+                // update cascade가 적용되지 않아 따로 처리를 또 해주어야함.
+                // 해당 별자리에 포함된 별들의 constellation_id를 다 낮춰줘야함.. sqlite 거지같음.
+
                 // autoincrement 수정
-                //sqLiteControl.set_autoincrement(Integer.toString(max_constellation_index));
-                //submitRunnable(sqLiteControl);
+                sqLiteControl.put_sqldata(new SQL_data(Integer.toString(max_constellation_index)));
+                submitRunnable(sqLiteControl);
                 // 가독성을 위해 따로 증감문.
                 max_constellation_index--;
             }
@@ -949,7 +957,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         }
 
-        sqLiteControl.select(sqLiteControl.getTable_constellation(), new String[] {"id", "title"}, selection, selectionArgs, GET_CONSTELLATION_LIST);
+
+        sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_SELECT, sqLiteControl.getTable_constellation(), new String[] {"id", "title"}, selection, selectionArgs, GET_CONSTELLATION_LIST));
         submitRunnable(sqLiteControl);
 
     }

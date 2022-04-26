@@ -231,8 +231,7 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
             contentValues.put("parent_id", this.parent.getIndex());
         }
 
-        sqLiteControl.insert(sqLiteControl.getTable_note(), contentValues);
-
+        sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_INSERT, sqLiteControl.getTable_note(), contentValues));
         MainActivity.submitRunnable(sqLiteControl);
 
     }

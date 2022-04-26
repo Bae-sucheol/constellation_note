@@ -22,7 +22,7 @@ public class SQLiteHelper extends SQLiteOpenHelper
         // 객체가 존재하지 않으면 만들어야한다.
         if(sqLiteHelper == null)
         {
-            sqLiteHelper = new SQLiteHelper(context, "constellation_note.db", null, 38);
+            sqLiteHelper = new SQLiteHelper(context, "constellation_note.db", null, 46);
         }
 
         return sqLiteHelper;
@@ -31,6 +31,8 @@ public class SQLiteHelper extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase)
     {
+        sqLiteDatabase.execSQL("PRAGMA foreign_keys = ON;");
+
         // constellation 테이블
         String id = "id INTEGER PRIMARY KEY, ";
         String title = "title TEXT NOT NULL";
@@ -43,8 +45,6 @@ public class SQLiteHelper extends SQLiteOpenHelper
 
         sqLiteDatabase.execSQL(query);
 
-        sqLiteDatabase.execSQL("PRAGMA foreign_keys = 1;");
-
         // note 테이블
         id = "id INTEGER, ";
         title = "title TEXT NOT NULL, ";
@@ -54,7 +54,7 @@ public class SQLiteHelper extends SQLiteOpenHelper
         String x = "x FLOAT NOT NULL, ";
         String y = "y FLOAT NOT NULL, ";
         String constellation_id = "constellation_id INTEGER, ";
-        String constraint = "CONSTRAINT constellation_id_fk FOREIGN KEY(constellation_id) REFERENCES constellation(id) ON DELETE CASCADE ";
+        String constraint = "CONSTRAINT constellation_id_fk FOREIGN KEY(constellation_id) REFERENCES constellation(id) ON DELETE CASCADE ON UPDATE CASCADE ";
         String constraint2 = "PRIMARY KEY(id, constellation_id)";
 
         query = "CREATE TABLE note(" +
