@@ -837,6 +837,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 // update cascade가 적용되지 않아 따로 처리를 또 해주어야함.
                 // 해당 별자리에 포함된 별들의 constellation_id를 다 낮춰줘야함.. sqlite 거지같음.
 
+                sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_UPDATE, sqLiteControl.getTable_note(), "constellation_id > " + target_id, true));
+                submitRunnable(sqLiteControl);
+
                 // autoincrement 수정
                 sqLiteControl.put_sqldata(new SQL_data(Integer.toString(max_constellation_index)));
                 submitRunnable(sqLiteControl);
@@ -861,9 +864,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 {
                     case R.id.action_star_create :
 
-                        //touch_pre_x = star.get_x();
-                        //touch_pre_y = star.get_y();
-                        //temp_star(constellation);
                         constellation.create_star(star.get_x(), star.get_y());
                         temp_star = constellation.get_last_star();
                         temp_star.setAlpha(0.5f);

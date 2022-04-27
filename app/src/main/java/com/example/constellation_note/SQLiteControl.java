@@ -87,8 +87,20 @@ public class SQLiteControl implements Runnable
 
                     if(update_multiple)
                     {
-                        sqlite.execSQL(String.format("UPDATE %s SET %s = id - 1 WHERE %s;",
-                                getTable_constellation(), "id" , selection));
+
+                        String target;
+
+                        if(table.equals(getTable_constellation()))
+                        {
+                            target = "id";
+                        }
+                        else
+                        {
+                            target = "constellation_id";
+                        }
+
+                        sqlite.execSQL(String.format("UPDATE %s SET %s = %s - 1 WHERE %s;",
+                                table, target, target , selection));
                     }
                     else
                     {
