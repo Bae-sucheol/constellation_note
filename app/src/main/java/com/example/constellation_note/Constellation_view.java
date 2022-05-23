@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -290,6 +291,11 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         if(mainActivity.isFocused)
         {
             Intent intent = new Intent(getContext(), Create_note.class);
+
+            Bundle bundle = new Bundle();
+            //bundle.putParcelable("star_data", );
+            intent.putExtras(bundle);
+
             mainActivity.startActivity(intent);
         }
     }

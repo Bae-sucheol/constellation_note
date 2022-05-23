@@ -1,20 +1,45 @@
 package com.example.constellation_note;
 
-public class Star_data extends Constellation_data
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Star_data extends Constellation_data implements Parcelable
 {
 
     private int id;
+    private String title;
     private int constellation_id;
     private String content;
     private float relative_x;
     private float relative_y;
     private int parent_index;
 
+    public Star_data()
+    {
+
+    }
+
+    protected Star_data(Parcel in)
+    {
+        id = in.readInt();
+        title = in.readString();
+        constellation_id = in.readInt();
+        content = in.readString();
+        relative_x = in.readFloat();
+        relative_y = in.readFloat();
+        parent_index = in.readInt();
+    }
+
     //setter
 
     public void set_id(int id)
     {
         this.id = id;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
     }
 
     public void setConstellation_id(int constellation_id)
@@ -49,6 +74,11 @@ public class Star_data extends Constellation_data
         return this.id;
     }
 
+    public String getTitle()
+    {
+        return this.title;
+    }
+
     public int getConstellation_id()
     {
         return constellation_id;
@@ -73,4 +103,38 @@ public class Star_data extends Constellation_data
     {
         return parent_index;
     }
+
+    public static final Creator<Star_data> CREATOR = new Creator<Star_data>()
+    {
+        @Override
+        public Star_data createFromParcel(Parcel in)
+        {
+            return new Star_data(in);
+        }
+
+        @Override
+        public Star_data[] newArray(int size)
+        {
+            return new Star_data[size];
+        }
+    };
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i)
+    {
+        parcel.writeInt(id);
+        parcel.writeString(title);
+        parcel.writeInt(constellation_id);
+        parcel.writeString(content);
+        parcel.writeFloat(relative_x);
+        parcel.writeFloat(relative_y);
+        parcel.writeInt(parent_index);
+    }
+
 }

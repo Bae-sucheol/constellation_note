@@ -12,6 +12,8 @@ import androidx.annotation.MainThread;
 
 public class Star extends View implements View.OnLongClickListener, View.OnClickListener
 {
+    // Star 클래스와 Star_data 클래스의 내용이 겹치므로
+    // 내일은 Star 클래스와 Star_data 클래스의 중첩 부분을 제거하고 잘 활용해야 겠다.
 
     // 별의 번호
     private int index;
