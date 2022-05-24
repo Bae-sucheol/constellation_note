@@ -845,6 +845,24 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 submitRunnable(sqLiteControl);
                 // 가독성을 위해 따로 증감문.
                 max_constellation_index--;
+
+                // 삭제되었으니 인덱스를 재정렬 해주어야한다.
+
+                Iterator<Constellation_view> iter = constellations.iterator();
+
+                while(iter.hasNext())
+                {
+                    Constellation_view constellation = iter.next();
+
+                    if(constellation.getIndex() > constellation_view.get_id())
+                    {
+                        constellation.setIndex(constellation.getIndex() - 1);
+                    }
+
+                }
+
+                // 인덱스 재정렬이 끝나면 다시 위치를 재조정
+                set_constellation_position();
             }
         });
         dialog.show();

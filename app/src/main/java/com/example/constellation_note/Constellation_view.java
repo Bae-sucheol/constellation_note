@@ -187,6 +187,11 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
     }
 
+    public void setIndex(int index)
+    {
+        this.index = index;
+    }
+
     // getter
 
     public int get_id()
@@ -293,7 +298,14 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
             Intent intent = new Intent(getContext(), Create_note.class);
 
             Bundle bundle = new Bundle();
-            //bundle.putParcelable("star_data", );
+
+            Star star = (Star)view;
+
+            intent.putExtra("id", star.getIndex());
+            intent.putExtra("constellation_id", this.id);
+            intent.putExtra("title", star.getTitle());
+            intent.putExtra("content", star.getContent());
+
             intent.putExtras(bundle);
 
             mainActivity.startActivity(intent);

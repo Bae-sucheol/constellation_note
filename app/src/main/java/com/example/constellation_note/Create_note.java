@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,8 +19,13 @@ public class Create_note extends AppCompatActivity
     private Toolbar toolbar;
     private SQLiteControl sqLiteControl;
 
-    private Star_data star_data;
+    private EditText edit_title;
+    private EditText edit_content;
+
+    private int id;
     private int constellation_id;
+    private String title;
+    private String content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -32,31 +38,24 @@ public class Create_note extends AppCompatActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        edit_title = findViewById(R.id.edit_create_note_toolbar_title);
+        edit_content = findViewById(R.id.edit_create_note_content);
+
         // 인텐트
         Intent intent = getIntent();
+
+        id = intent.getIntExtra("id", 0);
         constellation_id = intent.getIntExtra("constellation_id", 0);
+        title = intent.getStringExtra("title");
+        content = intent.getStringExtra("content");
+
+        edit_title.setText(title);
+        edit_content.setText(content);
 
         // sqLiteControl 정의
         Handler handler = MainHandler.getMainHandler(this);
 
         sqLiteControl = new SQLiteControl(SQLiteHelper.getSqLiteHelper(this), handler);
-
-        star_data = new Star_data();
-
-        getStarData();
-    }
-
-    // 먼저 데이터를 불러와야 한다.
-    private void getStarData()
-    {
-
-        String selection = "constellation_id = ?";
-        String selectionArgs[] = new String[1];
-
-        selectionArgs[0] = Integer.toString(constellation_id);
-
-        sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_SELECT, sqLiteControl.getTable_note(), new String[] {"*"}, selection, selectionArgs, MainActivity.GET_STARS_LIST));
-        MainActivity.submitRunnable(sqLiteControl);
 
     }
 
@@ -71,18 +70,21 @@ public class Create_note extends AppCompatActivity
     public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
 
+        System.out.println(" 아이디가 뭘까용? : " + item.getItemId());
+
         switch(item.getItemId())
         {
-            case R.id.home :
+            case android.R.id.home :
                 // finish 이전에 저장 작업을 먼저 해주어야 한다.
 
                 finish();
-                return true;
+                break;
+
             case R.id.action_delete :
                 // finish 이전에 삭제 작업을 해주어야 한다.
                 //finish();
-                return true;
-
+                //return true;
+                break;
         }
 
         return super.onOptionsItemSelected(item);

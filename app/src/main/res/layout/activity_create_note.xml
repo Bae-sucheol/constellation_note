@@ -25,6 +25,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <EditText
+        android:id="@+id/edit_create_note_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:inputType="textMultiLine"
