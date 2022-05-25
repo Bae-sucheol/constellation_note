@@ -101,10 +101,11 @@ public class SQLiteControl implements Runnable
 
                         sqlite.execSQL(String.format("UPDATE %s SET %s = %s - 1 WHERE %s;",
                                 table, target, target , selection));
+
                     }
                     else
                     {
-                        sqlite.update(table, contentValues, "id = ?", new String[]{id});
+                        sqlite.update(table, contentValues, selection, selectionArgs);
                     }
 
                     break;

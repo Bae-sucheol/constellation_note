@@ -606,6 +606,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     public void set_stars_data(ArrayList<Star_data> stars)
     {
+        // 만약 반환된 별자리 내의 별이 없다면 작업을 취소.
+        if(stars.size() == 0)
+        {
+            return;
+        }
+
         int constellation_id = stars.get(0).getConstellation_id();
 
         Iterator<Constellation_view> constellation_iterator = constellations.iterator();

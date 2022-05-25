@@ -40,6 +40,15 @@ public class SQL_data
         this.contentValues = contentValues;
     }
 
+    public SQL_data(int task_id, String table, ContentValues contentValues, String selection, String[] selectionArgs)
+    {
+        this.task_id = task_id;
+        this.table = table;
+        this.contentValues = contentValues;
+        this.selection = selection;
+        this.selectionArgs = selectionArgs;
+    }
+
     public SQL_data(int task_id, String table, String[] columns, String selection, String[] selectionArgs, int select_id)
     {
         this.task_id = task_id;
