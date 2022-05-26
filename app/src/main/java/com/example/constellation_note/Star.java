@@ -2,11 +2,16 @@ package com.example.constellation_note;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Layout;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.MainThread;
 
@@ -27,8 +32,14 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
     // 내용
     private String content;
 
+    // 별 제목을 표시할 텍스트 뷰
+    private TextView title_view;
+
     // 레이아웃 파라미터
     ViewGroup.LayoutParams star_param;
+    LinearLayout.LayoutParams title_view_param;
+
+
 
     // 별의 위치
     // 별의 위치는 각자 다르기 때문에.
@@ -64,6 +75,15 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
         this.setOnLongClickListener(this);
         this.setOnClickListener(this);
+
+        title_view = new TextView(context);
+        title_view.setTextColor(Color.WHITE);
+
+        title_view_param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        title_view.setLayoutParams(title_view_param);
+        title_view.setAlpha(0);
+
+        constellation.addView(title_view);
 
         Handler handler = MainHandler.getMainHandler(context);
 
@@ -134,6 +154,20 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
         this.parent = parent;
     }
 
+    public void setTitle_view()
+    {
+        if(title_view.getAlpha() == 0)
+        {
+            title_view.setAlpha(1);
+            title_view.setX(constellation.get_width() * this.relative_x - title_view.getWidth() / 2 + size / 2);
+            title_view.setY(constellation.get_height() * this.relative_y + size);
+        }
+        else
+        {
+            title_view.setAlpha(0);
+        }
+    }
+
     public void remove_line()
     {
         if(line == null)
@@ -154,8 +188,6 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
     public void set_Position_relative()
     {
-        System.out.println("별자리 절대 x : " + this.relative_x);
-        System.out.println("별자리 절대 y : " + this.relative_y);
         this.setX(constellation.get_width() * this.relative_x);
         this.setY(constellation.get_height() * this.relative_y);
     }
@@ -173,6 +205,7 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
     public void setTitle(String title)
     {
         this.title = title;
+        title_view.setText(title);
     }
 
     public String getTitle()

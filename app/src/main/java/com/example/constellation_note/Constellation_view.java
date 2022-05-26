@@ -242,9 +242,11 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
             //iter.setX(this.get_width() / 2 - Star.getSize() / 2);
             //iter.setY(this.get_height() / 2 - Star.getSize() / 2);
+
             iter.set_Position_relative();
             iter.calculate_size();
             iter.setSize();
+            iter.setTitle_view();
 
         }
 

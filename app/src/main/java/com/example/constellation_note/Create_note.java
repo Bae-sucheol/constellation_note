@@ -110,6 +110,17 @@ public class Create_note extends AppCompatActivity
     {
         // 여기에 저장 작업을 해주어야 한다.
 
+        String selection = "id = ? and constellation_id = ?";
+        String arg1 = Integer.toString(id);
+        String arg2 = Integer.toString(constellation_id);
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("title", edit_title.getText().toString());
+        contentValues.put("content", edit_content.getText().toString());
+
+        sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_UPDATE, sqLiteControl.getTable_note(), contentValues, selection, new String[] {arg1, arg2}));
+        MainActivity.submitRunnable(sqLiteControl);
+
         super.onBackPressed();
     }
 }
