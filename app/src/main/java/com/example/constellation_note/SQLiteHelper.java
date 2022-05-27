@@ -29,10 +29,18 @@ public class SQLiteHelper extends SQLiteOpenHelper
     }
 
     @Override
+    public void onConfigure(SQLiteDatabase db) {
+        super.onConfigure(db);
+
+        //db.execSQL("PRAGMA foreign_keys = ON;");
+        db.setForeignKeyConstraintsEnabled(true);
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase)
     {
 
-        sqLiteDatabase.execSQL("PRAGMA foreign_keys = ON;");
+
 
         // constellation 테이블
         String id = "id INTEGER PRIMARY KEY, ";

@@ -204,7 +204,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         constellation.set_id(max_constellation_index);
         constellation.create_star(constellation.get_width() / 2, constellation.get_height() / 2);
 
+        // 에러 발생 위치. 일단은 다른 작업부터 먼저 하고 나중에 처리.
         constellation.get_last_star().insert_into_star();
+
         constellations.add(constellation);
         frameLayout_main.addView(constellation);
 
@@ -824,8 +826,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 String target_id = Integer.toString(constellation_view.get_id());
 
                 // 1. 별자리 내의 모든 별들을 삭제
-                sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_DELETE, sqLiteControl.getTable_note(), "constellation_id = ?", new String[] {target_id}));
-                submitRunnable(sqLiteControl);
+                //sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_DELETE, sqLiteControl.getTable_note(), "constellation_id = ?", new String[] {target_id}));
+                //submitRunnable(sqLiteControl);
 
                 // 아마 실행 후 바로 아래 구문이 실행되어 별자리만 삭제하는 것 같으니 중간에 작업이 끝났을 때 다시 실행하도록 바꿔야 한다.
 
@@ -843,8 +845,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 // update cascade가 적용되지 않아 따로 처리를 또 해주어야함.
                 // 해당 별자리에 포함된 별들의 constellation_id를 다 낮춰줘야함.. sqlite 거지같음.
 
-                sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_UPDATE, sqLiteControl.getTable_note(), "constellation_id > " + target_id, true));
-                submitRunnable(sqLiteControl);
+                //sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_UPDATE, sqLiteControl.getTable_note(), "constellation_id > " + target_id, true));
+                //submitRunnable(sqLiteControl);
 
                 // autoincrement 수정
                 sqLiteControl.put_sqldata(new SQL_data(Integer.toString(max_constellation_index)));
