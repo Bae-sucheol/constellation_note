@@ -46,7 +46,7 @@ public class Create_note extends AppCompatActivity
     private boolean recording = false;
     private RecognitionListener recognitionListener;
 
-
+ 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
