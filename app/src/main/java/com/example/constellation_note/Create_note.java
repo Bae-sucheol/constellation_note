@@ -121,7 +121,7 @@ public class Create_note extends AppCompatActivity
             @Override
             public void onError(int error)
             {
-                String error_message = null;
+                String error_message = "";
 
                 switch(error)
                 {

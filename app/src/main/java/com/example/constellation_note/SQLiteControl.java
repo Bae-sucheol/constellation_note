@@ -228,12 +228,11 @@ public class SQLiteControl implements Runnable
 
         if(queue.size() == 0)
         {
-            System.out.println("큐에 저장된 작업이 없는데?");
             return;
         }
 
-        SQL_data sql_data = queue.get(0);
-        queue.remove(0);
+        SQL_data sql_data = queue.remove(0);
+        //queue.remove(0);
 
         this.task_id = sql_data.getTask_id();
 
