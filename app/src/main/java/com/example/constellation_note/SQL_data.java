@@ -20,8 +20,9 @@ public class SQL_data
 
     }
 
-    public SQL_data(String id)
+    public SQL_data(int task_id, String id)
     {
+        this.task_id = task_id;
         this.id = id;
     }
 

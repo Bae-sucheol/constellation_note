@@ -848,11 +848,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 //sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_UPDATE, sqLiteControl.getTable_note(), "constellation_id > " + target_id, true));
                 //submitRunnable(sqLiteControl);
 
-                // autoincrement 수정
-                sqLiteControl.put_sqldata(new SQL_data(Integer.toString(max_constellation_index)));
-                submitRunnable(sqLiteControl);
                 // 가독성을 위해 따로 증감문.
                 max_constellation_index--;
+
+                // autoincrement 수정
+                //sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_ALTER, Integer.toString(max_constellation_index)));
+                //submitRunnable(sqLiteControl);
 
                 // 삭제되었으니 인덱스를 재정렬 해주어야한다.
 

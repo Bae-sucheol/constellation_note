@@ -54,7 +54,6 @@ public class SQLiteControl implements Runnable
 
         try
         {
-            System.out.println("sql 작업이 실행되고 있습니다.");
             apply_sqldata();
 
             switch(task_id)
@@ -200,10 +199,6 @@ public class SQLiteControl implements Runnable
 
                     sqlite.execSQL(String.format("UPDATE SQLITE_SEQUENCE SET SEQ = %s WHERE NAME = %s;",
                            id, getTable_constellation()));
-
-                    break;
-
-                default:
 
                     break;
             }
