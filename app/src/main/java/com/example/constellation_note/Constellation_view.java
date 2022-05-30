@@ -1,5 +1,6 @@
 package com.example.constellation_note;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -17,6 +19,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.widget.TextViewCompat;
@@ -297,6 +303,8 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
     {
         if(mainActivity.isFocused)
         {
+            mainActivity.setUseStar((Star)view);
+
             Intent intent = new Intent(getContext(), Create_note.class);
 
             Bundle bundle = new Bundle();
@@ -310,7 +318,7 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
             intent.putExtras(bundle);
 
-            mainActivity.startActivity(intent);
+            mainActivity.startActivityResult.launch(intent);
         }
     }
 

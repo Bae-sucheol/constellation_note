@@ -252,23 +252,14 @@ public class Create_note extends AppCompatActivity
     public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
 
-        String selection = "id = ? and constellation_id = ?";
-        String arg1 = Integer.toString(id);
-        String arg2 = Integer.toString(constellation_id);
-
         switch(item.getItemId())
         {
             case android.R.id.home :
                 // finish 이전에 저장 작업을 먼저 해주어야 한다.
 
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("title", edit_title.getText().toString());
-                contentValues.put("content", edit_content.getText().toString());
+                update_data();
 
-                sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_UPDATE, sqLiteControl.getTable_note(), contentValues, selection, new String[] {arg1, arg2}));
-                MainActivity.submitRunnable(sqLiteControl);
-
-                finish();
+                finish_activity();
                 break;
 
             case R.id.action_stt :
@@ -284,10 +275,14 @@ public class Create_note extends AppCompatActivity
 
             case R.id.action_delete :
 
+                String selection = "id = ? and constellation_id = ?";
+                String arg1 = Integer.toString(id);
+                String arg2 = Integer.toString(constellation_id);
+
                 sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_DELETE, sqLiteControl.getTable_note(), selection, new String[] {arg1, arg2}));
                 MainActivity.submitRunnable(sqLiteControl);
 
-                finish();
+                finish_activity();
                 //return true;
                 break;
         }
@@ -300,17 +295,36 @@ public class Create_note extends AppCompatActivity
     {
         // 여기에 저장 작업을 해주어야 한다.
 
+        update_data();
+        finish_activity();
+
+        super.onBackPressed();
+    }
+
+    private void update_data()
+    {
+
+        title = edit_title.getText().toString();
+        content = edit_content.getText().toString();
+
         String selection = "id = ? and constellation_id = ?";
         String arg1 = Integer.toString(id);
         String arg2 = Integer.toString(constellation_id);
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put("title", edit_title.getText().toString());
-        contentValues.put("content", edit_content.getText().toString());
+        contentValues.put("title", title);
+        contentValues.put("content", content);
 
         sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_UPDATE, sqLiteControl.getTable_note(), contentValues, selection, new String[] {arg1, arg2}));
         MainActivity.submitRunnable(sqLiteControl);
+    }
 
-        super.onBackPressed();
+    private void finish_activity()
+    {
+        Intent intent = new Intent();
+        intent.putExtra("title", title);
+        intent.putExtra("content", content);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

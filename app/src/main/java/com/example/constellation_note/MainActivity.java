@@ -1,14 +1,21 @@
 package com.example.constellation_note;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -93,6 +100,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     private boolean isLongclick = false;
 
+    private Star useStar;
+
   @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -147,6 +156,25 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         submitRunnable(sqLiteControl);
 
     }
+
+    ActivityResultLauncher<Intent> startActivityResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result)
+                {
+                    if(result.getResultCode() == Activity.RESULT_OK)
+                    {
+                        //처리
+                       Intent intent = result.getData();
+
+                        useStar.setTitle(intent.getStringExtra("title"));
+                        useStar.setContent(intent.getStringExtra("content"));
+                       
+                    }
+                }
+            }
+    );
 
     public void create_stars(int num_star)
     {
@@ -680,13 +708,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 int next_id = constellation_id + (2 * direction - 1);
 
                 // 다음 id가 1보다 작으면 즉 0이면 마지막 별자리를 불러와야한다.
-                if(next_id < 1)
+                if(next_id < 0)
                 {
                     selectionArgs[0] = Integer.toString(max_constellation_index);
                 }
                 else if(next_id > max_constellation_index) // 다음 id가 마지막 별자리 id보다 크면 첫번째 별자리를 불러와야한다.
                 {
-                    selectionArgs[0] = Integer.toString(1);
+                    selectionArgs[0] = Integer.toString(0);
                 }
                 else
                 {
@@ -857,6 +885,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                 // 삭제되었으니 인덱스를 재정렬 해주어야한다.
 
+
                 Iterator<Constellation_view> iter = constellations.iterator();
 
                 while(iter.hasNext())
@@ -869,6 +898,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     }
 
                 }
+
+
 
                 // 인덱스 재정렬이 끝나면 다시 위치를 재조정
                 set_constellation_position();
@@ -988,5 +1019,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_SELECT, sqLiteControl.getTable_constellation(), new String[] {"id", "title"}, selection, selectionArgs, GET_CONSTELLATION_LIST));
         submitRunnable(sqLiteControl);
 
+    }
+
+    public void setUseStar(Star star)
+    {
+        useStar = star;
     }
 }
