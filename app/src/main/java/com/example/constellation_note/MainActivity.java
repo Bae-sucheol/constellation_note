@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public static final int GET_STARS_LIST = 4;
 
     private static boolean temp_star_mode = false;
+    private static boolean modify_star_mode = false;
 
     public static boolean isFocused = false;
 
@@ -231,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         constellation.setOnTouchListener(this);
         constellation.set_id(max_constellation_index);
         constellation.create_star(constellation.get_width() / 2, constellation.get_height() / 2);
+        constellation.get_last_star().setTitle("임시 제목");
 
         constellations.add(constellation);
         frameLayout_main.addView(constellation);
@@ -286,14 +288,24 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         temp_star.setAlpha(1.0f);
                         temp_star.draw_line();
                         temp_star.insert_into_star();
+                        temp_star.setTitle("임시 제목");
                         temp_star_mode = false;
+                    }
+
+                    if(modify_star_mode)
+                    {
+                        temp_star.calculate_relative_position();
+                        temp_star.setAlpha(1.0f);
+                        temp_star.draw_line();
+                        temp_star.update_star();
+                        modify_star_mode = false;
                     }
 
                     break;
 
                 case MotionEvent.ACTION_MOVE :
 
-                    if(temp_star_mode)
+                    if(temp_star_mode || modify_star_mode)
                     {
                         temp_star.set_Postion(motionEvent.getX(), motionEvent.getY());
                     }
@@ -944,7 +956,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         star.remove_line();
                         temp_star = star;
                         temp_star.setAlpha(0.5f);
-                        temp_star_mode = true;
+                        modify_star_mode = true;
 
                         break;
                     default:

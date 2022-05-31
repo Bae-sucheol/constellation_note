@@ -271,6 +271,19 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
     }
 
+    public void update_star()
+    {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("x", this.relative_x);
+        contentValues.put("y", this.relative_y);
+
+        String selection = "id = ? and constellation_id = ?";
+        String selectionArgs[] = {Integer.toString(index), Integer.toString(constellation.get_id())};
+
+        sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_UPDATE, sqLiteControl.getTable_note(), contentValues, selection, selectionArgs));
+        MainActivity.submitRunnable(sqLiteControl);
+    }
+
     @Override
     public boolean onLongClick(View view)
     {
