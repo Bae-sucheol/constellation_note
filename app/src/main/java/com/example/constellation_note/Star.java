@@ -159,13 +159,18 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
         if(title_view.getAlpha() == 0)
         {
             title_view.setAlpha(1);
-            title_view.setX(constellation.get_width() * this.relative_x - title_view.getWidth() / 2 + size / 2);
-            title_view.setY(constellation.get_height() * this.relative_y + size);
+            setTitle_position();
         }
         else
         {
             title_view.setAlpha(0);
         }
+    }
+
+    public void setTitle_position()
+    {
+        title_view.setX(constellation.get_width() * this.relative_x - title_view.getWidth() / 2 + size / 2);
+        title_view.setY(constellation.get_height() * this.relative_y + size);
     }
 
     public void remove_line()
@@ -206,6 +211,11 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
     {
         this.title = title;
         title_view.setText(title);
+    }
+
+    public void setTitleAlpha(float alpha)
+    {
+        title_view.setAlpha(alpha);
     }
 
     public String getTitle()

@@ -232,7 +232,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         constellation.setOnTouchListener(this);
         constellation.set_id(max_constellation_index);
         constellation.create_star(constellation.get_width() / 2, constellation.get_height() / 2);
-        constellation.get_last_star().setTitle("임시 제목");
 
         constellations.add(constellation);
         frameLayout_main.addView(constellation);
@@ -245,7 +244,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_INSERT, sqLiteControl.getTable_constellation(), contentValues));
         submitRunnable(sqLiteControl);
 
-        // 에러 발생 위치. 일단은 다른 작업부터 먼저 하고 나중에 처리.
         constellation.get_last_star().insert_into_star();
     }
 
@@ -288,7 +286,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         temp_star.setAlpha(1.0f);
                         temp_star.draw_line();
                         temp_star.insert_into_star();
-                        temp_star.setTitle("임시 제목");
+                        temp_star.setTitleAlpha(1);
+                        temp_star.setTitle_position();
                         temp_star_mode = false;
                     }
 
