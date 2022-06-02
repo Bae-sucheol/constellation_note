@@ -874,9 +874,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_DELETE, sqLiteControl.getTable_constellation(), "id = ?", new String[] {target_id}));
                 submitRunnable(sqLiteControl);
 
-                constellations.remove(constellation_view);
-                frameLayout_main.removeView(constellation_view);
-
                 // 별자리 테이블의 모든 별자리 id를 적절하게 수정
                 sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_UPDATE, sqLiteControl.getTable_constellation(), "id > " + target_id, true));
                 submitRunnable(sqLiteControl);
@@ -887,8 +884,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 //sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_UPDATE, sqLiteControl.getTable_note(), "constellation_id > " + target_id, true));
                 //submitRunnable(sqLiteControl);
 
-                // 가독성을 위해 따로 증감문.
-                max_constellation_index--;
 
                 // autoincrement 수정
                 //sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_ALTER, Integer.toString(max_constellation_index)));
@@ -896,27 +891,41 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                 // 삭제되었으니 인덱스를 재정렬 해주어야한다.
 
+                remove_index(constellation_view);
+                max_constellation_index--;
 
-                Iterator<Constellation_view> iter = constellations.iterator();
-
-                while(iter.hasNext())
+                if(max_constellation_index >= 4)
                 {
-                    Constellation_view constellation = iter.next();
-
-                    if(constellation.getIndex() > constellation_view.get_id())
-                    {
-                        constellation.setIndex(constellation.getIndex() - 1);
-                    }
-
+                    // 여기에 추가 작업을 해주어야 함.
                 }
 
 
-
-                // 인덱스 재정렬이 끝나면 다시 위치를 재조정
-                set_constellation_position();
             }
         });
         dialog.show();
+    }
+
+    private void remove_index(Constellation_view constellation_view)
+    {
+        Iterator<Constellation_view> iter = constellations.iterator();
+
+        while(iter.hasNext())
+        {
+            Constellation_view constellation = iter.next();
+
+            if(constellation.getIndex() > constellation_view.getIndex())
+            {
+                constellation.setIndex(constellation.getIndex() - 1);
+            }
+
+        }
+
+        constellations.remove(constellation_view);
+        frameLayout_main.removeView(constellation_view);
+
+        // 인덱스 재정렬이 끝나면 다시 위치를 재조정
+        set_constellation_position();
+        move_stars(0, 0);
     }
 
     public void popup_star_menu(View view, Constellation_view constellation)
@@ -1002,8 +1011,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             selection = "id IN(?, ?, ?, ?, ?)";
             selectionArgs = new String[5];
 
-            selectionArgs[0] = Integer.toString(1);
-            selectionArgs[1] = Integer.toString(2);
+            selectionArgs[0] = Integer.toString(0);
+            selectionArgs[1] = Integer.toString(1);
             selectionArgs[2] = Integer.toString(last_id - 2);
             selectionArgs[3] = Integer.toString(last_id - 1);
             selectionArgs[4] = Integer.toString(last_id);
