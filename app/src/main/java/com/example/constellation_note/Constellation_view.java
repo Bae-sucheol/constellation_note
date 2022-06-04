@@ -168,6 +168,12 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
             if(index == max_index)
             {
+
+                // 4보다 크면. 즉 별자리가 5개 이상이면 새로운 정보를 불러오고 기존 별자리 정보는 삭제해야 한다.
+                if(mainActivity.getMax_constellation_index() > 4)
+                {
+                    reset_constellation();
+                }
                 index = 0;
             }
             else
@@ -181,6 +187,11 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
             if(index == 0)
             {
+                // 4보다 크면. 즉 별자리가 5개 이상이면 새로운 정보를 불러오고 기존 별자리 정보는 삭제해야 한다.
+                if(mainActivity.getMax_constellation_index() > 4)
+                {
+                    reset_constellation();
+                }
                 index = max_index;
             }
             else
@@ -385,6 +396,23 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         }
 
         return star;
+    }
+
+    private void reset_constellation()
+    {
+
+        Iterator<Star> iterator = stars.iterator();
+
+        while(iterator.hasNext())
+        {
+            Star star = iterator.next();
+            star.remove_line();
+            this.removeView(star);
+        }
+
+        stars.clear();
+        this.requestLayout();
+
     }
 
     /*

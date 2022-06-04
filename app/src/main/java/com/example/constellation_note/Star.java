@@ -312,4 +312,5 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
     }
 
+
 }

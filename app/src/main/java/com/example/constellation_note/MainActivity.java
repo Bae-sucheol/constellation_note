@@ -409,6 +409,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             set_constellation_index(true);
                             request_constellation_data(0);
 
+
                             // 한 페이지 만큼을 움직여야 한다.
                             page_deviation = current_x + (width - touch_move_distance);
 
@@ -633,7 +634,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     // 어느 별자리에서 요청했는지 나중에 선별해서 넣어줘야한다.
     // 어차피 보이는 뷰3개 안보이는뷰 2개로 최대 5개이기 때문에
     // 탐색 비용은 적을 것 같다.
-    private void request_stars_data(int constellation_id)
+    public void request_stars_data(int constellation_id)
     {
 
         String selection = "constellation_id = ?";
@@ -1055,4 +1056,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     {
         useStar = star;
     }
+
+    public int getMax_constellation_index()
+    {
+        return max_constellation_index;
+    }
+
 }

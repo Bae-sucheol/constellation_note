@@ -99,6 +99,7 @@ public class MainHandler extends Handler
                 ArrayList<Constellation_data> returnValue = msg.getData().getParcelableArrayList("constellations");
 
                 mainActivity.swap_constellation_data(returnValue.get(0));
+                mainActivity.request_stars_data(returnValue.get(0).getId());
 
                 break;
 
