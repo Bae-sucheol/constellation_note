@@ -654,7 +654,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
         int constellation_id = stars.get(0).getConstellation_id();
-
+   //123123
         Iterator<Constellation_view> constellation_iterator = constellations.iterator();
 
         while(constellation_iterator.hasNext())
