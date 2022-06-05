@@ -185,6 +185,17 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
     }
 
+    public void remove_title()
+    {
+        if(title_view == null)
+        {
+            return;
+        }
+
+        constellation.removeView(title_view);
+        title_view = null;
+    }
+
     public void calculate_relative_position()
     {
         this.relative_x = this.getX() / (float)constellation.get_width();

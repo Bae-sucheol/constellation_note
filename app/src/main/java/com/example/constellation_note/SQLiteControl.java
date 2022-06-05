@@ -76,9 +76,7 @@ public class SQLiteControl implements Runnable
 
                 case TASK_DELETE :
 
-                    int result = sqlite.delete(table, selection, selectionArgs);
-
-                    System.out.println("삭제 결과 : " + result);
+                    sqlite.delete(table, selection, selectionArgs);
                     
                     break;
 

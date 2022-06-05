@@ -970,6 +970,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         constellation.removeView(star);
                         // 별과 별을 잇는(이어주는) 선을 지운다.
                         star.remove_line();
+                        star.remove_title();
+
+                        // DB에서 삭제
+
+                        String Selection = "constellation_id = ? and id = ?";
+                        String SelectionArgs[] = {Integer.toString(constellation.get_id()), Integer.toString(star.getIndex())};
+
+                        sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_DELETE, sqLiteControl.getTable_note(), Selection, SelectionArgs));
+                        submitRunnable(sqLiteControl);
 
                         break;
                     case R.id.action_star_modify :
