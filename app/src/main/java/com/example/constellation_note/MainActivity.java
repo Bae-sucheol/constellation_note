@@ -297,6 +297,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         temp_star.setAlpha(1.0f);
                         temp_star.draw_line();
                         temp_star.update_star();
+                        temp_star.setTitleAlpha(1);
+                        temp_star.setTitle_position();
                         modify_star_mode = false;
                     }
 
@@ -975,6 +977,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         star.remove_line();
                         temp_star = star;
                         temp_star.setAlpha(0.5f);
+                        temp_star.setTitleAlpha(0);
                         modify_star_mode = true;
 
                         break;
