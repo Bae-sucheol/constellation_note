@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private boolean isLongclick = false;
 
     private Star useStar;
-
+     
   @Override
     protected void onCreate(Bundle savedInstanceState)
     {
