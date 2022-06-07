@@ -20,6 +20,7 @@ import android.view.Display;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -811,6 +812,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         imageView_add_constellation.setVisibility(View.GONE);
         view.set_star_position();
         view.redraw_star_line();
+        view.setButton_confirm_visibility(View.VISIBLE);
+        view.setTitleAlignment(View.TEXT_ALIGNMENT_TEXT_START);
         isFocused = true;
 
     }
@@ -821,6 +824,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         view.set_width(width / 3);
         view.set_height(height / 3);
         view.set_size();
+        view.setButton_confirm_visibility(View.GONE);
+        view.setTitleAlignment(View.TEXT_ALIGNMENT_CENTER);
 
         set_constellation_position();
 

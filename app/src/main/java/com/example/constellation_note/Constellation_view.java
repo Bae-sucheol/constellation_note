@@ -8,6 +8,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Layout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -48,6 +49,7 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
     private EditText edit_title;
 
     private ViewGroup.LayoutParams constellation_params;
+    private LinearLayout.LayoutParams edit_param;
 
     private MainActivity mainActivity = null;
 
@@ -86,8 +88,10 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
         LinearLayout.LayoutParams menu_param = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         menu_layout.setLayoutParams(menu_param);
+        menu_layout.setPadding(20, 0, 20, 0);
 
-        menu_layout.setBackgroundResource(R.drawable.constellation_border);
+
+        //menu_layout.setBackgroundResource(R.drawable.constellation_border);
 
         button_confirm = new Button(context);
 
@@ -99,6 +103,7 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         button_confirm.setLayoutParams(button_param);
 
         button_confirm.setText("확인");
+        button_confirm.setVisibility(GONE);
         button_confirm.setOnClickListener(this);
 
         edit_title = new EditText(getContext());
@@ -108,6 +113,9 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         edit_title.setLayoutParams(edit_param);
         edit_title.setText("별자리 이름");
         edit_title.setTextColor(Color.WHITE);
+        edit_title.setIncludeFontPadding(false);
+        edit_title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+        edit_title.setTextAlignment(TEXT_ALIGNMENT_CENTER);
 
         menu_layout.addView(edit_title);
 
@@ -236,6 +244,16 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         return this.height;
     }
 
+
+    public void setButton_confirm_visibility(int visibility)
+    {
+        button_confirm.setVisibility(visibility);
+    }
+
+    public void setTitleAlignment(int alignment)
+    {
+        edit_title.setTextAlignment(alignment);
+    }
 
     @Override
     public void onClick(View view)
