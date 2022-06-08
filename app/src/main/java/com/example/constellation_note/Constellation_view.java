@@ -95,15 +95,20 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
 
         button_confirm = new Button(context);
 
-        int button_width = width / 3;
-        int button_height = height / 8;
+        //int button_width = width / 3;
+        //int button_height = height / 7;
 
-        LinearLayout.LayoutParams button_param = new LinearLayout.LayoutParams(button_width, button_height);
-        button_param.weight = 1;
+        LinearLayout.LayoutParams button_param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        button_param.weight = 3;
+        button_param.gravity = Gravity.CENTER;
         button_confirm.setLayoutParams(button_param);
 
         button_confirm.setText("확인");
+        button_confirm.setTextSize(TypedValue.COMPLEX_UNIT_DIP , mainActivity.CREATIVE_TEXT_SIZE);
         button_confirm.setVisibility(GONE);
+        button_confirm.setMinimumHeight(0);
+        button_confirm.setMinimumWidth(0);
+        button_confirm.setPadding(0, 0, 0, 0);
         button_confirm.setOnClickListener(this);
 
         edit_title = new EditText(getContext());
@@ -114,7 +119,7 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         edit_title.setText("별자리 이름");
         edit_title.setTextColor(Color.WHITE);
         edit_title.setIncludeFontPadding(false);
-        edit_title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+        edit_title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mainActivity.NORMAL_TEXT_SIZE);
         edit_title.setTextAlignment(TEXT_ALIGNMENT_CENTER);
 
         menu_layout.addView(edit_title);
@@ -431,6 +436,11 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         stars.clear();
         this.requestLayout();
 
+    }
+
+    public void setTitleTextSize(int size)
+    {
+        edit_title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size);
     }
 
     /*

@@ -2,18 +2,34 @@ package com.example.constellation_note;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BlurMaskFilter;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Layout;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.MainThread;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 public class Star extends View implements View.OnLongClickListener, View.OnClickListener
 {
@@ -38,8 +54,6 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
     // 레이아웃 파라미터
     ViewGroup.LayoutParams star_param;
     LinearLayout.LayoutParams title_view_param;
-
-
 
     // 별의 위치
     // 별의 위치는 각자 다르기 때문에.
@@ -66,8 +80,6 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
         this.constellation = constellation;
 
         this.calculate_size();
-
-        this.setBackgroundResource(R.drawable.star_glow);
 
         star_param = new ViewGroup.LayoutParams(size, size);
 
@@ -97,7 +109,7 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
     public void calculate_size()
     {
-        this.size = constellation.get_width() / 20;
+        this.size = constellation.get_width() / 8;
     }
 
     public void setSize()
@@ -321,6 +333,31 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
         constellation.click_star(view);
 
+    }
+
+
+    @Override
+    protected void onDraw(Canvas canvas)
+    {
+
+        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.star);
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable.mutate(), ContextCompat.getColor(getContext(), R.color.star_white_blue));
+
+
+        /*
+        Paint paint = new Paint();
+        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.star);
+
+        // 색상 설정
+        ColorFilter colorFilter = new PorterDuffColorFilter(Color.YELLOW, PorterDuff.Mode.DST_ATOP);
+        paint.setColorFilter(colorFilter);
+
+        canvas.drawBitmap(image, 0, 0, paint);
+
+         */
+
+        this.setBackground(drawable);
     }
 
 

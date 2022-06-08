@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public static final int GET_CONSTELLATION_LIST = 2;
     public static final int GET_CONSTELLATION_SINGLE = 3;
     public static final int GET_STARS_LIST = 4;
+    public static final int NORMAL_TEXT_SIZE = 16;
+    public static final int CREATIVE_TEXT_SIZE = 20;
 
     private static boolean temp_star_mode = false;
     private static boolean modify_star_mode = false;
@@ -814,6 +816,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         view.redraw_star_line();
         view.setButton_confirm_visibility(View.VISIBLE);
         view.setTitleAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        view.setTitleTextSize(CREATIVE_TEXT_SIZE);
         isFocused = true;
 
     }
@@ -826,6 +829,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         view.set_size();
         view.setButton_confirm_visibility(View.GONE);
         view.setTitleAlignment(View.TEXT_ALIGNMENT_CENTER);
+        view.setTitleTextSize(NORMAL_TEXT_SIZE);
 
         set_constellation_position();
 
