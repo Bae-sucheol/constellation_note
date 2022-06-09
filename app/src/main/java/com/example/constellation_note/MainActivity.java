@@ -184,7 +184,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                 break;
                             case 2:
 
-
+                                System.out.println(intent.getExtras());
+                                useStar.setStarColor(intent.getIntExtra("color", 0));
 
                                 break;
                             default:
@@ -1021,6 +1022,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                         Intent intent = new Intent(MainActivity.this, activity_popup_color_picker.class);
                         startActivityResult.launch(intent);
+                        useStar = star;
 
                         break;
 

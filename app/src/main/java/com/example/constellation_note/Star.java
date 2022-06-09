@@ -335,30 +335,13 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
     }
 
-
-    @Override
-    protected void onDraw(Canvas canvas)
+    public void setStarColor(int color)
     {
-
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.star);
         drawable = DrawableCompat.wrap(drawable);
-        DrawableCompat.setTint(drawable.mutate(), ContextCompat.getColor(getContext(), R.color.star_white_blue));
-
-
-        /*
-        Paint paint = new Paint();
-        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.star);
-
-        // 색상 설정
-        ColorFilter colorFilter = new PorterDuffColorFilter(Color.YELLOW, PorterDuff.Mode.DST_ATOP);
-        paint.setColorFilter(colorFilter);
-
-        canvas.drawBitmap(image, 0, 0, paint);
-
-         */
+        DrawableCompat.setTint(drawable.mutate(), ContextCompat.getColor(getContext(), color));
 
         this.setBackground(drawable);
     }
-
 
 }
