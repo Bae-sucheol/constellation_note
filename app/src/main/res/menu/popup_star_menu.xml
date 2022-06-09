@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_star_create"
@@ -10,5 +11,8 @@
     <item
         android:id="@+id/action_star_modify"
         android:title="수정" />
+    <item
+        android:id="@+id/action_star_color"
+        android:title="색상"/>
 
 </menu>

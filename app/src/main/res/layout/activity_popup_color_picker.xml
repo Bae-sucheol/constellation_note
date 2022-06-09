@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity_popup_color_picker">
+
+    <GridLayout
+        android:id="@+id/layout_color_picker"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="50dp"
+        android:orientation="horizontal"
+        android:columnCount="3">
+
+        <ImageView
+            android:id="@+id/imageView_color_1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_gravity="center"
+            android:background="@drawable/color_selector"/>
+
+        <ImageView
+            android:id="@+id/imageView_color_2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_gravity="center"
+            android:background="@drawable/color_selector"/>
+
+        <ImageView
+            android:id="@+id/imageView_color_3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_gravity="center"
+            android:background="@drawable/color_selector"/>
+
+        <ImageView
+            android:id="@+id/imageView_color_4"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_gravity="center"
+            android:background="@drawable/color_selector"/>
+
+        <ImageView
+            android:id="@+id/imageView_color_5"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_gravity="center"
+            android:background="@drawable/color_selector" />
+
+        <ImageView
+            android:id="@+id/imageView_color_6"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_gravity="center"
+            android:background="@drawable/color_selector"/>
+
+    </GridLayout>
+
+    <Button
+        android:id="@+id/button_color_picker"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:textSize="18dp"
+        android:text="확인"/>
+
+
+
+</FrameLayout>

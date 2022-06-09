@@ -167,15 +167,32 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 @Override
                 public void onActivityResult(ActivityResult result)
                 {
+                    Intent intent = result.getData();
+
+                    int RequestCode = intent.getIntExtra("requestCode", 0);
+
                     if(result.getResultCode() == Activity.RESULT_OK)
                     {
-                        //처리
-                       Intent intent = result.getData();
 
-                        useStar.setTitle(intent.getStringExtra("title"));
-                        useStar.setContent(intent.getStringExtra("content"));
-                       
+                        switch (RequestCode)
+                        {
+                            case 1:
+
+                                useStar.setTitle(intent.getStringExtra("title"));
+                                useStar.setContent(intent.getStringExtra("content"));
+
+                                break;
+                            case 2:
+
+
+
+                                break;
+                            default:
+                                break;
+                        }
+
                     }
+
                 }
             }
     );
@@ -999,6 +1016,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         modify_star_mode = true;
 
                         break;
+
+                    case R.id.action_star_color :
+
+                        Intent intent = new Intent(MainActivity.this, activity_popup_color_picker.class);
+                        startActivityResult.launch(intent);
+
+                        break;
+
                     default:
 
                         break;

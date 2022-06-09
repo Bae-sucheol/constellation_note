@@ -322,6 +322,7 @@ public class Create_note extends AppCompatActivity
     private void finish_activity()
     {
         Intent intent = new Intent();
+        intent.putExtra("requestCode", 1);
         intent.putExtra("title", title);
         intent.putExtra("content", content);
         setResult(RESULT_OK, intent);
