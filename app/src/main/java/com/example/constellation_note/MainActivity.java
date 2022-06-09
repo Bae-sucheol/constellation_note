@@ -184,8 +184,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                 break;
                             case 2:
 
-                                System.out.println(intent.getExtras());
-                                useStar.setStarColor(intent.getIntExtra("color", 0));
+                                int color_id = intent.getIntExtra("color", 0);
+                                if(color_id != 0)
+                                {
+                                    useStar.setStarColor(color_id);
+
+                                    ContentValues contentValues = new ContentValues();
+                                    contentValues.put("color", color_id);
+                                    useStar.update_star(contentValues);
+                                }
 
                                 break;
                             default:
@@ -317,7 +324,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         temp_star.calculate_relative_position();
                         temp_star.setAlpha(1.0f);
                         temp_star.draw_line();
-                        temp_star.update_star();
+
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put("x", temp_star.getRelative_x());
+                        contentValues.put("y", temp_star.getRelative_y());
+
+                        temp_star.update_star(contentValues);
                         temp_star.setTitleAlpha(1);
                         temp_star.setTitle_position();
                         modify_star_mode = false;
@@ -700,6 +712,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     temp_star = constellation_view.get_last_star();
                     temp_star.setRelative_x(star_data.getRelative_x());
                     temp_star.setRelative_y(star_data.getRelative_y());
+                    temp_star.setStarColor(star_data.getColor());
                     temp_star.set_Position_relative();
                     temp_star.setParent_index(star_data.getParent_index());
                     temp_star.setTitle(star_data.getTitle());

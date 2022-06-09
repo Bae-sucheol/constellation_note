@@ -70,6 +70,8 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
     private Line_star line;
 
+    private int color;
+
     // sql 컨트롤 객체
     private SQLiteControl sqLiteControl;
 
@@ -256,6 +258,16 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
         return this.content;
     }
 
+    public float getRelative_x()
+    {
+        return this.relative_x;
+    }
+
+    public float getRelative_y()
+    {
+        return this.relative_y;
+    }
+
     public void draw_line()
     {
         if(parent == null)
@@ -290,6 +302,7 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
         contentValues.put("id", this.index);
         contentValues.put("title", "임시 제목");
         contentValues.put("content", "임시 내용");
+        contentValues.put("color", this.color);
         contentValues.put("x", this.relative_x);
         contentValues.put("y", this.relative_y);
         contentValues.put("constellation_id", constellation.get_id());// 임시.
@@ -304,12 +317,8 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
     }
 
-    public void update_star()
+    public void update_star(ContentValues contentValues)
     {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("x", this.relative_x);
-        contentValues.put("y", this.relative_y);
-
         String selection = "id = ? and constellation_id = ?";
         String selectionArgs[] = {Integer.toString(index), Integer.toString(constellation.get_id())};
 
@@ -337,6 +346,7 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
     public void setStarColor(int color)
     {
+        this.color = color;
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.star);
         drawable = DrawableCompat.wrap(drawable);
         DrawableCompat.setTint(drawable.mutate(), ContextCompat.getColor(getContext(), color));

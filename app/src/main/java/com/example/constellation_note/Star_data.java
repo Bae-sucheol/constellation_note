@@ -13,6 +13,7 @@ public class Star_data extends Constellation_data implements Parcelable
     private float relative_x;
     private float relative_y;
     private int parent_index;
+    private int color;
 
     public Star_data()
     {
@@ -67,6 +68,11 @@ public class Star_data extends Constellation_data implements Parcelable
         this.parent_index = parent_index;
     }
 
+    public void setColor(int color)
+    {
+        this.color = color;
+    }
+
     //getter
 
     public int get_id()
@@ -102,6 +108,11 @@ public class Star_data extends Constellation_data implements Parcelable
     public int getParent_index()
     {
         return parent_index;
+    }
+
+    public int getColor()
+    {
+        return this.color;
     }
 
     public static final Creator<Star_data> CREATOR = new Creator<Star_data>()

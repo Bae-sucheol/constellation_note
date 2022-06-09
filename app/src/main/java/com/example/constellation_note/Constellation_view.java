@@ -249,7 +249,6 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         return this.height;
     }
 
-
     public void setButton_confirm_visibility(int visibility)
     {
         button_confirm.setVisibility(visibility);
