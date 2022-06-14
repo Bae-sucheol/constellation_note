@@ -323,7 +323,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     {
                         temp_star.calculate_relative_position();
                         temp_star.setAlpha(1.0f);
-                        temp_star.draw_line();
+
+                        if(view instanceof Constellation_view)
+                        {
+                            Constellation_view focused_constellation = (Constellation_view)view;
+                            focused_constellation.redraw_star_line(temp_star);
+                        }
+
+                        //temp_star.draw_line();
 
                         ContentValues contentValues = new ContentValues();
                         contentValues.put("x", temp_star.getRelative_x());
@@ -1020,9 +1027,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         submitRunnable(sqLiteControl);
 
                         break;
-                    case R.id.action_star_modify :
+                    case R.id.action_star_move :
 
-                        star.remove_line();
                         temp_star = star;
                         temp_star.setAlpha(0.5f);
                         temp_star.setTitleAlpha(0);

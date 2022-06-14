@@ -9,8 +9,8 @@
         android:id="@+id/action_star_delete"
         android:title="삭제" />
     <item
-        android:id="@+id/action_star_modify"
-        android:title="수정" />
+        android:id="@+id/action_star_move"
+        android:title="이동" />
     <item
         android:id="@+id/action_star_color"
         android:title="색상"/>

@@ -322,6 +322,26 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         }
     }
 
+    public void redraw_star_line(Star star)
+    {
+        star.remove_line();
+        star.draw_line();
+
+        Iterator<Star> iterator = stars.iterator();
+
+        while(iterator.hasNext())
+        {
+            Star iter = iterator.next();
+            if(iter.getParent_index() == star.getIndex())
+            {
+                iter.remove_line();
+                iter.draw_line();
+            }
+
+        }
+
+    }
+
     public void long_click_star(View view)
     {
 
