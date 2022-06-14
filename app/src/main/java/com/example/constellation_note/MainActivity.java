@@ -444,7 +444,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             set_constellation_index(true);
                             request_constellation_data(0);
 
-
                             // 한 페이지 만큼을 움직여야 한다.
                             page_deviation = current_x + (width - touch_move_distance);
 

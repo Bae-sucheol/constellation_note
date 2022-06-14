@@ -183,10 +183,13 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
             {
 
                 // 4보다 크면. 즉 별자리가 5개 이상이면 새로운 정보를 불러오고 기존 별자리 정보는 삭제해야 한다.
+                /*
                 if(mainActivity.getMax_constellation_index() > 4)
                 {
                     reset_constellation();
                 }
+                 */
+                reset_constellation();
                 index = 0;
             }
             else
@@ -201,10 +204,16 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
             if(index == 0)
             {
                 // 4보다 크면. 즉 별자리가 5개 이상이면 새로운 정보를 불러오고 기존 별자리 정보는 삭제해야 한다.
+
+                // 어차피 size가 4 이상이여야 스왑이 가능하므로.
+                // 마지막 별자리 혹은 첫 별자리의 데이터만 리셋 시키면 된다. ㅇㅋ?
+                /*
                 if(mainActivity.getMax_constellation_index() > 4)
                 {
                     reset_constellation();
                 }
+                 */
+                reset_constellation();
                 index = max_index;
             }
             else
@@ -434,8 +443,6 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         }
 
         stars.clear();
-        this.requestLayout();
-
     }
 
     public void setTitleTextSize(int size)
