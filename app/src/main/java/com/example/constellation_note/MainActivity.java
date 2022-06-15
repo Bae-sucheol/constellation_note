@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private boolean isLongclick = false;
 
     private Star useStar;
+
+    private int swap_count = 0;
      
   @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -423,6 +425,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         if(view instanceof Constellation_view)
                         {
                             creative_mode((Constellation_view)view);
+                            break;
                         }
                     }
 
@@ -449,6 +452,20 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         if(touch_move_distance > 0)
                         {
 
+                            if(constellations.size() == 4)
+                            {
+
+                                if(swap_count == 1)
+                                {
+                                    swap_count = 0;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+
+                            }
+
                             set_constellation_index(true);
                             request_constellation_data(0);
 
@@ -459,9 +476,25 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         else
                         {
 
-                            set_constellation_index(false);
-                            request_constellation_data(1);
+                            if(constellations.size() == 4)
+                            {
 
+                                if(swap_count == 0)
+                                {
+                                    swap_count = 1;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+
+                            }
+
+                            set_constellation_index(false);
+                            if(constellations.size() > 4) 
+                            {
+                                request_constellation_data(1);
+                            }
                             page_deviation = current_x - (width + touch_move_distance);
 
                         }
@@ -486,6 +519,18 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     if(constellations.size() < 4)
                     {
                         break;
+                    }
+
+                    if(constellations.size() == 4)
+                    {
+                        if(swap_count == 0 && (touch_move_pre_x - motionEvent.getX()) < 0)
+                        {
+                            break;
+                        }
+                        if(swap_count == 1 && (touch_move_pre_x - motionEvent.getX()) > 0)
+                        {
+                            break;
+                        }
                     }
 
                     if(touch_move_pre_x != motionEvent.getX())
@@ -750,6 +795,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         int target = 1 + (2 * direction);
         swap_target = (4 * direction);
 
+
         Iterator<Constellation_view> iter = constellations.iterator();
 
         while(iter.hasNext())
@@ -822,6 +868,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         {
             Constellation_view constellation = iter.next();
 
+            /*
             if(delta_index == 1)
             {
                 constellation.setIndex(true);
@@ -830,6 +877,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             {
                 constellation.setIndex(false);
             }
+            */
 
             if(constellation == view)
             {
@@ -955,7 +1003,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 {
                     constellations.remove(constellation_view);
                     frameLayout_main.removeView(constellation_view);
+                    set_constellation_position();
                 }
+
+                move_stars(0, 0);
 
 
             }
@@ -1067,7 +1118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     {
         max_constellation_index++;
 
-        if(constellations.size() >= 5)
+        if(constellations.size() > 3)
         {
             // 일단 별자리 데이터를 db에 삽입하고.
             // 처음 앱을 실행하여 화면에 출력하듯이 db로 다시 불러와 화면에 뿌려준다.
@@ -1089,13 +1140,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             // 별자리 다시 불러오기
             select_ConstellationData(max_constellation_index);
 
-
-
         }
         else
         {
             create_constellations();
+            if(constellations.size() == 4)
+            {
+                set_constellation_index(false);
+            }
             set_constellation_position();
+            move_stars(0, 0);
+
         }
 
     }

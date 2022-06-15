@@ -213,6 +213,7 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
                     reset_constellation();
                 }
                  */
+
                 reset_constellation();
                 index = max_index;
             }
