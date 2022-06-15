@@ -12,6 +12,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
@@ -894,12 +895,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         Constellation_view constellation_view = (Constellation_view)view;
 
-        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-        dialog.setTitle("삭제 메시지");
-        dialog.setMessage("선택한 별자리를 삭제하시겠습니까? 별자리 내의 모든 기록이 같이 삭제됩니다." + constellation_view.get_id());
+        builder.setTitle("삭제 메시지");
+        builder.setMessage("선택한 별자리를 삭제하시겠습니까? 별자리 내의 모든 기록이 같이 삭제됩니다." + constellation_view.get_id());
 
-        dialog.setPositiveButton("확인", new DialogInterface.OnClickListener()
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
@@ -959,7 +960,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
             }
         });
+
+        AlertDialog dialog = builder.create();
         dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.orange));
+
+
+
+
     }
 
     private void change_index(Constellation_view constellation_view)
@@ -1058,8 +1066,38 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     public void onClickCreateConstellation(View view)
     {
         max_constellation_index++;
-        create_constellations();
-        set_constellation_position();
+
+        if(constellations.size() >= 5)
+        {
+            // 일단 별자리 데이터를 db에 삽입하고.
+            // 처음 앱을 실행하여 화면에 출력하듯이 db로 다시 불러와 화면에 뿌려준다.
+            // 그러기 위해서는 constellations 배열을 clear 시키고 constellation_view를 전부 clear 한 후 db를 호출한다.
+
+            // 별자리를 추가
+            create_constellations();
+
+            // 별자리 리스트를 순회하여 메인화면(framelayout)에서 삭제
+            Iterator<Constellation_view> iterator = constellations.iterator();
+
+            while(iterator.hasNext())
+            {
+                frameLayout_main.removeView(iterator.next());
+            }
+            // 별자리 리스트 클리어
+            constellations.clear();
+
+            // 별자리 다시 불러오기
+            select_ConstellationData(max_constellation_index);
+
+
+
+        }
+        else
+        {
+            create_constellations();
+            set_constellation_position();
+        }
+
     }
 
     public int getConstellationSize()

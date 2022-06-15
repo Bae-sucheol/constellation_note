@@ -24,13 +24,27 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <EditText
-        android:id="@+id/edit_create_note_content"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:inputType="textMultiLine"
-        android:gravity="top"
-        android:background="@android:color/transparent"
-        android:padding="10dp"/>
+        android:background="@color/gray"
+        android:paddingVertical="30dp"
+        android:paddingHorizontal="10dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edit_create_note_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textMultiLine"
+            android:gravity="top"
+            android:background="@android:color/white"
+            android:padding="20dp"/>
+
+    </LinearLayout>
+
+
+
+
 
 </LinearLayout>

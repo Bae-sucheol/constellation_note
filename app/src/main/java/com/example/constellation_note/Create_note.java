@@ -3,7 +3,9 @@ package com.example.constellation_note;
 import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.Attribution;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognitionListener;
@@ -14,6 +16,8 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -59,6 +63,11 @@ public class Create_note extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Window window = this.getWindow();
+
+        window.setStatusBarColor(Color.WHITE);
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         edit_title = findViewById(R.id.edit_create_note_toolbar_title);
         edit_content = findViewById(R.id.edit_create_note_content);
