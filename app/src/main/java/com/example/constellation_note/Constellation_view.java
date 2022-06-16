@@ -1,6 +1,7 @@
 package com.example.constellation_note;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -26,6 +27,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.TextViewCompat;
 
 import java.util.ArrayList;
@@ -109,6 +112,8 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         button_confirm.setMinimumHeight(0);
         button_confirm.setMinimumWidth(0);
         button_confirm.setPadding(0, 0, 0, 0);
+        button_confirm.setBackgroundColor(Color.TRANSPARENT);
+        button_confirm.setTextColor(Color.WHITE);
         button_confirm.setOnClickListener(this);
 
         edit_title = new EditText(getContext());
@@ -121,6 +126,7 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         edit_title.setIncludeFontPadding(false);
         edit_title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mainActivity.NORMAL_TEXT_SIZE);
         edit_title.setTextAlignment(TEXT_ALIGNMENT_CENTER);
+        edit_title.setEnabled(false);
 
         menu_layout.addView(edit_title);
 
@@ -474,6 +480,31 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
     public void setTitleTextSize(int size)
     {
         edit_title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size);
+    }
+
+    public void setTitleEditable(boolean editable)
+    {
+        edit_title.setEnabled(editable);
+    }
+
+    public void check_changed()
+    {
+        String current_title = edit_title.getText().toString();
+
+        if(!title.equals(current_title))
+        {
+            setTitle(current_title);
+
+            String selection = "id = ?";
+            String selectionArgs[] = {Integer.toString(this.id)};
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("title", current_title);
+
+            sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_UPDATE, sqLiteControl.getTable_constellation(), contentValues, selection, selectionArgs));
+            MainActivity.submitRunnable(sqLiteControl);
+
+        }
     }
 
     /*

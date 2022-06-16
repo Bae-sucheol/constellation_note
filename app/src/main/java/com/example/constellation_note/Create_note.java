@@ -19,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,7 +32,7 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Create_note extends AppCompatActivity
+public class Create_note extends AppCompatActivity implements View.OnClickListener
 {
 
     private Toolbar toolbar;
@@ -49,6 +51,19 @@ public class Create_note extends AppCompatActivity
     private final int PERMISSION = 1;
     private boolean recording = false;
     private RecognitionListener recognitionListener;
+
+    private LinearLayout layout_draw_menu;
+    private LinearLayout layout_color_menu;
+
+    private ImageView imageView_color_picker;
+    private ImageView imageView_eraser;
+    private ImageView imageView_undo;
+    private ImageView imageView_redo;
+
+    private ImageView imageView_color_black;
+    private ImageView imageView_color_gray;
+    private ImageView imageView_color_red;
+    private ImageView imageView_color_blue;
 
  
     @Override
@@ -96,6 +111,29 @@ public class Create_note extends AppCompatActivity
         // recognitionListener 클래스 따로 만들어서 연결해주기 귀찮아 그냥 클래스 내에서 처리하려고 한다.
         // 오버라이드 할 내용이 많아 메소드로 따로 처리하려고 한다.
         setRecognitionListener();
+
+        layout_draw_menu = findViewById(R.id.layout_draw_menu);
+        layout_color_menu = findViewById(R.id.layout_color_menu);
+        imageView_color_picker = findViewById(R.id.imageView_color_picker);
+        imageView_eraser = findViewById(R.id.imageView_eraser);
+        imageView_undo = findViewById(R.id.imageView_undo);
+        imageView_redo = findViewById(R.id.imageView_redo);
+
+        imageView_color_black = findViewById(R.id.imageView_color_black);
+        imageView_color_gray = findViewById(R.id.imageView_color_gray);
+        imageView_color_red = findViewById(R.id.imageView_color_red);
+        imageView_color_blue = findViewById(R.id.imageView_color_blue);
+
+        imageView_color_picker.setOnClickListener(this);
+        imageView_eraser.setOnClickListener(this);
+        imageView_undo.setOnClickListener(this);
+        imageView_redo.setOnClickListener(this);
+
+        imageView_color_black.setOnClickListener(this);
+        imageView_color_gray.setOnClickListener(this);
+        imageView_color_red.setOnClickListener(this);
+        imageView_color_blue.setOnClickListener(this);
+
 
     }
 
@@ -294,6 +332,13 @@ public class Create_note extends AppCompatActivity
                 finish_activity();
                 //return true;
                 break;
+
+            case R.id.action_draw :
+
+                layout_draw_menu.setVisibility(View.VISIBLE);
+                edit_content.setEnabled(false);
+
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -336,5 +381,42 @@ public class Create_note extends AppCompatActivity
         intent.putExtra("content", content);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        switch (view.getId())
+        {
+            case R.id.imageView_color_picker :
+
+                layout_color_menu.setVisibility(View.VISIBLE);
+
+                break;
+            case R.id.imageView_eraser :
+
+                break;
+            case R.id.imageView_undo :
+
+                break;
+            case R.id.imageView_redo :
+
+                break;
+            case R.id.imageView_color_black :
+
+                break;
+            case R.id.imageView_color_gray :
+
+                break;
+            case R.id.imageView_color_red :
+
+                break;
+            case R.id.imageView_color_blue :
+
+                break;
+            default :
+
+                break;
+        }
     }
 }

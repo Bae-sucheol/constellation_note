@@ -43,6 +43,8 @@ public class activity_popup_color_picker extends Activity implements View.OnClic
         // 따로 추가하려고 했으나 설정이 잘 적용되지 않기도 하고
         // 색상도 많지 않아서 그냥 따로 작성하기로 했음.
 
+        color_id = 0;
+
         color1 = findViewById(R.id.layout_color_1);
         color2 = findViewById(R.id.layout_color_2);
         color3 = findViewById(R.id.layout_color_3);

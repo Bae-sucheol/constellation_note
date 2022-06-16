@@ -108,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private Star useStar;
 
     private int swap_count = 0;
+
+    private Constellation_view focused_constellation;
      
   @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -166,11 +168,18 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     ActivityResultLauncher<Intent> startActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
+            new ActivityResultCallback<ActivityResult>()
+            {
                 @Override
                 public void onActivityResult(ActivityResult result)
                 {
+
                     Intent intent = result.getData();
+
+                    if(intent == null)
+                    {
+                        return;
+                    }
 
                     int RequestCode = intent.getIntExtra("requestCode", 0);
 
@@ -203,6 +212,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         }
 
                     }
+
+
 
                 }
             }
@@ -283,13 +294,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         Constellation_view constellation = new Constellation_view(this, constellations.size());
         constellation.set_id(constellation_data.getId());
-        constellation.setTitle(Integer.toString(constellation_data.getId()));
+        constellation.setTitle(constellation_data.getTitle());
         constellation.setCallback_constellation(this);
         constellation.setOnTouchListener(this);
         constellations.add(constellation);
         frameLayout_main.addView(constellation);
 
         request_stars_data(constellation_data.getId());
+
+        move_stars(0, 0);
     }
 
 
@@ -327,13 +340,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         temp_star.calculate_relative_position();
                         temp_star.setAlpha(1.0f);
 
+                        /*
+
                         if(view instanceof Constellation_view)
                         {
-                            Constellation_view focused_constellation = (Constellation_view)view;
+                            focused_constellation = (Constellation_view)view;
                             focused_constellation.redraw_star_line(temp_star);
                         }
 
+                         */
+
                         //temp_star.draw_line();
+
+                        focused_constellation.redraw_star_line(temp_star);
 
                         ContentValues contentValues = new ContentValues();
                         contentValues.put("x", temp_star.getRelative_x());
@@ -424,7 +443,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         isTouchConstellation = false;
                         if(view instanceof Constellation_view)
                         {
-                            creative_mode((Constellation_view)view);
+                            focused_constellation = (Constellation_view)view;
+                            creative_mode(focused_constellation);
                             break;
                         }
                     }
@@ -852,7 +872,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             if(constellation.getIndex() == swap_target)
             {
                 constellation.set_id(constellation_data.getId());
-                constellation.setTitle(Integer.toString(constellation_data.getId()));
+                constellation.setTitle(constellation_data.getTitle());
                 constellation.requestLayout();
 
                 break;
@@ -910,6 +930,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         view.setButton_confirm_visibility(View.VISIBLE);
         view.setTitleAlignment(View.TEXT_ALIGNMENT_TEXT_START);
         view.setTitleTextSize(CREATIVE_TEXT_SIZE);
+        view.setTitleEditable(true);
         isFocused = true;
 
     }
@@ -923,6 +944,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         view.setButton_confirm_visibility(View.GONE);
         view.setTitleAlignment(View.TEXT_ALIGNMENT_CENTER);
         view.setTitleTextSize(NORMAL_TEXT_SIZE);
+        view.setTitleEditable(false);
 
         set_constellation_position();
 
@@ -940,6 +962,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         view.setY(height / 2 - view.get_height() / 2);
         view.set_star_position();
         view.redraw_star_line();
+        view.check_changed();
         isFocused = false;
         move_stars(0, 0);
 
@@ -1237,4 +1260,18 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         return max_constellation_index;
     }
 
+    @Override
+    public void onBackPressed()
+    {
+
+        if(!isFocused)
+        {
+            super.onBackPressed();
+            return;
+        }
+
+        normal_mode(focused_constellation);
+
+
+    }
 }
