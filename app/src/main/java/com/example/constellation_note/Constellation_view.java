@@ -454,6 +454,11 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
     private void reset_constellation()
     {
 
+        if(mainActivity.getConstellationSize() < 5)
+        {
+            return;
+        }
+
         Iterator<Star> iterator = stars.iterator();
 
         while(iterator.hasNext())

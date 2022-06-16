@@ -452,6 +452,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         if(touch_move_distance > 0)
                         {
 
+                            /*
                             if(constellations.size() == 4)
                             {
 
@@ -465,17 +466,20 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                 }
 
                             }
+                             */
 
                             set_constellation_index(true);
-                            request_constellation_data(0);
-
+                            if(constellations.size() > 4)
+                            {
+                                request_constellation_data(0);
+                            }
                             // 한 페이지 만큼을 움직여야 한다.
                             page_deviation = current_x + (width - touch_move_distance);
 
                         }
                         else
                         {
-
+                            /*
                             if(constellations.size() == 4)
                             {
 
@@ -489,6 +493,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                 }
 
                             }
+                            */
 
                             set_constellation_index(false);
                             if(constellations.size() > 4) 
@@ -521,6 +526,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         break;
                     }
 
+                    /*
                     if(constellations.size() == 4)
                     {
                         if(swap_count == 0 && (touch_move_pre_x - motionEvent.getX()) < 0)
@@ -532,6 +538,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             break;
                         }
                     }
+                     */
 
                     if(touch_move_pre_x != motionEvent.getX())
                     {
@@ -1146,7 +1153,16 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             create_constellations();
             if(constellations.size() == 4)
             {
+                Iterator<Constellation_view> iterator = constellations.iterator();
+
+                while(iterator.hasNext())
+                {
+                    Constellation_view constellation = iterator.next();
+                    constellation.setIndex(constellation.get_id());
+                }
+
                 set_constellation_index(false);
+
             }
             set_constellation_position();
             move_stars(0, 0);
