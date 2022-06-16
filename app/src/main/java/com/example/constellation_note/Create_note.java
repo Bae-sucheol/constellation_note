@@ -17,8 +17,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -52,6 +54,7 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
     private boolean recording = false;
     private RecognitionListener recognitionListener;
 
+    private FrameLayout layout_content;
     private LinearLayout layout_draw_menu;
     private LinearLayout layout_color_menu;
 
@@ -65,6 +68,7 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
     private ImageView imageView_color_red;
     private ImageView imageView_color_blue;
 
+    private Draw_view draw_view;
  
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -112,8 +116,10 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
         // 오버라이드 할 내용이 많아 메소드로 따로 처리하려고 한다.
         setRecognitionListener();
 
+        layout_content = findViewById(R.id.layout_content);
         layout_draw_menu = findViewById(R.id.layout_draw_menu);
         layout_color_menu = findViewById(R.id.layout_color_menu);
+
         imageView_color_picker = findViewById(R.id.imageView_color_picker);
         imageView_eraser = findViewById(R.id.imageView_eraser);
         imageView_undo = findViewById(R.id.imageView_undo);
@@ -134,6 +140,16 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
         imageView_color_red.setOnClickListener(this);
         imageView_color_blue.setOnClickListener(this);
 
+        edit_content.setVisibility(View.GONE);
+
+        // 그림용 view를 framelayout에 추가.
+        draw_view = new Draw_view(this);
+        draw_view.setBackgroundColor(Color.WHITE);
+
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        draw_view.setLayoutParams(layoutParams);
+
+        layout_content.addView(draw_view);
 
     }
 
@@ -398,23 +414,42 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.imageView_undo :
 
+                draw_view.undo();
+
                 break;
             case R.id.imageView_redo :
+
+                draw_view.redo();
 
                 break;
             case R.id.imageView_color_black :
 
+                draw_view.setColor_id(Color.BLACK);
+                layout_color_menu.setVisibility(View.GONE);
+
                 break;
             case R.id.imageView_color_gray :
+
+                draw_view.setColor_id(Color.LTGRAY);
+                layout_color_menu.setVisibility(View.GONE);
 
                 break;
             case R.id.imageView_color_red :
 
+                draw_view.setColor_id(Color.RED);
+                layout_color_menu.setVisibility(View.GONE);
+
                 break;
             case R.id.imageView_color_blue :
 
+                draw_view.setColor_id(Color.BLUE);
+                layout_color_menu.setVisibility(View.GONE);
+
                 break;
             default :
+
+                layout_color_menu.setVisibility(View.GONE);
+                layout_draw_menu.setVisibility(View.GONE);
 
                 break;
         }
