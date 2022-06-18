@@ -14,6 +14,7 @@ public class Star_data extends Constellation_data implements Parcelable
     private float relative_y;
     private int parent_index;
     private int color;
+    private byte drawing[];
 
     public Star_data()
     {
@@ -73,6 +74,11 @@ public class Star_data extends Constellation_data implements Parcelable
         this.color = color;
     }
 
+    public void setDrawing(byte[] drawing)
+    {
+        this.drawing = drawing;
+    }
+
     //getter
 
     public int get_id()
@@ -115,6 +121,11 @@ public class Star_data extends Constellation_data implements Parcelable
         return this.color;
     }
 
+    public byte[] getDrawing()
+    {
+        return this.drawing;
+    }
+
     public static final Creator<Star_data> CREATOR = new Creator<Star_data>()
     {
         @Override
@@ -146,6 +157,7 @@ public class Star_data extends Constellation_data implements Parcelable
         parcel.writeFloat(relative_x);
         parcel.writeFloat(relative_y);
         parcel.writeInt(parent_index);
+        parcel.writeByteArray(drawing);
     }
 
 }

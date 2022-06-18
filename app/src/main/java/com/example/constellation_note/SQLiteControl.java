@@ -145,6 +145,7 @@ public class SQLiteControl implements Runnable
                             data.setRelative_y(cursor.getFloat(6));
                             data.setColor(cursor.getInt(7));
                             data.setConstellation_id(cursor.getInt(8));
+                            data.setDrawing(cursor.getBlob(9));
 
                             returnValues.add(data);
                         }

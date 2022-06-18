@@ -22,7 +22,7 @@ public class SQLiteHelper extends SQLiteOpenHelper
         // 객체가 존재하지 않으면 만들어야한다.
         if(sqLiteHelper == null)
         {
-            sqLiteHelper = new SQLiteHelper(context, "constellation_note.db", null, 58);
+            sqLiteHelper = new SQLiteHelper(context, "constellation_note.db", null, 59);
         }
 
         return sqLiteHelper;
@@ -64,6 +64,7 @@ public class SQLiteHelper extends SQLiteOpenHelper
         String y = "y FLOAT NOT NULL, ";
         String color = "color INTEGER NOT NULL, ";
         String constellation_id = "constellation_id INTEGER, ";
+        String drawing = "drawing BLOB, ";
         String constraint = "CONSTRAINT constellation_id_fk FOREIGN KEY(constellation_id) REFERENCES constellation(id) ON UPDATE CASCADE ON DELETE CASCADE ";
         String constraint2 = "PRIMARY KEY(id, constellation_id)";
 
@@ -77,6 +78,7 @@ public class SQLiteHelper extends SQLiteOpenHelper
                 y +
                 color +
                 constellation_id +
+                drawing +
                 constraint +
                 constraint2 +
                 ");";

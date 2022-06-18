@@ -72,6 +72,8 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
 
     private int color;
 
+    private byte drawing[];
+
     // sql 컨트롤 객체
     private SQLiteControl sqLiteControl;
 
@@ -120,6 +122,16 @@ public class Star extends View implements View.OnLongClickListener, View.OnClick
         param.width = this.size;
         param.height = this.size;
         this.setLayoutParams(param);
+    }
+
+    public byte[] getDrawing()
+    {
+        return drawing;
+    }
+
+    public void setDrawing(byte[] drawing)
+    {
+        this.drawing = drawing;
     }
 
     public int getSize()

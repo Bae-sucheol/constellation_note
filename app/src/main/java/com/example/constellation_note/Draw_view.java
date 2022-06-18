@@ -1,6 +1,8 @@
 package com.example.constellation_note;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,6 +21,8 @@ public class Draw_view extends View implements View.OnTouchListener
     private Context context;
     private Paint paint;
     private custom_path path;
+    private Canvas canvas;
+    private Bitmap bitmap;
     private int color_id;
     private int width;
     private boolean isEraser = false;
@@ -28,7 +32,7 @@ public class Draw_view extends View implements View.OnTouchListener
 
     private Create_note parent;
 
-    public Draw_view(Context context)
+    public Draw_view(Context context, byte[] drawing)
     {
         super(context);
 
@@ -48,11 +52,21 @@ public class Draw_view extends View implements View.OnTouchListener
         paint.setColor(color_id);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(width);
+
+        if(drawing != null)
+        {
+            bitmap = BitmapFactory.decodeByteArray(drawing, 0, drawing.length);
+        }
+
     }
 
     @Override
     protected void onDraw(Canvas canvas)
     {
+        if(bitmap != null)
+        {
+            canvas.drawBitmap(bitmap, 0, 0, null);
+        }
 
         for(custom_path p : path_list)
         {
@@ -77,8 +91,11 @@ public class Draw_view extends View implements View.OnTouchListener
         }
 
             canvas.drawPath(path, paint);
+            this.canvas = canvas;
 
     }
+
+
 
 
     @Override
@@ -165,6 +182,16 @@ public class Draw_view extends View implements View.OnTouchListener
     public void setWidth(int width)
     {
         this.width = width;
+    }
+
+    public boolean isDrawing()
+    {
+        if(path_list.size() == 0)
+        {
+            return false;
+        }
+
+        return true;
     }
 
 

@@ -2,17 +2,22 @@ package com.example.constellation_note;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.Attribution;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,6 +38,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -48,6 +58,7 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
     private int constellation_id;
     private String title;
     private String content;
+    private byte[] drawing;
 
     private Intent recognizer_intent;
     private SpeechRecognizer speechRecognizer;
@@ -102,6 +113,7 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
         constellation_id = intent.getIntExtra("constellation_id", 0);
         title = intent.getStringExtra("title");
         content = intent.getStringExtra("content");
+        drawing = intent.getByteArrayExtra("drawing");
 
         edit_title.setText(title);
         edit_content.setText(content);
@@ -153,7 +165,7 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
         edit_content.setVisibility(View.GONE);
 
         // 그림용 view를 framelayout에 추가.
-        draw_view = new Draw_view(this);
+        draw_view = new Draw_view(this, drawing);
         draw_view.setBackgroundColor(Color.WHITE);
 
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -331,6 +343,7 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
                 // finish 이전에 저장 작업을 먼저 해주어야 한다.
 
                 update_data();
+                update_drawing();
 
                 finish_activity();
                 break;
@@ -376,6 +389,7 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
         // 여기에 저장 작업을 해주어야 한다.
 
         update_data();
+        update_drawing();
         finish_activity();
 
         super.onBackPressed();
@@ -383,7 +397,6 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
 
     private void update_data()
     {
-
         title = edit_title.getText().toString();
         content = edit_content.getText().toString();
 
@@ -405,6 +418,7 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
         intent.putExtra("requestCode", 1);
         intent.putExtra("title", title);
         intent.putExtra("content", content);
+        intent.putExtra("drawing", drawing);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -507,4 +521,36 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
 
         layout_color_menu.setVisibility(View.GONE);
     }
+
+    public void update_drawing()
+    {
+        if(!draw_view.isDrawing())
+        {
+            return;
+        }
+
+        draw_view.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(draw_view.getDrawingCache());
+        draw_view.setDrawingCacheEnabled(false);
+
+        drawing = bitmapToByteArray(bitmap);
+
+        String selection = "id = ? and constellation_id = ?";
+        String arg1 = Integer.toString(id);
+        String arg2 = Integer.toString(constellation_id);
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("drawing", drawing);
+
+        sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_UPDATE, sqLiteControl.getTable_note(), contentValues, selection, new String[] {arg1, arg2}));
+        MainActivity.submitRunnable(sqLiteControl);
+    }
+
+    public byte[] bitmapToByteArray(Bitmap bitmap)
+    {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
+        bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
+        return stream.toByteArray() ;
+    }
+
 }

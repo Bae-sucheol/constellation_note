@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                                 useStar.setTitle(intent.getStringExtra("title"));
                                 useStar.setContent(intent.getStringExtra("content"));
+                                useStar.setDrawing(intent.getByteArrayExtra("drawing"));
 
                                 break;
                             case 2:
@@ -797,6 +798,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     temp_star.setTitle(star_data.getTitle());
                     temp_star.setContent(star_data.getContent());
                     temp_star.setIndex(star_data.get_id());
+                    temp_star.setDrawing(star_data.getDrawing());
 
                 }
 

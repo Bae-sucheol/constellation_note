@@ -384,6 +384,7 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
             intent.putExtra("constellation_id", this.id);
             intent.putExtra("title", star.getTitle());
             intent.putExtra("content", star.getContent());
+            intent.putExtra("drawing", star.getDrawing());
 
             intent.putExtras(bundle);
 
