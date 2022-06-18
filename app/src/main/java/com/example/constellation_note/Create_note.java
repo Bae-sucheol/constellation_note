@@ -23,6 +23,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,9 +36,8 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Create_note extends AppCompatActivity implements View.OnClickListener
+public class Create_note extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener, SeekBar.OnSeekBarChangeListener
 {
-
     private Toolbar toolbar;
     private SQLiteControl sqLiteControl;
 
@@ -69,6 +70,9 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
     private ImageView imageView_color_blue;
 
     private Draw_view draw_view;
+
+    private TextView textView_pen_width;
+    private SeekBar seekBar_pen_width;
  
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -130,7 +134,11 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
         imageView_color_red = findViewById(R.id.imageView_color_red);
         imageView_color_blue = findViewById(R.id.imageView_color_blue);
 
+        textView_pen_width = findViewById(R.id.textView_pen_width);
+        seekBar_pen_width = findViewById(R.id.seekBar_pen_width);
+
         imageView_color_picker.setOnClickListener(this);
+        imageView_color_picker.setOnLongClickListener(this);
         imageView_eraser.setOnClickListener(this);
         imageView_undo.setOnClickListener(this);
         imageView_redo.setOnClickListener(this);
@@ -139,6 +147,8 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
         imageView_color_gray.setOnClickListener(this);
         imageView_color_red.setOnClickListener(this);
         imageView_color_blue.setOnClickListener(this);
+
+        seekBar_pen_width.setOnSeekBarChangeListener(this);
 
         edit_content.setVisibility(View.GONE);
 
@@ -402,14 +412,17 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onClick(View view)
     {
+
         switch (view.getId())
         {
             case R.id.imageView_color_picker :
 
-                layout_color_menu.setVisibility(View.VISIBLE);
+                draw_view.setPenMode();
 
                 break;
             case R.id.imageView_eraser :
+
+                draw_view.setEraserMode();
 
                 break;
             case R.id.imageView_undo :
@@ -453,5 +466,45 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
 
                 break;
         }
+    }
+
+    @Override
+    public boolean onLongClick(View view)
+    {
+
+        // 어차피 롱클릭 할 요소는 1개이므로 따로 아이디를 거를 필요가 없다.
+        layout_color_menu.setVisibility(View.VISIBLE);
+
+        return false;
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b)
+    {
+
+       textView_pen_width.setText( Integer.toString(i + 4));
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar)
+    {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar)
+    {
+        draw_view.setWidth(seekBar.getProgress() + 4);
+    }
+
+    public void drawing()
+    {
+        if(layout_color_menu.getVisibility() == View.GONE)
+        {
+            return;
+        }
+
+        layout_color_menu.setVisibility(View.GONE);
     }
 }

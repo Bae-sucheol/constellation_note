@@ -89,6 +89,7 @@
 
     <LinearLayout
         android:id="@+id/layout_color_menu"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_gravity="bottom"
@@ -98,43 +99,76 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:background="@drawable/color_menu"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_marginHorizontal="20dp"
-            android:gravity="center"
             android:elevation="5dp"
-            android:padding="10dp">
+            android:background="@drawable/color_menu">
 
-            <ImageView
-                android:id="@+id/imageView_color_black"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@color/black"/>
 
-            <ImageView
-                android:id="@+id/imageView_color_gray"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@color/gray"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="10dp">
 
-            <ImageView
-                android:id="@+id/imageView_color_red"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@color/red"/>
+                <ImageView
+                    android:id="@+id/imageView_color_black"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:background="@color/black"/>
 
-            <ImageView
-                android:id="@+id/imageView_color_blue"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@color/blue"/>
+                <ImageView
+                    android:id="@+id/imageView_color_gray"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:background="@color/gray"/>
+
+                <ImageView
+                    android:id="@+id/imageView_color_red"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:background="@color/red"/>
+
+                <ImageView
+                    android:id="@+id/imageView_color_blue"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:background="@color/blue"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView_pen_width"
+                    android:gravity="center"
+                    android:text="4"
+                    android:textSize="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <SeekBar
+                    android:id="@+id/seekBar_pen_width"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="16"/>
+
+
+            </LinearLayout>
+
 
         </LinearLayout>
+
 
     </LinearLayout>
 
