@@ -45,6 +45,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Stack;
 
 public class Create_note extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener, SeekBar.OnSeekBarChangeListener
 {
@@ -84,6 +85,12 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
 
     private TextView textView_pen_width;
     private SeekBar seekBar_pen_width;
+
+    private int modify_count = 0;
+    private Stack<Character> modify_stack = new Stack<>();
+    private char last_char;
+    private int start_text_length;
+    private int current_text_length;
  
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -117,6 +124,8 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
 
         edit_title.setText(title);
         edit_content.setText(content);
+        start_text_length = title.length() - 1;
+        current_text_length = start_text_length;
 
         // sqLiteControl 정의
         Handler handler = MainHandler.getMainHandler(this);
@@ -171,6 +180,60 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
         draw_view.setLayoutParams(layoutParams);
 
         layout_content.addView(draw_view, 0);
+
+        // 따로 클래스를 지정하여 오버라이드 하기 번거로워 그냥 사용한다.
+
+        edit_content.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int length, int delete, int insert)
+            {
+
+                if(delete == 1)
+                {
+                    current_text_length -= delete;
+                    //System.out.println("char : " + charSequence.charAt(current_text_length));
+                    if(modify_count > 0)
+                    {
+                        modify_count--;
+                    }
+                    else
+                    {
+                        modify_stack.push(charSequence.charAt(current_text_length));
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int length, int delete, int insert)
+            {
+                if(insert == 1)
+                {
+                    current_text_length += insert;
+                    //System.out.println("char : " + charSequence.charAt(current_text_length - 1));
+
+                    if(!modify_stack.empty())
+                    {
+                        if(modify_stack.peek() == charSequence.charAt(current_text_length - 1))
+                        {
+                            modify_stack.pop();
+                        }
+                        else
+                        {
+                            modify_count++;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+
+            }
+        });
 
     }
 
@@ -398,27 +461,43 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onBackPressed()
     {
-        // 여기에 저장 작업을 해주어야 한다.
 
         update_data();
         update_drawing();
         finish_activity();
 
         super.onBackPressed();
+
     }
 
     private void update_data()
     {
+        boolean textChanged = isTextChanged();
+        boolean titleChanged = isTitleChanged();
+
+        if(!textChanged && !titleChanged)
+        {
+            return;
+        }
+
+        ContentValues contentValues = new ContentValues();
+
+        if(titleChanged)
+        {
+            contentValues.put("title", title);
+        }
+
+        if(textChanged)
+        {
+            contentValues.put("content", content);
+        }
+
         title = edit_title.getText().toString();
         content = edit_content.getText().toString();
 
         String selection = "id = ? and constellation_id = ?";
         String arg1 = Integer.toString(id);
         String arg2 = Integer.toString(constellation_id);
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("title", title);
-        contentValues.put("content", content);
 
         sqLiteControl.put_sqldata(new SQL_data(sqLiteControl.TASK_UPDATE, sqLiteControl.getTable_note(), contentValues, selection, new String[] {arg1, arg2}));
         MainActivity.submitRunnable(sqLiteControl);
@@ -562,4 +641,29 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
         return stream.toByteArray() ;
     }
 
+    private boolean isTextChanged()
+    {
+        if(start_text_length != current_text_length)
+        {
+            return true;
+        }
+        if(!modify_stack.empty())
+        {
+            return true;
+        }
+
+        System.out.println("내용이 바뀌지 않았습니다.");
+        return false;
+    }
+
+    private boolean isTitleChanged()
+    {
+        if(title.equals(edit_title.getText().toString()))
+        {
+            System.out.println("타이틀이 바뀌지 않았습니다.");
+            return false;
+        }
+
+        return true;
+    }
 }
