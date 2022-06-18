@@ -88,7 +88,6 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
 
     private int modify_count = 0;
     private Stack<Character> modify_stack = new Stack<>();
-    private char last_char;
     private int start_text_length;
     private int current_text_length;
  
@@ -124,7 +123,8 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
 
         edit_title.setText(title);
         edit_content.setText(content);
-        start_text_length = title.length() - 1;
+
+        start_text_length = content.length() - 1;
         current_text_length = start_text_length;
 
         // sqLiteControl 정의
@@ -477,6 +477,7 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
 
         if(!textChanged && !titleChanged)
         {
+            System.out.println("변경할 내용이 없습니다.");
             return;
         }
 
@@ -484,16 +485,15 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
 
         if(titleChanged)
         {
+            title = edit_title.getText().toString();
             contentValues.put("title", title);
         }
 
         if(textChanged)
         {
+            content = edit_content.getText().toString();
             contentValues.put("content", content);
         }
-
-        title = edit_title.getText().toString();
-        content = edit_content.getText().toString();
 
         String selection = "id = ? and constellation_id = ?";
         String arg1 = Integer.toString(id);
