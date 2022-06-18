@@ -162,16 +162,15 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
 
         seekBar_pen_width.setOnSeekBarChangeListener(this);
 
-        edit_content.setVisibility(View.GONE);
-
         // 그림용 view를 framelayout에 추가.
         draw_view = new Draw_view(this, drawing);
         draw_view.setBackgroundColor(Color.WHITE);
+        draw_view.setEnabled(false);
 
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         draw_view.setLayoutParams(layoutParams);
 
-        layout_content.addView(draw_view);
+        layout_content.addView(draw_view, 0);
 
     }
 
@@ -374,8 +373,21 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
 
             case R.id.action_draw :
 
-                layout_draw_menu.setVisibility(View.VISIBLE);
-                edit_content.setEnabled(false);
+                if(layout_draw_menu.getVisibility() == View.VISIBLE)
+                {
+                    item.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_baseline_edit_24));
+                    layout_draw_menu.setVisibility(View.GONE);
+                    edit_content.setVisibility(View.VISIBLE);
+                    draw_view.setEnabled(false);
+                }
+                else
+                {
+                    item.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_baseline_keyboard_24));
+                    layout_draw_menu.setVisibility(View.VISIBLE);
+                    edit_content.setVisibility(View.GONE);
+                    draw_view.setEnabled(true);
+                }
+
 
                 break;
         }
@@ -474,9 +486,6 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
 
                 break;
             default :
-
-                layout_color_menu.setVisibility(View.GONE);
-                layout_draw_menu.setVisibility(View.GONE);
 
                 break;
         }

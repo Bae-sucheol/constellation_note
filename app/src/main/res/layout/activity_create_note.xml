@@ -40,7 +40,7 @@
             android:layout_height="match_parent"
             android:inputType="textMultiLine"
             android:gravity="top"
-            android:background="@android:color/white"
+            android:background="@android:color/transparent"
             android:padding="20dp"/>
 
     </FrameLayout>
@@ -153,7 +153,7 @@
                     android:id="@+id/textView_pen_width"
                     android:gravity="center"
                     android:text="4"
-                    android:textSize="10dp"
+                    android:textSize="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
