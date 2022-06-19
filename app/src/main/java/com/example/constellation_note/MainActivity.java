@@ -42,12 +42,18 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private static final int STAR_SIZE = 32; // 별 사이즈
     private static final int MAX_Z = 10; // 별과 스크린간의 최대거리.
     private static final int MIN_Z = 5; // 별과 스크린간의 최소거리.
-    private static final float MAX_MAGNIFICATION = 0.4f; // 화면 너비에 맞춰 별자리 뷰의 사이즈를 정한다.(최대)
+    //private static final float MAX_MAGNIFICATION = 0.4f; // 화면 너비에 맞춰 별자리 뷰의 사이즈를 정한다.(최대)
     private static final int SPEED_MULTIPLIER = 2; // 별이 움직이는 속도 배수
     private static final float DISTORTION = 0.2f; // 공간이 왜곡되는 정도
     private static final float SWIPE_MAGNIFUCATION = 0.4f; // 얼마나 스와이프 해야 화면이 넘어가는지(별자리 페이지가 넘어가는지)
     private static final int ANIMATION_TIME = 200; // 애니메이션 타임.
-    private static final int CONSTELLATION_Z = 2; // 별자리 뷰와 스크린간의 거리 (움직이는 속도와도 관계가 있음)
+    //private static final int CONSTELLATION_Z = 2; // 별자리 뷰와 스크린간의 거리 (움직이는 속도와도 관계가 있음)
+
+    // touch 리스너로 클릭을 구현하기 때문에 실제 디바이스에서 터치 시 클릭 지점이 흔들려 클릭이 잘 안되는 경우가 있어
+    // 오차범위를 허용하여 클릭할 수 있도록 했다.
+    private static final float ALLOWED_TOUCH_GAP = 2.0f;
+    private static final int LONG_CLICK_TIME_MILL = 500; // 롱클릭 시간을 설정
+
 
     public static final int GET_LAST_CONSTELLATION_ID = 1;
     public static final int GET_CONSTELLATION_LIST = 2;
@@ -274,6 +280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         constellation.setCallback_constellation(this);
         constellation.setOnTouchListener(this);
         constellation.set_id(max_constellation_index);
+        constellation.setTitle("별자리 이름");
         constellation.create_star(constellation.get_width() / 2, constellation.get_height() / 2);
 
         constellations.add(constellation);
@@ -403,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             public void run()
                             {
 
-                                if(touch_pre_x == motionEvent.getX() && touch_pre_y == motionEvent.getY() && isTouchConstellation)
+                                if(isClickRange(touch_pre_x, motionEvent.getX()) && isClickRange(touch_pre_y, motionEvent.getY()) && isTouchConstellation)
                                 {
                                     isLongclick = true;
                                     popup_constellation_menu(view);
@@ -430,7 +437,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     if(view instanceof Constellation_view)
                     {
                         isLongclick = false;
-                        long_click_timer.schedule(long_click_timerTask, 1000); // 1초 후
+                        long_click_timer.schedule(long_click_timerTask, LONG_CLICK_TIME_MILL); // 0.5초 후
                     }
 
                     break;
@@ -439,15 +446,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                     float current_x = motionEvent.getX();
 
-                    if(isTouchConstellation && touch_pre_x == current_x && isLongclick == false)
+                    if(isTouchConstellation && isClickRange(touch_pre_x, current_x) && isLongclick == false)
                     {
                         isTouchConstellation = false;
-                        if(view instanceof Constellation_view)
-                        {
-                            focused_constellation = (Constellation_view)view;
-                            creative_mode(focused_constellation);
-                            break;
-                        }
+
+                        focused_constellation = (Constellation_view)view;
+                        creative_mode(focused_constellation);
+                        break;
                     }
 
                     if(constellations.size() < 4)
@@ -1275,5 +1280,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         normal_mode(focused_constellation);
 
 
+    }
+
+    private boolean isClickRange(float down_point, float up_point)
+    {
+        float gap = Math.abs(down_point - up_point);
+
+        if(gap < ALLOWED_TOUCH_GAP)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

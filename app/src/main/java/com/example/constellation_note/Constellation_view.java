@@ -399,6 +399,7 @@ public class Constellation_view extends FrameLayout implements Button.OnClickLis
         star.set_Postion(x, y);
         star.calculate_relative_position();
         star.setTitle("임시 제목");
+        star.setContent("임시 내용");
         star.setStarColor(R.color.star_white);
         stars.add(star);
         this.addView(star);

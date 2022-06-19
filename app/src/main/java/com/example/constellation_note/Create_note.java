@@ -121,11 +121,15 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
         content = intent.getStringExtra("content");
         drawing = intent.getByteArrayExtra("drawing");
 
+        System.out.println("content : " + content);
+
         edit_title.setText(title);
         edit_content.setText(content);
 
-        start_text_length = content.length() - 1;
+        start_text_length = content.length();
         current_text_length = start_text_length;
+
+        System.out.println("크기 : " + current_text_length);
 
         // sqLiteControl 정의
         Handler handler = MainHandler.getMainHandler(this);
@@ -354,7 +358,10 @@ public class Create_note extends AppCompatActivity implements View.OnClickListen
                     post_text.append(iterator.next());
                 }
 
+                modify_count += post_text.length() - pre_text.length();
                 edit_content.setText(post_text.toString());
+                current_text_length = post_text.length();
+                System.out.println("크기 : " + current_text_length);
                 recording = false;
             }
 
